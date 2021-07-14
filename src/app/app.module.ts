@@ -9,6 +9,11 @@ import { ResponsiveContainerDirective } from './components/responsive/container/
 import { GridExampleComponent } from './examples/grid-example/grid-example.component';
 import { ResponsiveExampleComponent } from './examples/responsive-example/responsive-example.component';
 import {ResizeObserverService} from "./components/responsive/resize-observer.service";
+import { SideMenuComponent } from './components/side-menu/side-menu.component';
+import {MatTreeModule} from "@angular/material/tree";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+
 
 @NgModule({
   declarations: [
@@ -16,12 +21,16 @@ import {ResizeObserverService} from "./components/responsive/resize-observer.ser
     GridLayoutComponent,
     ResponsiveContainerDirective,
     GridExampleComponent,
-    ResponsiveExampleComponent
+    ResponsiveExampleComponent,
+    SideMenuComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatTreeModule,
+    MatButtonModule,
+    MatIconModule
   ],
   providers: [
     ResizeObserverService

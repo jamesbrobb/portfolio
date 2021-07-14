@@ -1,0 +1,27 @@
+:host {
+  display: block;
+
+  .side-menu-tree {
+    height: 100%;
+    padding-left: 20px;
+  }
+
+  .side-menu-tree-invisible {
+    display: none;
+  }
+
+  ul,
+  li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+  }
+
+  .mat-nested-tree-node div[role=group] {
+    padding-left: 20px;
+  }
+
+  div[role=group] > .mat-tree-node {
+    padding-left: 20px;
+  }
+}
