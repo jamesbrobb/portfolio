@@ -1,4 +1,4 @@
-import {Directive, ElementRef, EventEmitter, OnDestroy, Output} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {BaseResponsiveContainer} from "./responsive-container";
 import {ResizeObserverService} from "../resize-observer.service";
 
@@ -7,7 +7,7 @@ import {ResizeObserverService} from "../resize-observer.service";
 @Directive({
   selector: '[responsiveContainer]'
 })
-export class ResponsiveContainerDirective extends BaseResponsiveContainer implements OnDestroy {
+export class ResponsiveContainerDirective extends BaseResponsiveContainer implements OnInit, OnDestroy {
 
   @Output() resizeNotification = new EventEmitter();
 
@@ -15,11 +15,15 @@ export class ResponsiveContainerDirective extends BaseResponsiveContainer implem
     super(elementRef.nativeElement, service);
   }
 
-  protected _resizeNotification(contentRect: DOMRectReadOnly, element: Element): void {
-    this.resizeNotification.emit({contentRect, element});
+  ngOnInit(): void {
+    this._initialise();
   }
 
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.destroy();
+  }
+
+  protected _resizeNotification(contentRect: DOMRectReadOnly, element: Element): void {
+    this.resizeNotification.emit({contentRect, element});
   }
 }

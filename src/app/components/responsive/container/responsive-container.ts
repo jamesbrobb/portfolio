@@ -25,21 +25,12 @@ export abstract class BaseResponsiveContainer implements ResizeHandler {
   private _breakPoints: BREAKPOINTS | undefined;
 
   private _element: ResponsiveElement;
-  private _service: ResizeObserverService | undefined;
+  private _service: ResizeObserverService;
 
   constructor(element: ResponsiveElement, service: ResizeObserverService) {
 
     this._element = element;
-
-    this._breakPoints = this._getBreakpointValues(element);
-
-    if(!this._breakPoints) {
-      console.warn('No breakpoint values declared in component styles');
-      return;
-    }
-
     this._service = service;
-    this._service.observe(this._element, this);
   }
 
   public handleResize(contentRect: DOMRectReadOnly): void {
@@ -68,11 +59,19 @@ export abstract class BaseResponsiveContainer implements ResizeHandler {
 
   public destroy(): void {
 
-    if(!this._service) {
+    this._service.unobserve(this._element);
+  }
+
+  protected _initialise(): void {
+
+    this._breakPoints = this._getBreakpointValues(this._element);
+
+    if(!this._breakPoints) {
+      console.warn('No breakpoint values declared in component styles');
       return;
     }
 
-    this._service.unobserve(this._element);
+    this._service.observe(this._element, this);
   }
 
   private _getBreakpointValues(element: ResponsiveElement): BREAKPOINTS | undefined {
