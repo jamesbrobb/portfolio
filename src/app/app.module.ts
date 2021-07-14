@@ -11,8 +11,7 @@ import { ResponsiveExampleComponent } from './examples/responsive-example/respon
 import {ResizeObserverService} from "./components/responsive/resize-observer.service";
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import {MatTreeModule} from "@angular/material/tree";
-import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
+import {MatListModule} from "@angular/material/list";
 
 
 @NgModule({
@@ -29,8 +28,7 @@ import {MatButtonModule} from "@angular/material/button";
     AppRoutingModule,
     BrowserAnimationsModule,
     MatTreeModule,
-    MatButtonModule,
-    MatIconModule
+    MatListModule
   ],
   providers: [
     ResizeObserverService

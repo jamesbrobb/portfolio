@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 
@@ -6,6 +6,7 @@ import {MatTreeNestedDataSource} from '@angular/material/tree';
 export interface MenuItemNode {
   name: string;
   children?: MenuItemNode[]
+  path?: string
 }
 
 
@@ -18,6 +19,7 @@ export interface MenuItemNode {
 export class SideMenuComponent implements OnChanges {
 
   @Input() dataProvider: MenuItemNode[] | undefined;
+  @Output() itemSelected: EventEmitter<MenuItemNode> = new EventEmitter<MenuItemNode>();
 
   treeControl = new NestedTreeControl<MenuItemNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<MenuItemNode>();
@@ -32,4 +34,8 @@ export class SideMenuComponent implements OnChanges {
   }
 
   hasChild = (_: number, node: MenuItemNode) => !!node.children && node.children.length > 0;
+
+  nodeSelected(node:MenuItemNode): void {
+    this.itemSelected.emit(node);
+  }
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {MenuItemNode} from "./components/side-menu/side-menu.component";
+import {Router} from "@angular/router";
 
 
 const MENU_DATA_PROVIDER: MenuItemNode[] = [{
@@ -7,11 +8,14 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
   children: [{
     name: 'Layout',
     children: [{
-      name: 'Grid'
+      name: 'Grid',
+      path: 'grid'
     }, {
-      name: 'Flex Grid'
+      name: 'Flex Grid',
+      path: 'flex-grid'
     },{
-      name: 'Responsive'
+      name: 'Responsive',
+      path: 'responsive'
     }]
   }]
 }
@@ -26,4 +30,14 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
 export class AppComponent {
 
   menuDataProvider: MenuItemNode[] = MENU_DATA_PROVIDER;
+
+  private _router: Router;
+
+  constructor(router: Router) {
+    this._router = router;
+  }
+
+  onItemSelect($event: MenuItemNode): void {
+    this._router.navigate([$event.path]);
+  }
 }
