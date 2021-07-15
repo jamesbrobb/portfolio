@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-grid-example',
-  templateUrl: './grid-example.component.html',
-  styleUrls: ['./grid-example.component.scss']
+  selector: 'grid-layout-route-component',
+  templateUrl: './grid-layout-route.component.html',
+  styleUrls: ['./grid-layout-route.component.scss']
 })
-export class GridExampleComponent {
+export class GridLayoutRouteComponent {
 
   dataProvider = [{
     title: 'one'
