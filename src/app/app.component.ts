@@ -15,7 +15,7 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
       path: 'flex-grid'
     },{
       name: 'Responsive',
-      path: 'responsive'
+      path: 'responsive-container'
     }]
   }]
 }
