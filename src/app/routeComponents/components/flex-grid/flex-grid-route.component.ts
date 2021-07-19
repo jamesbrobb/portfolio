@@ -31,4 +31,7 @@ export class FlexGridRouteComponent {
     title: 'eleven'
   }];
 
+  trackById(index: number, item: any): string {
+    return item['id'] ?? undefined;
+  }
 }

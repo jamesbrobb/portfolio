@@ -1,0 +1,15 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+
+  .example {
+    resize: both;
+    overflow: auto;
+    max-width: 100%;
+    background-color: #424242;
+    border: solid 1px rgba(255,255,255,.12);
+    padding: 10px;
+  }
+}

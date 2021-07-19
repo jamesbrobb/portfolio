@@ -1,11 +1,19 @@
-<grid-layout [dataProvider]="dataProvider">
+<page-container [docURI]="'/components/grid-layout/README.md'">
 
-  <ng-template let-item="item">
+    <grid-layout class="grid-layout" [dataProvider]="dataProvider">
 
-    <div class="item">
-      <div>{{item.title}}</div>
-    </div>
+      <ng-template let-item="item">
 
-  </ng-template>
+        <div class="item">
+          <div>{{item.title}}</div>
+        </div>
 
-</grid-layout>
+      </ng-template>
+
+    </grid-layout>
+
+</page-container>
+
+
+
+
