@@ -1,4 +1,11 @@
-import {Directive, ElementRef, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import {BaseResponsiveContainer} from "./responsive-container";
 import {ResizeObserverService} from "../resize-observer.service";
 
