@@ -1,12 +1,15 @@
-import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MediaMatcher} from "@angular/cdk/layout";
+import {MatSidenav} from "@angular/material/sidenav";
 
 @Component({
   selector: 'app-container',
   templateUrl: './app-container.component.html',
   styleUrls: ['./app-container.component.scss']
 })
-export class AppContainerComponent implements OnDestroy {
+export class AppContainerComponent implements OnInit, OnDestroy {
+
+  @ViewChild('snav', { static: true }) sidenav: MatSidenav | undefined;
 
   mobileQuery: MediaQueryList;
 
@@ -16,6 +19,15 @@ export class AppContainerComponent implements OnDestroy {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);
+  }
+
+  ngOnInit(): void {
+
+    if(this.mobileQuery.matches) {
+      return;
+    }
+
+    this.sidenav?.open();
   }
 
   ngOnDestroy(): void {
