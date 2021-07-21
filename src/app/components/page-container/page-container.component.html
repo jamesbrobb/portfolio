@@ -1,11 +1,11 @@
 
 <section class="markdown">
 
-  <markdown ngPreserveWhitespaces [src]="'/assets/docs/' + docURI" (error)="onError($event)"></markdown>
+  <markdown ngPreserveWhitespaces [src]="'/assets/docs/' + docURI" (load)="onLoad($event)" (error)="onError($event)"></markdown>
 
 </section>
 
-<section class="example">
+<section [style.visibility]="hasLoaded ? 'visible' : 'hidden'" class="example">
 
   <ng-content></ng-content>
 
