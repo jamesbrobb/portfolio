@@ -37,7 +37,7 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
   templateUrl: './side-menu.component.html',
   styleUrls: ['./side-menu.component.scss']
 })
-export class SideMenuComponent implements OnDestroy {
+export class SideMenuComponent {
 
   private _router: Router;
 
@@ -53,10 +53,6 @@ export class SideMenuComponent implements OnDestroy {
 
     this.dataSource.data = MENU_DATA_PROVIDER;
     this.treeControl.dataNodes = MENU_DATA_PROVIDER;
-  }
-
-  ngOnDestroy(): void {
-
   }
 
   hasChild = (_: number, node: MenuItemNode) => !!node.children && node.children.length > 0;
