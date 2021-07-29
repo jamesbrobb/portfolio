@@ -15,6 +15,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {AppContainerComponent} from "./container/app-container.component";
 import {PageContainerComponent} from "./page-container/page-container.component";
+import {AnalyticsModule} from "../ng/core";
 
 
 export const COMPONENTS = [
@@ -31,6 +32,7 @@ export const COMPONENTS = [
     CommonModule,
     BrowserAnimationsModule,
     RouterModule,
+    AnalyticsModule,
     MarkdownModule.forChild(),
     MatTreeModule,
     MatListModule,
