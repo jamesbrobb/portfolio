@@ -6,6 +6,7 @@ import {FlexGridRouteComponent} from "./components/flex-grid/flex-grid-route.com
 import {ResponsiveContainerRouteComponent} from "./components/responsive-container/responsive-container-route.component";
 import {RouterModule, Routes} from "@angular/router";
 import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
+import {AnalyticsRouteComponent} from "./core/analytics/analytics-route.component";
 
 const routes: Routes = [
   {
@@ -18,6 +19,11 @@ const routes: Routes = [
         {path: 'responsive-container', component: ResponsiveContainerRouteComponent}
       ]
     }]
+  }, {
+    path: 'core',
+    children: [
+      {path: 'analytics', component: AnalyticsRouteComponent}
+    ]
   }
 ]
 
@@ -25,7 +31,8 @@ export const COMPONENTS = [
   PageNotFoundComponent,
   GridLayoutRouteComponent,
   FlexGridRouteComponent,
-  ResponsiveContainerRouteComponent
+  ResponsiveContainerRouteComponent,
+  AnalyticsRouteComponent
 ];
 
 @NgModule({

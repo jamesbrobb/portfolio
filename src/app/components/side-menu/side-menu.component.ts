@@ -28,6 +28,13 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
       path: 'components/layout/responsive-container'
     }]
   }]
+}, {
+  name: 'Core',
+  path: 'core',
+  children: [{
+    name: 'Analytics',
+    path: 'core/analytics'
+  }]
 }];
 
 

@@ -1,11 +1,17 @@
 
-<section class="markdown">
+<section class="markdown" [style.visibility]="hasLoaded ? 'visible' : 'hidden'">
 
-  <markdown ngPreserveWhitespaces [src]="'/assets/docs/' + docURI" (load)="onLoad($event)" (error)="onError($event)"></markdown>
+  <markdown *ngFor="let docUri of docURIs" ngPreserveWhitespaces [src]="'/assets/docs/' + docUri" (load)="onLoad($event)" (error)="onError($event)"></markdown>
 
 </section>
 
-<section [style.visibility]="hasLoaded ? 'visible' : 'hidden'" class="example">
+<section class="error" *ngIf="hasError && hasLoaded">
+
+  <p>An error occurred whilst loading the docs.</p>
+
+</section>
+
+<section [style.visibility]="hasLoaded && !noExample ? 'visible' : 'hidden'" class="example">
 
   <ng-content></ng-content>
 

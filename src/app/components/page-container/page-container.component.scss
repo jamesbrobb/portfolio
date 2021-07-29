@@ -13,6 +13,14 @@
     padding: 10px;
   }
 
+  markdown {
+    display: block;
+
+    & + markdown {
+      margin-top: 50px;
+    }
+  }
+
   a {
     color: white;
   }
