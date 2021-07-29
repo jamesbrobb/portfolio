@@ -6,6 +6,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {ComponentsModule} from "./components/components.module";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {AnalyticsModule} from "./ng/core/analytics/analytics.module";
+import {GoogleAnalyticsModule} from "./ng/core/analytics/trackers/google-analytics/google-analytics.module";
+import {AppConfigModule} from "./app-config.module";
 
 
 @NgModule({
@@ -16,6 +19,9 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
     HttpClientModule,
     MarkdownModule.forRoot({loader: HttpClient}),
     BrowserModule,
+    AppConfigModule,
+    AnalyticsModule,
+    GoogleAnalyticsModule,
     AppRoutingModule,
     ComponentsModule
   ],
