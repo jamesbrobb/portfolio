@@ -1,9 +1,9 @@
-import {InjectionToken, NgModule} from '@angular/core';
+import {InjectionToken, NgModule, Optional} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AnalyticsActions,
   AnalyticsService,
-  AnalyticsAdaptor
+  AnalyticsAdaptor, AnalyticsHook
 } from "../../../core";
 import {AnalyticsEventDirective} from "./components/analytics-event.directive";
 
@@ -11,13 +11,19 @@ import {AnalyticsEventDirective} from "./components/analytics-event.directive";
 
 export const AnalyticsActionsService = new InjectionToken<AnalyticsActions>('AnalyticsActionsService');
 export const AnalyticsAdaptorService = new InjectionToken<AnalyticsAdaptor>('AnalyticsAdaptorService');
+export const AnalyticsHooksService = new InjectionToken<AnalyticsHook[]>('AnalyticsHooksService')
 
 
 export function analyticsServiceFactory(
   actions: AnalyticsActions,
-  adaptor: AnalyticsAdaptor): AnalyticsService {
+  adaptor: AnalyticsAdaptor,
+  hooks: AnalyticsHook[]): AnalyticsService {
 
-  return new AnalyticsService(actions, adaptor);
+  if (Array.isArray(hooks)) {
+    hooks = ([] as AnalyticsHook[]).concat(...hooks)
+  }
+
+  return new AnalyticsService(actions, adaptor, hooks);
 }
 
 const COMPONENTS = [
@@ -34,7 +40,8 @@ const COMPONENTS = [
       useFactory: analyticsServiceFactory,
       deps: [
         AnalyticsActionsService,
-        AnalyticsAdaptorService
+        AnalyticsAdaptorService,
+        [new Optional(), AnalyticsHooksService]
       ]
     }
   ],

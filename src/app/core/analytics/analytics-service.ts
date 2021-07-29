@@ -39,10 +39,16 @@ export class AnalyticsService {
     private _preHooks: AnalyticsHook[] | undefined;
 
 
-    constructor(actions: AnalyticsActions, adaptor: AnalyticsAdaptor) {
+    constructor(actions: AnalyticsActions, adaptor: AnalyticsAdaptor, hooks?: AnalyticsHook[]) {
 
         this._actions = actions;
         this._adaptor = adaptor;
+
+        if(!hooks) {
+          return;
+        }
+
+        this._preHooks = hooks.concat();
     }
 
     public addHook(hook: AnalyticsHook): void {
