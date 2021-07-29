@@ -1,6 +1,7 @@
 import {ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MediaMatcher} from "@angular/cdk/layout";
 import {MatSidenav} from "@angular/material/sidenav";
+import {AnalyticsEvent} from "../../core";
 
 @Component({
   selector: 'app-container',
@@ -12,6 +13,14 @@ export class AppContainerComponent implements OnInit, OnDestroy {
   @ViewChild('snav', { static: true }) sidenav: MatSidenav | undefined;
 
   mobileQuery: MediaQueryList;
+
+  analytics: AnalyticsEvent = {
+    actionType:'test.for.me',
+    propertyValueMap: {
+      prop1: 'value1',
+      prop2: 'value2'
+    }
+  }
 
   private _mobileQueryListener: () => void;
 
