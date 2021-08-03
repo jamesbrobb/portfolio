@@ -1,6 +1,9 @@
 import { Observable } from 'rxjs';
 
 
-export interface Hook<I, O = I> {
-    execute(input: I): O|Observable<O>;
+export type HookReturnType<A, B> = B extends void ? A | Observable<A>: A | B | Observable<A | B>;
+
+
+export interface Hook<IOType, AdditionalOutputType = void> {
+    execute(input: IOType): HookReturnType<IOType, AdditionalOutputType>;
 }

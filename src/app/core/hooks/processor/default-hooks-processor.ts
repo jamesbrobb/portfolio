@@ -2,41 +2,51 @@ import {Observable, of} from 'rxjs';
 import {mergeMap} from 'rxjs/operators';
 
 import {Hook} from '../hook';
-import {HooksProcessor, HookBypassCondition} from './hooks-processor';
+import {HooksProcessor, HookBypassCondition, HooksProcessorReturnType} from './hooks-processor';
 
 
 
 export class DefaultHooksProcessor implements HooksProcessor {
 
 
-    public execute<I, O = I>(
-        input: I|Observable<I>,
-        hooks: Hook<I, I|O>[],
-        bypassCondition?: HookBypassCondition<I|O>
+    public execute<IOType, BypassType = void>(
 
-    ): Observable<any> {
+        input: IOType | Observable<IOType>,
+        hooks: Hook<IOType, BypassType>[],
+        bypassCondition?: HookBypassCondition<IOType | BypassType>
 
-        if (!(input instanceof Observable)) {
-            input = of(input);
-        }
+    ): HooksProcessorReturnType<IOType, BypassType> {
 
-        return hooks.reduce<Observable<I|O>>((observable: Observable<I|O>, hook: Hook<I, I|O>) => {
+        /*
+          if BypassType != void and no bypassCondition supplied throw error
+         */
 
-            return observable.pipe(mergeMap((inpt: I|O) => this._executeHook<I, O>(inpt, hook, bypassCondition)));
+        const initialValue: Observable<IOType> = input instanceof Observable ? input : of(input);
 
-        }, input) as Observable<any>;
+        return hooks.reduce(
+
+          (observable: Observable<IOType | BypassType>, hook: Hook<IOType, BypassType>) => {
+
+            return observable.pipe(
+              mergeMap(
+                (inpt: IOType | BypassType) => {
+                  return this._executeHook<IOType, BypassType>(inpt, hook, bypassCondition)
+                })
+            );
+
+          }, initialValue) as HooksProcessorReturnType<IOType, BypassType>;
     }
 
-    private _executeHook<I, O>(
-        input: I|O,
-        hook: Hook<I, I|O>,
-        bypassCondition?: HookBypassCondition<I|O>
+    private _executeHook<IOType, BypassType>(
+        input: IOType | BypassType,
+        hook: Hook<IOType, BypassType>,
+        bypassCondition?: HookBypassCondition<IOType | BypassType>
 
-    ): Observable<I|O> {
+    ): Observable<IOType | BypassType> {
 
-        let result: I|O|Observable<I|O>;
+        let result: IOType | BypassType |Observable<IOType | BypassType>;
 
-        if (this._shouldBypass<I, O>(input, bypassCondition)) {
+        if (this._shouldBypass<IOType, BypassType>(input, bypassCondition)) {
 
             return of(input);
         }
@@ -46,12 +56,14 @@ export class DefaultHooksProcessor implements HooksProcessor {
         return result instanceof Observable ? result : of(result);
     }
 
-    private _shouldBypass<I, O>(
-        input: I|O,
-        bypassCondition?: HookBypassCondition<I|O>
+    private _shouldBypass<IOType, BypassType>(
+        input: IOType | BypassType,
+        bypassCondition?: HookBypassCondition<IOType | BypassType>
 
-    ): input is O {
+    ): input is BypassType {
 
-        return bypassCondition && bypassCondition(input);
+        const shouldBypass: boolean | undefined = bypassCondition?.(input);
+
+        return !!shouldBypass;
     }
 }
