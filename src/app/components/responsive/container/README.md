@@ -19,7 +19,7 @@ Optional CSS variables (`--XS`, `--SM`, `--MD` etc) are added to the component s
   --XL: 1000px;
   --XXL: 1200px;
 
-  --responsive-example-background-color: red;
+  --responsive-example-background-color: #f06292;
 
   display: block;
   width: 100%;
@@ -28,27 +28,27 @@ Optional CSS variables (`--XS`, `--SM`, `--MD` etc) are added to the component s
 }
 
 .container.XS {
-  --responsive-example-background-color: yellow;
+  --responsive-example-background-color: #ec407a;
 }
 
 .container.SM {
-  --responsive-example-background-color: pink;
+  --responsive-example-background-color: #e91e63;
 }
 
 .container.MD {
-  --responsive-example-background-color: green;
+  --responsive-example-background-color: #d81b60;
 }
 
 .container.LG {
-  --responsive-example-background-color: orange;
+  --responsive-example-background-color: #c2185b;
 }
 
 .container.XL {
-  --responsive-example-background-color: purple;
+  --responsive-example-background-color: #ad1457;
 }
 
 .container.XXL {
-  --responsive-example-background-color: blue;
+  --responsive-example-background-color: #880e4f;
 }
 ```
 
