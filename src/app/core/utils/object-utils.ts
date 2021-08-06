@@ -2,7 +2,7 @@ import { StringUtils } from './string-utils';
 import * as deepMerge from 'deepmerge';
 import {Options} from "deepmerge";
 
-export const MISSING_OBJECT_PROP_ERROR = 'ObjectUtils:: There is no object \'%propertyName%\'. Failed at prop \'%prop%\'';
+export const MISSING_OBJECT_PROP_ERROR_MESSAGE = (propertyName: string, prop: string) => `ObjectUtils:: There is no property '${propertyName}'. Failed at key '${prop}'`;
 
 
 type VALID_JSON_TYPES = {[key: string]: VALID_JSON_TYPES} | Array<VALID_JSON_TYPES> | string | boolean | number | null;
@@ -41,18 +41,11 @@ export class ObjectUtils {
       trgt = trgt[prop];
 
       if (trgt === undefined) {
-        ObjectUtils.throwMissingPropertyError(propertyName, prop);
+        throw new Error(MISSING_OBJECT_PROP_ERROR_MESSAGE(propertyName, prop));
       }
     });
 
     return trgt;
-  }
-
-  private static throwMissingPropertyError(propertyName: string, prop: string): void {
-
-    const msg = StringUtils.replaceMultiple(MISSING_OBJECT_PROP_ERROR, ['%propertyName%', '%prop%'], [propertyName, prop]);
-
-    throw new Error(msg);
   }
 
   public static isPropertyChainDefined(obj: {[key:string]: any }, path: string): boolean {
@@ -64,5 +57,9 @@ export class ObjectUtils {
       obj[path];
 
     return !!res;
+  }
+
+  public static isEmpty(obj: {[key:string]: any }): boolean {
+      return !Object.keys(obj).length;
   }
 }

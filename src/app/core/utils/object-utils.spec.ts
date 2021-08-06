@@ -1,5 +1,4 @@
-import {MISSING_OBJECT_PROP_ERROR, ObjectUtils} from './object-utils';
-import {StringUtils} from './string-utils';
+import {MISSING_OBJECT_PROP_ERROR_MESSAGE, ObjectUtils} from './object-utils';
 
 
 describe('ObjectUtils', () => {
@@ -46,10 +45,10 @@ describe('ObjectUtils', () => {
                 targetPropTwo = 'bar.baz.two';
 
             expect(() => ObjectUtils.recursivelyFindProperty(targetPropOne, mock))
-                .toThrowError(StringUtils.replaceMultiple(MISSING_OBJECT_PROP_ERROR, ['%propertyName%', '%prop%'], [targetPropOne, 'baz']));
+                .toThrowError(MISSING_OBJECT_PROP_ERROR_MESSAGE(targetPropOne, 'baz'));
 
             expect(() => ObjectUtils.recursivelyFindProperty(targetPropTwo, mock))
-                .toThrowError(StringUtils.replaceMultiple(MISSING_OBJECT_PROP_ERROR, ['%propertyName%', '%prop%'], [targetPropTwo, 'two']));
+                .toThrowError(MISSING_OBJECT_PROP_ERROR_MESSAGE(targetPropTwo, 'two'));
         });
     });
 
@@ -82,5 +81,16 @@ describe('ObjectUtils', () => {
             });
         });
 
+    });
+
+    describe('.IsEmpty', () => {
+
+        it('should return true if the object has no properties', () => {
+            expect(ObjectUtils.isEmpty({})).toBe(true);
+        });
+
+        it('should return false if the object has properties', () => {
+            expect(ObjectUtils.isEmpty({test: 'test'})).toBe(false);
+        });
     });
 });

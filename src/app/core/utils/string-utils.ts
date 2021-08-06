@@ -11,8 +11,4 @@ export class StringUtils {
 
         return result;
     }
-
-    public static interpolate(): string {
-      return '';
-    }
 }
