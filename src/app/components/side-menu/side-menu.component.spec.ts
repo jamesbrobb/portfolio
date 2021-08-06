@@ -5,7 +5,7 @@ import { SideMenuComponent } from './side-menu.component';
 
 
 
-fdescribe('SideMenuComponent', () => {
+describe('SideMenuComponent', () => {
   let component: SideMenuComponent;
   let fixture: ComponentFixture<SideMenuComponent>;
 

@@ -15,7 +15,7 @@ export class AppContainerComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
 
   analytics: AnalyticsEvent = {
-    actionType:'test.for.me',
+    actionId:'test.for.me',
     propertyValueMap: {
       prop1: 'value1',
       prop2: 'value2'
