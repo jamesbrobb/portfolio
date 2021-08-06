@@ -1,19 +1,23 @@
 import Spy = jasmine.Spy;
-
+import createSpy = jasmine.createSpy;
 import {
-    GaAnalyticsAdaptor, HitTypes, GAPageOptions, GAEventOptions, GATimingOptions,
-    GASocialOptions
+  GaAnalyticsAdaptor,
+  GAPageOptions,
+  GATrackingTypes,
+  GTAG_UNDEFINED_WARNING,
+  NO_GOOGLE_ANALYTICS_CONFIG_WARNING,
+  UNKNOWN_HIT_TYPE_WARNING
 } from './ga-analytics-adaptor';
 import {GaAnalyticsConfig} from './ga-analytics-config';
+import {AnalyticsAction, AnalyticsPageAction, AnalyticsTrackingTypes} from "../../analytics-service";
 
 
 describe('GaAnalyticsAdaptor', () => {
 
-    var ga: any,
-        tracker: any,
+    var gtag: Spy,
         config: GaAnalyticsConfig,
         adaptor: GaAnalyticsAdaptor,
-        spy: Spy;
+        consoleSpy: Spy;
 
     beforeEach(() => {
 
@@ -23,113 +27,126 @@ describe('GaAnalyticsAdaptor', () => {
             cookieDomain: 'domain'
         };
 
-        tracker = {
-            send: () => {},
-            set: () => {}
-        };
+        gtag = createSpy('gtag');
 
-        ga = (arg: Function) => {arg()};
-        ga.create = () => tracker;
-        ga.send = () => {};
+        adaptor = new GaAnalyticsAdaptor(gtag, config);
 
-        adaptor = new GaAnalyticsAdaptor(ga, config);
-
-        spy = spyOn(tracker, 'send').and.callThrough();
+        consoleSpy = spyOn(console, 'warn').and.callThrough();
     });
 
-    describe('track', () => {
+    describe('.track()', () => {
 
-        it('should throw an error if no such hit type', () => {
+        it('should warn if the supplied gtag function is undefined', () => {
 
-            var type: string = 'noSuchHitType';
+            new GaAnalyticsAdaptor(undefined as any, config);
 
-            expect(() => adaptor.track({hitType: type}))
-                .toThrowError(`No hitType of type '${type}'`)
+            expect(consoleSpy).toHaveBeenCalledWith(GTAG_UNDEFINED_WARNING);
         });
 
-        it('should set and send a pageview', () => {
+        it('should warn if the supplied config is undefined', () => {
 
-            var args: GAPageOptions = {
-                    hitType: HitTypes[HitTypes.pageview],
-                    page: 'test/page'
-                },
-                setSpy = spyOn(tracker, 'set').and.callThrough();
+            new GaAnalyticsAdaptor(gtag, undefined as any);
 
-            adaptor.track(args);
-
-            expect(setSpy).toHaveBeenCalledWith('page', args.page);
-            expect(spy).toHaveBeenCalledWith(HitTypes[HitTypes.pageview], {page: args.page});
+            expect(consoleSpy).toHaveBeenCalledWith(NO_GOOGLE_ANALYTICS_CONFIG_WARNING);
         });
 
-        it('should send but not set a pageview', () => {
+        it('should configure gtag', () => {
 
-            var args: GAPageOptions = {
-                    hitType: HitTypes[HitTypes.pageview],
-                    page: 'test/page',
-                    nonPersistant: true
-                },
-                setSpy = spyOn(tracker, 'set').and.callThrough();
+            expect(gtag).toHaveBeenCalledWith(GATrackingTypes.config, config.trackerId, jasmine.any(Object))
+        })
 
-            adaptor.track(args);
+        it('should warn if the supplied trackType does not exist', () => {
 
-            expect(setSpy).not.toHaveBeenCalled();
-            expect(spy).toHaveBeenCalledWith(HitTypes[HitTypes.pageview], {page: args.page});
+            let type: string = 'noSuchHitType';
+
+            adaptor.track({type: 'test', trackType: type})
+
+            expect(consoleSpy).toHaveBeenCalledWith(UNKNOWN_HIT_TYPE_WARNING(type));
+        });
+
+        it('should set and send a persistant pageview', () => {
+
+            var action: AnalyticsAction = {
+                type: 'test',
+                trackType: AnalyticsTrackingTypes.page,
+                properties: {
+                    page_path: 'test/page',
+                    page_title: 'page title',
+                    page_location: 'page_location'
+                }
+            },
+            page_view: GAPageOptions = {
+                ...action.properties,
+                send_to: config.trackerId
+            } as GAPageOptions,
+            set_page_view = {
+                ...action.properties
+            };
+
+            adaptor.track(action);
+
+            expect(gtag).toHaveBeenCalledWith(GATrackingTypes.set, set_page_view);
+            expect(gtag).toHaveBeenCalledWith(GATrackingTypes.event, GATrackingTypes.page_view, page_view);
+        });
+
+        it('should send but not set a non-persistant pageview', () => {
+
+            var action: AnalyticsPageAction = {
+                type: 'test',
+                trackType: AnalyticsTrackingTypes.page,
+                doNotPersist: true,
+                properties: {
+                    page_path: 'test/page',
+                    page_title: 'page title',
+                    page_location: 'page_location'
+                }
+            },
+            page_view: GAPageOptions = {
+                ...action.properties,
+                send_to: config.trackerId
+            } as GAPageOptions,
+            set_page_view = {
+                ...action.properties
+            };
+
+            adaptor.track(action);
+
+            expect(gtag).not.toHaveBeenCalledWith(GATrackingTypes.set, set_page_view);
+            expect(gtag).toHaveBeenCalledWith(GATrackingTypes.event, GATrackingTypes.page_view, page_view);
         });
 
         it('should send an event', () => {
 
-            var args: GAEventOptions = {
-                hitType: HitTypes[HitTypes.event],
-                category: 'category',
-                action: 'action',
-                label: 'label',
-                value: 1
+            var action: AnalyticsAction = {
+                type: 'id',
+                trackType: AnalyticsTrackingTypes.event,
+                properties: {
+                    event_category: 'category',
+                    event_label: 'label',
+                    value: 1
+                }
             };
 
-            adaptor.track(args);
+            adaptor.track(action);
 
-            expect(spy).toHaveBeenCalledWith(HitTypes[HitTypes.event], {
-                eventCategory: args.category,
-                eventAction: args.action,
-                eventLabel: args.label,
-                eventValue: args.value
-            });
+            expect(gtag).toHaveBeenCalledWith(GATrackingTypes.event, action.type, action.properties);
         });
 
         it('should send a timing', () => {
 
-            var args: GATimingOptions = {
-                hitType: HitTypes[HitTypes.timing],
-                category: 'category',
-                varName: 'varName',
-                value: 1000
+            const action: AnalyticsAction = {
+                type: 'id',
+                trackType: AnalyticsTrackingTypes.timing,
+                properties: {
+                    event_category: 'event_category',
+                    name: 'name',
+                    value: 1000
+                }
             };
 
-            adaptor.track(args);
+            adaptor.track(action);
 
-            expect(spy).toHaveBeenCalledWith(HitTypes[HitTypes.timing], {
-                timingCategory: args.category,
-                timingVar: args.varName,
-                timingValue: args.value
-            });
-        });
-
-        it('should send a social', () => {
-
-            var args: GASocialOptions = {
-                hitType: HitTypes[HitTypes.social],
-                network: 'network',
-                action: 'action',
-                target: 'target'
-            };
-
-            adaptor.track(args);
-
-            expect(spy).toHaveBeenCalledWith(HitTypes[HitTypes.social], {
-                socialNetwork: args.network,
-                socialAction: args.action,
-                socialTarget: args.target
-            });
+            expect(gtag).toHaveBeenCalledWith(GATrackingTypes.timing_complete, action.properties);
         });
     })
 });

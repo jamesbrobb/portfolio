@@ -3,6 +3,11 @@ import {AnalyticsAction, AnalyticsPageAction, AnalyticsTrackingTypes} from "../.
 import {GaAnalyticsConfig} from './ga-analytics-config';
 
 
+export const GTAG_UNDEFINED_WARNING = 'the supplied gtag function is undefined';
+export const NO_GOOGLE_ANALYTICS_CONFIG_WARNING = 'No google analytics config object supplied';
+export const UNKNOWN_HIT_TYPE_WARNING = (trackType: string) => `No hitType of type '${trackType}'`
+
+
 export enum GATrackingTypes {
     config = 'config',
     set = 'set',
@@ -41,12 +46,12 @@ export class GaAnalyticsAdaptor implements AnalyticsAdaptor {
     constructor(gtag: Function, config: GaAnalyticsConfig) {
 
       if(!gtag) {
-        console.warn('No gtag object found on window');
+        console.warn(GTAG_UNDEFINED_WARNING);
         return;
       }
 
       if(!config) {
-        console.warn('No google analytics config object supplied');
+        console.warn(NO_GOOGLE_ANALYTICS_CONFIG_WARNING);
         return;
       }
 
@@ -81,7 +86,7 @@ export class GaAnalyticsAdaptor implements AnalyticsAdaptor {
                 return;
         }
 
-        throw new Error(`No hitType of type '${action.trackType}'`);
+        console.warn(UNKNOWN_HIT_TYPE_WARNING(action.trackType));
     }
 
     private _initialiseTracker(): void {
@@ -120,7 +125,7 @@ export class GaAnalyticsAdaptor implements AnalyticsAdaptor {
             send_to: this._config.trackerId
         };
 
-        if(!action.impersistent) {
+        if(!action.doNotPersist) {
             this._send(GATrackingTypes.set, {
               page_title: fields.page_title,
               page_path:fields.page_path,
@@ -159,7 +164,7 @@ export class GaAnalyticsAdaptor implements AnalyticsAdaptor {
         }
 
         var fields: GATimingOptions = {
-            event_category: action.properties.category as string,
+            event_category: action.properties.event_category as string,
             name: action.properties.name as string,
             value: action.properties.value as number
         };

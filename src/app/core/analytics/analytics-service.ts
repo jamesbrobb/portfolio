@@ -3,31 +3,37 @@ import {AnalyticsHook} from './analytics-hook';
 import {ObjectUtils} from "../utils";
 
 
+type PropertyValueMapType = {[propertyKey: string]: unknown};
+
+
+export const INTERPOLATABLE_PROP_VALUES_BUT_EMPTY_PROP_MAP_ERROR = 'There are interpolatable property values expected but no property value map was supplied';
+
+
 export enum AnalyticsTrackingTypes {
-  page = 'page',
-  event = 'event',
-  timing = 'timing'
+    page = 'page',
+    event = 'event',
+    timing = 'timing'
 }
 
 
 export type AnalyticsAction = {
-  type: string;
-  trackType: AnalyticsTrackingTypes | string;
-  disabled?: boolean;
-  properties?: {[key: string]: unknown}
+    type: string;
+    trackType: AnalyticsTrackingTypes | string;
+    disabled?: boolean;
+    properties?: {[key: string]: unknown}
 }
 
 export type AnalyticsPageAction = AnalyticsAction & {
-  impersistent?: boolean;
+    doNotPersist?: boolean;
 }
 
 export type AnalyticsActions = {
-  [key: string]: AnalyticsAction | AnalyticsPageAction | AnalyticsActions;
+    [key: string]: AnalyticsAction | AnalyticsPageAction | AnalyticsActions;
 }
 
 export type AnalyticsEvent = {
-  actionType: string,
-  propertyValueMap?: {[propertyKey: string]: unknown};
+    actionId: string,
+    propertyValueMap?: PropertyValueMapType;
 }
 
 
@@ -37,6 +43,8 @@ export class AnalyticsService {
     private readonly _adaptor: AnalyticsAdaptor;
 
     private _preHooks: AnalyticsHook[] | undefined;
+
+    private readonly _matcher: RegExp = /{%\s*([\w.]+)\s*%}/g;
 
 
     constructor(actions: AnalyticsActions, adaptor: AnalyticsAdaptor, hooks?: AnalyticsHook[]) {
@@ -64,13 +72,13 @@ export class AnalyticsService {
 
         try {
 
-            let action: AnalyticsAction = ObjectUtils.recursivelyFindProperty(analyticsEvent.actionType, this._actions) as AnalyticsAction;
+            let action: AnalyticsAction = ObjectUtils.recursivelyFindProperty(analyticsEvent.actionId, this._actions) as AnalyticsAction;
 
             action = this._interpolateValues(action, analyticsEvent.propertyValueMap);
             action = this._processHooks(action);
 
             if(action.disabled) {
-                console.log('Analytics action is disabled', action);
+                console.warn(`Analytics action ${action.type} is disabled`, action);
                 return;
             }
 
@@ -78,37 +86,48 @@ export class AnalyticsService {
 
         } catch (e) {
 
-            console.warn(e);
+            console.warn(e.message);
         }
     }
 
+    private _interpolateValues(action: AnalyticsAction, propertyValueMap?: PropertyValueMapType): AnalyticsAction {
 
-    private _interpolateValues(action: AnalyticsAction, properyValueMap?: {[propertyKey: string]: unknown}): AnalyticsAction {
+        const actionAsString = JSON.stringify(action),
+            hasInterpolatableValues = this._hasInterpolatablePropertyValues(actionAsString),
+            hasEmptyPropertyMap = this._propertyValueMapIsEmpty(propertyValueMap);
 
-        if(!action.properties && properyValueMap) {
-          // prop map but no properties supplied
+        if(hasInterpolatableValues && hasEmptyPropertyMap) {
+            throw new Error(INTERPOLATABLE_PROP_VALUES_BUT_EMPTY_PROP_MAP_ERROR);
         }
 
-        if(action.properties && !properyValueMap) {
-          // property values expected but no properyValueMap supplied
+        if(hasEmptyPropertyMap) {
+            return action;
         }
 
-        if(!properyValueMap) {
-          return action;
-        }
+        const interpolatedString = this._matchAndReplaceValues(actionAsString, propertyValueMap as PropertyValueMapType);
 
-        let s: string = JSON.stringify(action);
+        return JSON.parse(interpolatedString);
+    }
 
-        s = s.replace(/{%\s*([\w.]+)\s*%}/g, (match: string, innerGroupMatch: string): string => {
+    private _hasInterpolatablePropertyValues(actionAsString: string): boolean {
+        this._matcher.lastIndex = 0;
+        return this._matcher.test(actionAsString);
+    }
 
-          if(!properyValueMap[innerGroupMatch]) {
-            throw new Error(`no value supplied for property '${innerGroupMatch}'`);
-          }
+    private _propertyValueMapIsEmpty(propertyValueMap: PropertyValueMapType | undefined): boolean {
+        return !propertyValueMap || ObjectUtils.isEmpty(propertyValueMap);
+    }
 
-          return ObjectUtils.recursivelyFindProperty(innerGroupMatch, properyValueMap) as string;
-        });
+    private _matchAndReplaceValues(actionAsString: string, propertyValueMap: PropertyValueMapType): string {
 
-        return JSON.parse(s);
+        this._matcher.lastIndex = 0;
+
+        return actionAsString.replace(
+            this._matcher,
+            (match: string, innerGroupMatch: string): string => {
+                return ObjectUtils.recursivelyFindProperty(innerGroupMatch, propertyValueMap) as string;
+            }
+        );
     }
 
     private _processHooks(action: AnalyticsAction): AnalyticsAction {
@@ -118,8 +137,7 @@ export class AnalyticsService {
         }
 
         this._preHooks.forEach((hook: AnalyticsHook) => {
-
-          action = hook.execute(this._actions, action, this._adaptor);
+            action = hook.execute(this._actions, action, this._adaptor);
         });
 
         return action;
