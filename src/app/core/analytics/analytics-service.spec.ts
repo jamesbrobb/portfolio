@@ -3,17 +3,20 @@ import Spy = jasmine.Spy;
 import {
   AnalyticsService,
   AnalyticsActions,
+  AnalyticsAction,
+  AnalyticsEvent,
   INTERPOLATABLE_PROP_VALUES_BUT_EMPTY_PROP_MAP_ERROR
 } from './analytics-service';
 
 import {AnalyticsAdaptor} from './analytics-adaptor';
 import {ObjectUtils} from "../utils";
 import {MISSING_OBJECT_PROP_ERROR_MESSAGE} from "../utils/object-utils";
+import {AnalyticsHook} from "./analytics-hook";
 
 
 describe('AnalyticsService', () => {
 
-    var service: AnalyticsService,
+    let service: AnalyticsService,
         adaptor: AnalyticsAdaptor,
         actions: AnalyticsActions,
         spy: Spy;
@@ -114,7 +117,7 @@ describe('AnalyticsService', () => {
             };
 
             service.track({
-              actionId: 'another.thing.to.track',
+                actionId: 'another.thing.to.track',
                 propertyValueMap: {
                     obj: obj
                 }
@@ -124,6 +127,31 @@ describe('AnalyticsService', () => {
             actn.properties.label = obj.value;
 
             expect(spy).toHaveBeenCalledWith(actn);
+        });
+
+        it('should execute any supplied prehooks', () => {
+
+            const event: AnalyticsEvent = {
+              actionId: 'another.thing.to.track',
+              propertyValueMap: {
+                obj: {
+                    value: 'test'
+                }
+              }
+            }
+
+            const hook: AnalyticsHook = {
+                execute(actions: AnalyticsActions, action: AnalyticsAction, adaptor: AnalyticsAdaptor): AnalyticsAction {
+                    return action;
+                }
+            }
+
+            const hookSpy: Spy = spyOn(hook, 'execute').and.callThrough();
+
+            service.addHook(hook);
+            service.track(event);
+
+            expect(hookSpy).toHaveBeenCalled();
         });
     });
 });
