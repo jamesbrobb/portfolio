@@ -12,7 +12,7 @@ class TypeA {
 }
 
 class TypeB {
-    status: number;
+    status: number | undefined;
 }
 
 
@@ -71,7 +71,7 @@ describe('DefaultHooksProcessor', () => {
         input = new TypeA();
     });
 
-    describe('execute', () => {
+    describe('.execute()', () => {
 
         it('should sequentially process the supplied hooks and return the updated input', (done: Function) => {
 
@@ -95,18 +95,18 @@ describe('DefaultHooksProcessor', () => {
 
         it('should ignore any subsequent hooks when supplied with a bypass condition that fails', (done: Function) => {
 
-            const bypassCondition: HookBypassCondition<TypeA|TypeB> = (inpt: TypeA|TypeB) => {
+            const bypassCondition: HookBypassCondition<TypeA, TypeB> = (inpt: TypeA|TypeB): inpt is TypeB => {
                 return inpt instanceof TypeB;
             };
 
-            const bypassTestHooks: Hook<TypeA, TypeA | TypeB>[] = hooks;
+            const bypassTestHooks: (Hook<TypeA> | Hook<TypeA, TypeB>)[] = [...hooks];
 
             bypassTestHooks.splice(3, 0, new BypassConditionTriggerHook());
 
-            const spy: Spy = spyOn(hooks[4], 'execute').and.callThrough();
+            const spy: Spy = spyOn(bypassTestHooks[4], 'execute').and.callThrough();
 
-            processor.execute<TypeA, TypeA | TypeB>(input, bypassTestHooks, bypassCondition)
-                .subscribe((output: TypeB) => {
+            processor.execute<TypeA, TypeB>(input, bypassTestHooks, bypassCondition)
+                .subscribe((output: TypeA | TypeB) => {
                     expect(output).toEqual(jasmine.any(TypeB));
                     expect(input.value).toBe(30);
                     expect(spy.calls.any()).toBe(false);
