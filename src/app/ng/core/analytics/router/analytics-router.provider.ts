@@ -29,7 +29,7 @@ export function analyticsRouterListenerFactory(
         const rEvt: RouterEvent = event as RouterEvent;
 
         analyticsService.track({
-          actionType: AnalyticsTrackingTypes.page,
+          actionId: AnalyticsTrackingTypes.page,
           propertyValueMap: {
             title: document.title,
             path: rEvt.url,
