@@ -2,10 +2,12 @@ import {Observable, of} from 'rxjs';
 import {mergeMap} from 'rxjs/operators';
 
 import {Hook} from '../hook';
+
 import {
   HooksProcessor,
-  HookBypassCondition,
   HooksProcessorReturnType,
+  HooksProcessorHooksArgType,
+  HooksProcessorBypassConditionArgType
 } from './hooks-processor';
 
 
@@ -16,8 +18,8 @@ export class DefaultHooksProcessor implements HooksProcessor {
     public execute<IOType, BypassType = void>(
 
         input: IOType | Observable<IOType>,
-        hooks: (Hook<IOType> | Hook<IOType, BypassType>)[],
-        ...args: BypassType extends void ? [] : [bypassCondition?: HookBypassCondition<IOType, BypassType>]
+        hooks: HooksProcessorHooksArgType<IOType, BypassType>,
+        ...args: HooksProcessorBypassConditionArgType<IOType, BypassType>
 
     ): HooksProcessorReturnType<IOType, BypassType> {
 
