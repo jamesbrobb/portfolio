@@ -1,5 +1,5 @@
 :host {
-  --responsive-example-background-color: red;
+  --responsive-example-background-color: #f06292;
   display: block;
   width:100%;
 
@@ -18,27 +18,27 @@
     background-color: var(--responsive-example-background-color);
 
     &.XS {
-      --responsive-example-background-color: yellow;
+      --responsive-example-background-color: #ec407a;
     }
 
     &.SM {
-      --responsive-example-background-color: pink;
+      --responsive-example-background-color: #e91e63;
     }
 
     &.MD {
-      --responsive-example-background-color: green;
+      --responsive-example-background-color: #d81b60;
     }
 
     &.LG {
-      --responsive-example-background-color: orange;
+      --responsive-example-background-color: #c2185b;
     }
 
     &.XL {
-      --responsive-example-background-color: purple;
+      --responsive-example-background-color: #ad1457;
     }
 
     &.XXL {
-      --responsive-example-background-color: blue;
+      --responsive-example-background-color: #880e4f;
     }
   }
 }

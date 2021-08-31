@@ -8,9 +8,9 @@ Breakpoint values are calculated from the supplied `$min-column-width` and `$gap
 ## Usage
 
 ```sass
-  @include responsive-flex-grid($grid_class_name, $min-column-width, $gap);
+  @include responsive-flex-grid($grid_class_name, $min-column-width, $gap)
 
-  @include flex-grid($grid_class_name, $grid_item_class_name, $min-column-width, $gap, $gap);
+  @include flex-grid($grid_class_name, $grid_item_class_name, $min-column-width, $gap, $gap)
 ```
 
 ```html

@@ -34,6 +34,12 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
   children: [{
     name: 'Analytics',
     path: 'core/analytics'
+  }, {
+    name: 'Hooks',
+    path: 'core/hooks'
+  }, {
+    name: 'Http',
+    path: 'core/http'
   }]
 }];
 

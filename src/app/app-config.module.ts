@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {AnalyticsActionsService, AnalyticsHooksService} from './ng/core';
+import {AnalyticsActionsService} from './ng/core';
 
 
 

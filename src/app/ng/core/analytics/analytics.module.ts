@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import {
   AnalyticsActions,
   AnalyticsService,
-  AnalyticsAdaptor, AnalyticsHook
+  AnalyticsAdaptor,
+  AnalyticsHook
 } from "../../../core";
 import {AnalyticsEventDirective} from "./components/analytics-event.directive";
 
@@ -11,7 +12,17 @@ import {AnalyticsEventDirective} from "./components/analytics-event.directive";
 
 export const AnalyticsActionsService = new InjectionToken<AnalyticsActions>('AnalyticsActionsService');
 export const AnalyticsAdaptorService = new InjectionToken<AnalyticsAdaptor>('AnalyticsAdaptorService');
-export const AnalyticsHooksService = new InjectionToken<AnalyticsHook[]>('AnalyticsHooksService')
+
+/*
+  usage
+
+  {
+    provide: AnalyticsHooksService,
+    useValue:[...some analytics hooks],
+    multi: true
+  }
+ */
+export const AnalyticsHooksService = new InjectionToken<AnalyticsHook[]>('AnalyticsHooksService');
 
 
 export function analyticsServiceFactory(
