@@ -1,5 +1,4 @@
-import { Map } from '../../../../collection/index';
-import { ObjectUtils } from '../../../../utils/index';
+import { ObjectUtils } from '../../../../utils/';
 
 import { HttpEndpointMethod } from '../../method/http-endpoint-method';
 import { HttpEndpointMethodConfig } from '../../method/config/http-endpoint-method-config';
@@ -12,17 +11,15 @@ import { HttpSearchParams, HttpEndpointConfig } from '../http-endpoint-config';
 
 export class HttpEndpointConfigParser {
 
-    public parse(config: HttpEndpointConfig): Map < string, HttpEndpointMethod > {
+    public parse(config: HttpEndpointConfig): Map <string, HttpEndpointMethod> {
 
         const methodMap: Map<string, HttpEndpointMethod> = new Map<string, HttpEndpointMethod>(),
-            methods: {
-                [methodId: string]: HttpEndpointMethodConfig
-            } = config.methods;
+            methods: {[methodId: string]: HttpEndpointMethodConfig} = config.methods;
 
         Object.keys(methods)
-        .map((key: string) => {
-            methodMap.set(key, this._createMethod(config, methods[key]));
-        });
+          .map((key: string) => {
+              methodMap.set(key, this._createMethod(config, methods[key]));
+          });
 
         return methodMap;
     }
@@ -38,9 +35,9 @@ export class HttpEndpointConfigParser {
             timeout: !!methodConfig.timeout ? methodConfig.timeout : config.timeout,
             cache: methodConfig.cache !== undefined ? methodConfig.cache : config.cache,
             headers: this._createHeaders(config.headers, methodConfig.headers),
-            requestHooks: [].concat(config.requestHooks || []).concat(methodConfig.requestHooks || []),
-            responseHooks: [].concat(config.responseHooks || []).concat(methodConfig.responseHooks || []),
-            errorHooks: [].concat(config.errorHooks || []).concat(methodConfig.errorHooks || [])
+            requestHooks: ([] as string[]).concat(config.requestHooks || []).concat(methodConfig.requestHooks || []),
+            responseHooks: ([] as string[]).concat(config.responseHooks || []).concat(methodConfig.responseHooks || []),
+            errorHooks: ([] as string[]).concat(config.errorHooks || []).concat(methodConfig.errorHooks || [])
         };
 
         return new HttpEndpointMethod(signature);
@@ -53,16 +50,16 @@ export class HttpEndpointConfigParser {
         return baseUrl + (methodConfig.url || '');
     }
 
-    private _resolveSearch(config: HttpSearchParams, method: HttpSearchParams): HttpSearchParams {
+    private _resolveSearch(config: HttpSearchParams | undefined, method: HttpSearchParams | undefined): HttpSearchParams {
 
         const search: HttpSearchParams = {};
 
         if (config) {
-            ObjectUtils.merge(search, config);
+            ObjectUtils.simpleMerge(search, config);
         }
 
         if (method) {
-            ObjectUtils.merge(search, method);
+            ObjectUtils.simpleMerge(search, method);
         }
 
         return search;

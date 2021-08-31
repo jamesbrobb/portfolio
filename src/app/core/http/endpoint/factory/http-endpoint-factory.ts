@@ -1,5 +1,4 @@
-import { Map } from '../../../collection/index';
-import { DefaultHooksProcessor, HooksProcessor } from '../../../hooks/index';
+import { DefaultHooksProcessor, HooksProcessor } from '../../../hooks';
 
 import { DefaultUrlInterpolator } from '../../utils/url/default-url-interpolator';
 import { HttpAdaptor } from '../../adaptor/http-adaptor';
@@ -33,12 +32,12 @@ export interface HttpEndpointFactoryParams {
 
 export class HttpEndpointFactory {
 
-    private _config: HttpEndpointsConfig;
+    private _config: HttpEndpointsConfig | undefined;
     private _adaptor: HttpAdaptor;
     private _interpolator: UrlInterpolator;
     private _parser: HttpEndpointConfigParser;
     private _hookProcessor: HooksProcessor;
-    private _hooks: HttpEndpointFactoryHooksMap;
+    private _hooks: HttpEndpointFactoryHooksMap | undefined;
 
 
     constructor(params: HttpEndpointFactoryParams) {

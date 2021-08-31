@@ -1,5 +1,3 @@
-import {Map} from '../../collection/index';
-
 
 export interface HttpHeadersConfig {
     [type: string]: string;
@@ -22,7 +20,7 @@ export class HttpHeaders {
         this.fromObject(config);
     }
 
-    public set(name: string, value): void {
+    public set(name: string, value: string): void {
 
         if (!value) {
             this._map.delete(name);
@@ -32,7 +30,7 @@ export class HttpHeaders {
         this._map.set(name, value);
     }
 
-    public get(name: string): string {
+    public get(name: string): string | undefined {
         return this._map.get(name);
     }
 

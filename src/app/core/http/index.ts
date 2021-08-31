@@ -18,4 +18,3 @@ export { HttpResponse } from './response/http-response';
 
 export {HttpHeaders} from './headers/http-headers';
 export * from './http.mock';
-export * from './endpoint/repository/http-endpoints-repository';

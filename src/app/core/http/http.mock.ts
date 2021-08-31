@@ -8,6 +8,7 @@ import { HttpError } from './error/http-error';
 import { HttpResponse } from './response/http-response';
 import { HttpRequest } from './request/http-request';
 import { HttpEndpointConfig } from './endpoint/config/http-endpoint-config';
+import {isHttpError} from "./utils/http-type-guards";
 
 export const mockHttpConfig: HttpEndpointConfig = {
 
@@ -55,7 +56,7 @@ export const mockHttpConfig: HttpEndpointConfig = {
 
 export class MockRequestHook implements HttpRequestHook {
 
-    private _response: HttpResponse | HttpError;
+    private _response: HttpResponse | HttpError | undefined;
 
     constructor(response?: HttpResponse | HttpError) {
         this._response = response;
@@ -122,7 +123,7 @@ export class MockHttpAdaptor implements HttpAdaptor {
 
         this._response.request = request;
 
-        if (this._isError(this._response)) {
+        if (isHttpError(this._response)) {
 
             return throwError(this._response);
 
@@ -130,9 +131,5 @@ export class MockHttpAdaptor implements HttpAdaptor {
 
             return of(this._response);
         }
-    }
-
-    private _isError(arg: HttpResponse | HttpError): arg is HttpError {
-        return arg.status >= 400;
     }
 }

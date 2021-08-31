@@ -5,11 +5,10 @@
 import Spy = jasmine.Spy;
 import {of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {Map} from '../../collection/index';
 
 import {MockErrorHook, MockHttpAdaptor, mockHttpConfig, MockRequestHook, MockResponseHook} from '../http.mock';
 
-import {DefaultHooksProcessor, HooksProcessor} from '../../hooks/index';
+import {DefaultHooksProcessor, HooksProcessor} from '../../hooks';
 
 import { DefaultUrlInterpolator } from '../utils/url/default-url-interpolator';
 import { HttpAdaptor } from '../adaptor/http-adaptor';
@@ -81,8 +80,8 @@ describe('HttpEndpoint', () => {
 
     function setUp(
         response: HttpResponse | HttpError,
-        requestHookResponse ?: HttpResponse | HttpError,
-        responseHookError ?: HttpError
+        requestHookResponse?: HttpResponse | HttpError,
+        responseHookError?: HttpError
     ) {
         createHookMaps();
         populateMapsWithConcreteHooks(requestHookResponse, responseHookError);
@@ -98,7 +97,10 @@ describe('HttpEndpoint', () => {
             statusText: 'status text',
             data: {},
             headers: new HttpHeaders(),
-            request: null
+            request: {
+                method: 'GET',
+                url: ''
+            }
         };
 
         mockError = {
@@ -106,7 +108,10 @@ describe('HttpEndpoint', () => {
             statusText: 'status text',
             data: {},
             headers: new HttpHeaders(),
-            request: null
+            request: {
+                method: 'GET',
+                url: ''
+            }
         };
     });
 
@@ -134,7 +139,7 @@ describe('HttpEndpoint', () => {
                 .subscribe((response: HttpResponse) => {
 
                     const request: HttpRequest = response.request,
-                        headers: HttpHeaders = request.headers;
+                        headers: HttpHeaders | undefined = request.headers;
 
                     expect(request.search).toEqual({
                         field1: 'field1',
@@ -147,8 +152,8 @@ describe('HttpEndpoint', () => {
                     expect(request.cache).toEqual(true);
                     expect(request.timeout).toBeUndefined();
 
-                    expect(headers.get('Accept')).toEqual('application/json');
-                    expect(headers.get('Cache-control')).toEqual('no-cache');
+                    expect(headers?.get('Accept')).toEqual('application/json');
+                    expect(headers?.get('Cache-control')).toEqual('no-cache');
 
                     done();
                 });
@@ -179,7 +184,7 @@ describe('HttpEndpoint', () => {
                 .subscribe((response: HttpResponse) => {
 
                     const request: HttpRequest = response.request,
-                        headers: HttpHeaders = request.headers;
+                        headers: HttpHeaders | undefined = request.headers;
 
                     expect(request.search).toEqual({
                         field1: 'field1',
@@ -194,8 +199,8 @@ describe('HttpEndpoint', () => {
                     expect(request.cache).toEqual(false);
                     expect(request.timeout).toEqual(1000);
 
-                    expect(headers.get('Accept')).toEqual('application/json');
-                    expect(headers.get('Cache-control')).toEqual('max-age=0');
+                    expect(headers?.get('Accept')).toEqual('application/json');
+                    expect(headers?.get('Cache-control')).toEqual('max-age=0');
 
                     done();
                 });
@@ -205,7 +210,7 @@ describe('HttpEndpoint', () => {
     describe('request hook phase', () => {
 
         let methodId: string,
-            method: HttpEndpointMethod,
+            method: HttpEndpointMethod | undefined,
             hookSpys: Spy[],
             adaptorSpy: Spy,
             interpolatorSpy: Spy;
@@ -215,8 +220,12 @@ describe('HttpEndpoint', () => {
             methodId = 'create';
             method = methods.get(methodId);
 
+            if(!method) {
+                return;
+            }
+
             hookSpys = method.requestHooks
-                .map((key: string) => hooks.get(key))
+                .map((key: string) => hooks.get(key) as HttpRequestHook)
                 .map((hook: HttpRequestHook) => spyOn<any>(hook, 'execute').and.callThrough());
         }
 
@@ -285,7 +294,10 @@ describe('HttpEndpoint', () => {
                 statusText: 'interupt response',
                 data: {},
                 headers: new HttpHeaders(),
-                request: null
+                request: {
+                    method: 'GET',
+                    url: ''
+                }
             };
 
             setUp(mockResponse, interuptResponse);
@@ -339,7 +351,7 @@ describe('HttpEndpoint', () => {
     describe('response hooks phase', () => {
 
         let methodId: string,
-            method: HttpEndpointMethod,
+            method: HttpEndpointMethod | undefined,
             hookSpys: Spy[];
 
         function setUpHookSpys() {
@@ -347,8 +359,12 @@ describe('HttpEndpoint', () => {
             methodId = 'create';
             method = methods.get(methodId);
 
+            if(!method) {
+                return;
+            }
+
             hookSpys = method.responseHooks
-                .map((key: string) => hooks.get(key))
+                .map((key: string) => hooks.get(key) as HttpResponseHook)
                 .map((hook: HttpResponseHook) => spyOn<any>(hook, 'execute').and.callThrough());
         }
 
@@ -370,7 +386,7 @@ describe('HttpEndpoint', () => {
 
         it('bypasses any remaining hooks if an HttpError is returned during the phase', (done: Function) => {
 
-            setUp(mockResponse, null, mockError);
+            setUp(mockResponse, undefined, mockError);
             setUpHookSpys();
 
             endpoint.request(methodId)
@@ -416,7 +432,7 @@ describe('HttpEndpoint', () => {
     describe('error hook phase', () => {
 
         let methodId: string,
-            method: HttpEndpointMethod,
+            method: HttpEndpointMethod | undefined,
             hookSpys: Spy[];
 
         function setUpHookSpys() {
@@ -424,8 +440,12 @@ describe('HttpEndpoint', () => {
             methodId = 'create';
             method = methods.get(methodId);
 
+            if(!method) {
+              return;
+            }
+
             hookSpys = method.errorHooks
-                .map((key: string) => hooks.get(key))
+                .map((key: string) => hooks.get(key) as HttpErrorHook)
                 .map((hook: HttpErrorHook) => spyOn<any>(hook, 'execute').and.callThrough());
         }
 
@@ -450,7 +470,7 @@ describe('HttpEndpoint', () => {
 
         it('processes the error hooks when an error occurs in the response phase', (done: Function) => {
 
-            setUp(mockResponse, null, mockError);
+            setUp(mockResponse, undefined, mockError);
             setUpHookSpys();
 
             endpoint.request(methodId)
@@ -470,6 +490,7 @@ describe('HttpEndpoint', () => {
         it('forward the error to any subscribers - ensure the internally caught error is re-thrown', (done: Function) => {
 
             setUp(mockError);
+            setUpHookSpys();
 
             endpoint.request(methodId)
                 .subscribe(

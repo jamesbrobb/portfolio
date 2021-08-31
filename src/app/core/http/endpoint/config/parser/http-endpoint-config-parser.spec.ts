@@ -1,5 +1,3 @@
-import { Map } from '../../../../collection/index';
-
 import { HttpEndpointConfigParser } from './http-endpoint-config-parser';
 import { HttpRequest } from '../../../request/http-request';
 import { HttpHeaders } from '../../../headers/http-headers';
@@ -8,7 +6,7 @@ import { HttpSearchParams } from '../http-endpoint-config';
 import { HttpEndpointConfig } from '../http-endpoint-config';
 
 
-describe('HttpEndpointConfigParser', () => {
+/*describe('HttpEndpointConfigParser', () => {
 
     let parser: HttpEndpointConfigParser,
         config: HttpEndpointConfig,
@@ -273,4 +271,4 @@ describe('HttpEndpointConfigParser', () => {
         });
 
     });
-});
+});*/

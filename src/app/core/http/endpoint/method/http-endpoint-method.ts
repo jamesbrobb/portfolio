@@ -3,7 +3,7 @@ import { HttpRequest } from '../../request/http-request';
 import { HttpRequestOptions } from '../../request/http-request-options';
 import { HttpSearchParams } from '../config/http-endpoint-config';
 
-import { ObjectUtils } from '../../../utils/index';
+import { ObjectUtils } from '../../../utils';
 
 
 
@@ -25,11 +25,11 @@ export class HttpEndpointMethod {
 
     private _type: string;
     private _url: string;
-    private _search: HttpSearchParams;
+    private _search: HttpSearchParams | undefined;
     private _headers: HttpHeaders;
     private _withCredentials: boolean;
     private _cache: boolean;
-    private _timeout: number;
+    private _timeout: number | undefined;
 
     private _requestHooks: string[];
     private _responseHooks: string[];
@@ -65,10 +65,10 @@ export class HttpEndpointMethod {
     public toRequest(params?: { [key: string]: any }, options?: HttpRequestOptions): HttpRequest {
 
         let request: HttpRequest,
-            search: HttpSearchParams;
+            search: HttpSearchParams | undefined;
 
         const headers: HttpHeaders = this._headers.clone(),
-            timeout: number = options && !isNaN(options.timeout) ? options.timeout : this._timeout;
+            timeout: number | undefined = !isNaN(options?.timeout || NaN) ? options?.timeout : this._timeout;
 
         if (options && options.headers) {
             headers.merge(options.headers);
@@ -94,7 +94,7 @@ export class HttpEndpointMethod {
 
             search = {};
 
-            ObjectUtils.merge(search, this._search);
+            ObjectUtils.simpleMerge(search, this._search);
         }
 
         if (options) {
@@ -105,7 +105,7 @@ export class HttpEndpointMethod {
                     search = {};
                 }
 
-                ObjectUtils.merge(search, options.search);
+                ObjectUtils.simpleMerge(search, options.search);
             }
 
             if (options.data) {

@@ -13,7 +13,7 @@ export class UrlInterpolatorHook implements HttpRequestHook {
         this._interpolator = interpolator;
     }
 
-    public execute(input: HttpRequest): HttpRequest | Observable < HttpRequest > {
+    public execute(input: HttpRequest): HttpRequest | Observable<HttpRequest> {
         input.url = this._interpolator.interpolate(input.url, input.params);
         return input;
     }
