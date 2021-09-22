@@ -1,0 +1,61 @@
+<page-container [docURI]="'/components/media/image/image/README.md'">
+
+  <div section="controls">
+
+    <div class="control-group">
+      <label>Fallback seed: </label>
+      <input type="number" min="1" max="4" value="{{seed}}" (input)="onSeedChange($event)"/>
+    </div>
+
+    <div class="control-group">
+      <label>Color: </label>
+      <select (change)="onColorChange($event)">
+        <option>none</option>
+        <option [value]="color.value" *ngFor="let color of colors | keyvalue">{{color.value}}</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>Image url: </label>
+
+      <select (change)="onUrlChange($event)">
+        <option>none</option>
+        <option [value]="url.path" *ngFor="let url of urls; index as i" [selected]="i === 0">{{url.label}}</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label for="blur">Apply blur:</label>
+      <input type="checkbox" id="blur" name="blur" (change)="onBlurChangeHandler($event)"/>
+    </div>
+
+    <div class="control-group">
+      <label>Sizing: </label>
+
+      <div>
+        <input type="radio" id="default" value="default" name="size" [(ngModel)]="selectedSize"/>
+        <label for="default">Default (100% width and height to fit container whilst maintaining aspect ratio and centring image)</label>
+      </div>
+
+      <div>
+        <input type="radio" id="max-content" value="max-content" [(ngModel)]="selectedSize"/>
+        <label for="max-content">Content (width and height are determined by the image size)</label>
+      </div>
+
+      <div>
+        <input type="radio" id="fixed" value="fixed" [(ngModel)]="selectedSize"/>
+        <label for="fixed">Fixed (set to an explicit width (300px) and height(100px))</label>
+      </div>
+    </div>
+
+  </div>
+
+  <image-component class="image"
+      [ngClass]="selectedSize"
+      [url]="url"
+      [fallbackSeed]="seed"
+      [fallbackColor]="color"
+      [blur]="blur">
+  </image-component>
+
+</page-container>
