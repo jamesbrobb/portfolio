@@ -16,6 +16,7 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {AppContainerComponent} from "./container/app-container.component";
 import {PageContainerComponent} from "./page-container/page-container.component";
 import {AnalyticsModule} from "../ng/core";
+import {FallbackImageComponent} from "./media/image/fallback/fallback-image.component";
 
 
 export const COMPONENTS = [
@@ -23,7 +24,8 @@ export const COMPONENTS = [
   PageContainerComponent,
   GridLayoutComponent,
   ResponsiveContainerDirective,
-  SideMenuComponent
+  SideMenuComponent,
+  FallbackImageComponent
 ];
 
 

@@ -27,6 +27,17 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
       name: 'Responsive',
       path: 'components/layout/responsive-container'
     }]
+  }, {
+    name: 'Media',
+    path: 'media',
+    children: [{
+      name: 'Image',
+      path: 'image',
+      children: [{
+        name: 'Fallback',
+        path: 'components/media/image/fallback'
+      }]
+    }]
   }]
 }, {
   name: 'Core',

@@ -1,0 +1,26 @@
+
+<page-container [docURI]="'/components/media/image/fallback/README.md'">
+
+  <div section="controls">
+
+    <div class="control-group">
+      <label>Seed: </label>
+      <input type="number" min="1" max="4" value="{{seed}}" (input)="handleSeedChange($event)"/>
+    </div>
+
+    <div class="control-group">
+      <label>Color: </label>
+      <select (change)="setColor($event)">
+        <option>none</option>
+        <option [value]="color.value" *ngFor="let color of colors | keyvalue">{{color.value}}</option>
+      </select>
+    </div>
+
+  </div>
+
+  <fallback-image
+    [seed]="seed"
+    [color]="color">
+  </fallback-image>
+
+</page-container>

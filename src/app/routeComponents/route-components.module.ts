@@ -9,6 +9,7 @@ import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
 import {AnalyticsRouteComponent} from "./core/analytics/analytics-route.component";
 import {HooksRouteComponent} from "./core/hooks/hooks-route.component";
 import {HttpRouteComponent} from "./core/http/http-route.component";
+import {FallbackImageRouteComponent} from "./components/fallback-image/fallback-image.route.component";
 
 const routes: Routes = [
   {
@@ -18,7 +19,17 @@ const routes: Routes = [
       children: [
         {path: 'grid', component: GridLayoutRouteComponent},
         {path: 'flex-grid', component: FlexGridRouteComponent},
-        {path: 'responsive-container', component: ResponsiveContainerRouteComponent}
+        {path: 'responsive-container', component: ResponsiveContainerRouteComponent},
+      ]
+    }, {
+      path: 'media',
+      children: [
+        {
+          path: 'image',
+          children: [
+            {path: 'fallback', component: FallbackImageRouteComponent}
+          ]
+        }
       ]
     }]
   }, {
@@ -38,7 +49,8 @@ export const COMPONENTS = [
   ResponsiveContainerRouteComponent,
   AnalyticsRouteComponent,
   HooksRouteComponent,
-  HttpRouteComponent
+  HttpRouteComponent,
+  FallbackImageRouteComponent
 ];
 
 @NgModule({
