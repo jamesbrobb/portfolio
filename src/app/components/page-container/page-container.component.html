@@ -11,6 +11,12 @@
 
 </section>
 
+<section class="controls">
+
+  <ng-content select="[section=controls]"></ng-content>
+
+</section>
+
 <section [style.visibility]="hasLoaded && !noExample ? 'visible' : 'hidden'" class="example">
 
   <ng-content></ng-content>
