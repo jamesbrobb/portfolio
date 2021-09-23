@@ -4,7 +4,14 @@
   height: 100%;
   padding: 20px;
 
+  --controls-width: 250px;
+
+  @media(max-width: 600px) {
+    --controls-width: 100%;
+  }
+
   .controls {
+
     &:empty {
       display: none;
     }
@@ -14,10 +21,23 @@
     ::ng-deep .control-group {
       display: flex;
       flex-direction: column;
-      max-width: 560px;
 
       &:not(:last-child) {
         margin-bottom: 10px;
+      }
+
+      label {
+        margin-bottom: 5px;
+      }
+
+      input, select {
+        max-width: var(--controls-width);
+        margin-bottom: 5px;
+      }
+
+      [type="checkbox"],
+      [type="radio"] {
+        margin-right: 7px;
       }
     }
   }
@@ -39,9 +59,21 @@
     & + markdown {
       margin-top: 50px;
     }
-  }
 
-  a {
-    color: white;
+    ::ng-deep {
+
+      p + h2,
+      pre + h2 {
+        margin-top: 50px;
+      }
+
+      a {
+        color: white;
+      }
+
+      /*p {
+        font-size: 16px;
+      }*/
+    }
   }
 }
