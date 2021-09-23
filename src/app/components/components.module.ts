@@ -19,6 +19,7 @@ import {AnalyticsModule} from "../ng/core";
 import {FallbackImageComponent} from "./media/image/fallback/fallback-image.component";
 import {ImageComponent} from "./media/image/image/image.component";
 import {ColorOverlayComponent} from "./common/overlay/color/color-overlay.component";
+import {PageHeaderComponent} from "./layout/headers/page/page-header.component";
 
 
 export const COMPONENTS = [
@@ -29,7 +30,8 @@ export const COMPONENTS = [
   SideMenuComponent,
   FallbackImageComponent,
   ImageComponent,
-  ColorOverlayComponent
+  ColorOverlayComponent,
+  PageHeaderComponent
 ];
 
 

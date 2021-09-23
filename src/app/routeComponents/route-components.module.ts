@@ -13,6 +13,7 @@ import {HttpRouteComponent} from "./core/http/http-route.component";
 import {FallbackImageRouteComponent} from "./components/fallback-image/fallback-image.route.component";
 import {ImageComponentRouteComponent} from "./components/image-component/image-component.route.component";
 import {ColorOverlayRouteComponent} from "./components/color-overlay/color-overlay.route.component";
+import {PageHeaderRouteComponent} from "./components/page-header/page-header.route.component";
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
         {path: 'grid', component: GridLayoutRouteComponent},
         {path: 'flex-grid', component: FlexGridRouteComponent},
         {path: 'responsive-container', component: ResponsiveContainerRouteComponent},
+        {path: 'page-header', component: PageHeaderRouteComponent}
       ]
     }, {
       path: 'media',
@@ -66,7 +68,8 @@ export const COMPONENTS = [
   HttpRouteComponent,
   FallbackImageRouteComponent,
   ImageComponentRouteComponent,
-  ColorOverlayRouteComponent
+  ColorOverlayRouteComponent,
+  PageHeaderRouteComponent
 ];
 
 @NgModule({

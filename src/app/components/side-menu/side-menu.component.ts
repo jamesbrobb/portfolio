@@ -37,6 +37,9 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
     },{
       name: 'Responsive',
       path: 'components/layout/responsive-container'
+    }, {
+      name: 'Page Header',
+      path: 'components/layout/page-header'
     }]
   }, {
     name: 'Media',
