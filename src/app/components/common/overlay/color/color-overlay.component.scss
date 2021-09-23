@@ -3,11 +3,14 @@
     width: 100%;
     height: 100%;
 
-    .ef-class-color-overlay {
+    --color-overlay-color: transparent;
+    --color-overlay-opacity: 0.9;
+
+    .color-overlay {
         width: inherit;
         height: inherit;
-        background-color: var(--color-overlay-color, transparent);
-        opacity: var(--color-overlay-opacity, 0.9);
+        background-color: var(--color-overlay-color);
+        opacity: var(--color-overlay-opacity);
 
         &.allow-transition {
             transition: background-color 500ms linear;
