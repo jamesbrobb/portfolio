@@ -1,0 +1,26 @@
+
+<page-container [docURI]="'/components/common/overlay/color/README.md'">
+
+  <div section="controls">
+
+    <div class="control-group">
+      <label>Color: </label>
+      <select (change)="onColorChange($event)">
+        <option [value]="color.value" *ngFor="let color of colors | keyvalue">{{color.value}}</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label for="allow-transition">Allow transition:</label>
+      <input type="checkbox" id="allow-transition" name="allow-transition" (change)="onAllowTransitionChangeHandler($event)" [checked]="allowTransition" />
+    </div>
+
+  </div>
+
+  <color-overlay class="overlay"
+    [color]="color"
+    [allowTransition]="allowTransition">
+  </color-overlay>
+
+</page-container>
+

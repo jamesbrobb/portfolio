@@ -15,6 +15,17 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
   name: 'Components',
   path: 'components',
   children: [{
+    name: 'Common',
+    path: 'common',
+    children: [{
+      name: 'Overlay',
+      path: 'overlay',
+      children: [{
+        name: 'Color overlay',
+        path: 'components/common/overlay/color-overlay'
+      }]
+    }]
+  }, {
     name: 'Layout',
     path: 'layout',
     children: [{
@@ -36,6 +47,9 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
       children: [{
         name: 'Fallback',
         path: 'components/media/image/fallback'
+      }, {
+        name: 'Image component',
+        path: 'components/media/image/image-component'
       }]
     }]
   }]

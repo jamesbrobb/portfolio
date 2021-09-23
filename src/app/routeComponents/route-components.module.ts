@@ -1,20 +1,33 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
+import { FormsModule } from '@angular/forms';
+import {RouterModule, Routes} from "@angular/router";
 import {ComponentsModule} from "../components/components.module";
 import {GridLayoutRouteComponent} from "./components/grid-layout/grid-layout-route.component";
 import {FlexGridRouteComponent} from "./components/flex-grid/flex-grid-route.component";
 import {ResponsiveContainerRouteComponent} from "./components/responsive-container/responsive-container-route.component";
-import {RouterModule, Routes} from "@angular/router";
 import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
 import {AnalyticsRouteComponent} from "./core/analytics/analytics-route.component";
 import {HooksRouteComponent} from "./core/hooks/hooks-route.component";
 import {HttpRouteComponent} from "./core/http/http-route.component";
 import {FallbackImageRouteComponent} from "./components/fallback-image/fallback-image.route.component";
+import {ImageComponentRouteComponent} from "./components/image-component/image-component.route.component";
+import {ColorOverlayRouteComponent} from "./components/color-overlay/color-overlay.route.component";
 
 const routes: Routes = [
   {
     path: 'components',
     children: [{
+      path: 'common',
+      children: [
+        {
+          path: 'overlay',
+          children: [
+            {path: 'color-overlay', component: ColorOverlayRouteComponent}
+          ]
+        }
+      ]
+    }, {
       path: 'layout',
       children: [
         {path: 'grid', component: GridLayoutRouteComponent},
@@ -27,7 +40,8 @@ const routes: Routes = [
         {
           path: 'image',
           children: [
-            {path: 'fallback', component: FallbackImageRouteComponent}
+            {path: 'fallback', component: FallbackImageRouteComponent},
+            {path: 'image-component', component: ImageComponentRouteComponent}
           ]
         }
       ]
@@ -50,13 +64,16 @@ export const COMPONENTS = [
   AnalyticsRouteComponent,
   HooksRouteComponent,
   HttpRouteComponent,
-  FallbackImageRouteComponent
+  FallbackImageRouteComponent,
+  ImageComponentRouteComponent,
+  ColorOverlayRouteComponent
 ];
 
 @NgModule({
   imports: [
     RouterModule.forChild(routes),
     CommonModule,
+    FormsModule,
     ComponentsModule
   ],
   declarations: COMPONENTS,
