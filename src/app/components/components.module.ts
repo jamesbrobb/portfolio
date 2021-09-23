@@ -17,6 +17,8 @@ import {AppContainerComponent} from "./container/app-container.component";
 import {PageContainerComponent} from "./page-container/page-container.component";
 import {AnalyticsModule} from "../ng/core";
 import {FallbackImageComponent} from "./media/image/fallback/fallback-image.component";
+import {ImageComponent} from "./media/image/image/image.component";
+import {ColorOverlayComponent} from "./common/overlay/color/color-overlay.component";
 
 
 export const COMPONENTS = [
@@ -25,7 +27,9 @@ export const COMPONENTS = [
   GridLayoutComponent,
   ResponsiveContainerDirective,
   SideMenuComponent,
-  FallbackImageComponent
+  FallbackImageComponent,
+  ImageComponent,
+  ColorOverlayComponent
 ];
 
 
