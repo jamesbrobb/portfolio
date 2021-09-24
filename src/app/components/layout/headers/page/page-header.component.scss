@@ -23,7 +23,7 @@
         width: inherit;
 
         &.LG {
-            --top-slot-display: var(--ef-class-page-header-top-slot-display, flex);
+            --top-slot-display: var(--page-header-top-slot-display, flex);
             --horizontal-padding: 3.2rem;
             --title-font-size: 4.4rem;
             --content-slot-flex-direction: row;

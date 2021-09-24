@@ -1,6 +1,4 @@
-# Page Header
-
-Renders a page header.
+# **Page Header**
 
 ## IO
 

@@ -71,6 +71,14 @@
         color: white;
       }
 
+      li {
+        margin-bottom: 10px;
+      }
+
+      li > ul {
+        margin-top: 10px;
+      }
+
       /*p {
         font-size: 16px;
       }*/
