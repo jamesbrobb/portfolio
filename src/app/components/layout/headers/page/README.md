@@ -12,7 +12,7 @@
 
 **@Input(imageUrl):** `string` An optional image url
 
-**@Input(size):** `string` An optional image size
+**@Input(imageSize):** `string` An optional image size to be appended to the end of the image url
 
 
 ## Usage
@@ -24,6 +24,6 @@
     [fallbackColor]="fallback_color"
     [overlayColor]="overlay_color"
     [imageUrl]="url"
-    [size]="size">
+    [imageSize]="size">
 </page-header>
 ```

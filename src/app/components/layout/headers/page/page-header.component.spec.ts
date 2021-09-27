@@ -3,11 +3,14 @@ import {CommonModule} from '@angular/common';
 import {By} from '@angular/platform-browser';
 
 import {PageHeaderComponent} from './page-header.component';
-import {ResponsiveContainerDirective} from '../../../responsive/container/responsive-container.directive';
+import {FallbackImageComponent} from "../../../media/image/fallback/fallback-image.component";
+import {ImageComponent} from "../../../media/image/image/image.component";
+import {ColorOverlayComponent} from "../../../common/overlay/color/color-overlay.component";
+import {ResponsiveContainerDirectiveMock} from "../../../responsive/container/responsive-container.directive.mock";
 
 
 
-/*describe('PageHeaderComponent', () => {
+describe('PageHeaderComponent', () => {
 
     let component: PageHeaderComponent,
         fixture: ComponentFixture<PageHeaderComponent>;
@@ -15,24 +18,15 @@ import {ResponsiveContainerDirective} from '../../../responsive/container/respon
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                CommonModule,
-                EfClassImageModule,
-                EfClassOverlayComponentsModule,
-                EfClassResponsiveComponentsModule
+                CommonModule
             ],
             declarations: [
-                PageHeaderComponent
+                PageHeaderComponent,
+                FallbackImageComponent,
+                ImageComponent,
+                ColorOverlayComponent,
+                ResponsiveContainerDirectiveMock
             ]
-        })
-        .overrideModule(EfClassResponsiveComponentsModule, {
-            remove: {
-                declarations: [ResponsiveContainerDirective],
-                exports: [ResponsiveContainerDirective]
-            },
-            add: {
-                declarations: [ResponsiveContainerMockDirective],
-                exports: [ResponsiveContainerMockDirective]
-            }
         })
         .compileComponents();
     }));
@@ -54,7 +48,8 @@ import {ResponsiveContainerDirective} from '../../../responsive/container/respon
 
         const titleText = 'Title';
 
-        component.title = titleText;
+        component.ioTitle = titleText;
+        component.ngOnChanges();
 
         fixture.detectChanges();
 
@@ -62,4 +57,4 @@ import {ResponsiveContainerDirective} from '../../../responsive/container/respon
 
         expect(titleElement.textContent).toEqual(titleText);
     });
-});*/
+});

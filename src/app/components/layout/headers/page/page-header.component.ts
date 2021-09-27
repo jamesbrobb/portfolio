@@ -16,21 +16,21 @@ export class PageHeaderComponent implements OnChanges {
     @Input('fallbackColor') ioFallbackColor: FALLBACK_COLORS | undefined;
     @Input('overlayColor') ioOverlayColor: OVERLAY_COLORS | undefined;
     @Input('imageUrl') ioImageUrl: string | undefined;
-    @Input('size') ioSize: string | undefined;
+    @Input('imageSize') ioImageSize: string | undefined;
 
     public title: string | undefined;
     public fallbackSeed: string | undefined;
     public fallbackColor: FALLBACK_COLORS | undefined;
     public overlayColor: OVERLAY_COLORS = OVERLAY_COLORS.BLUE;
     public imageUrl: string | undefined;
-    public size: string | undefined;
+    public imageSize: string | undefined;
 
-    public ngOnChanges(changes: SimpleChanges): void {
+    public ngOnChanges(): void {
         this.title = this.ioTitle;
         this.fallbackSeed = this.ioFallbackSeed;
         this.fallbackColor = this.ioFallbackColor;
         this.overlayColor = this.ioOverlayColor || this.overlayColor;
         this.imageUrl = this.ioImageUrl;
-        this.size = this.ioSize;
+        this.imageSize = this.ioImageSize;
     }
 }

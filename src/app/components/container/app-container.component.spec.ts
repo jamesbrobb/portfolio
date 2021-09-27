@@ -9,6 +9,9 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {SideMenuComponent} from "../side-menu/side-menu.component";
+import {AnalyticsEventDirective} from "../../ng/core";
+import {AnalyticsModuleMock} from "../../ng/core/analytics/analytics.module.mock";
 
 
 
@@ -26,9 +29,13 @@ describe('RootComponent', () => {
         MatButtonModule,
         MatIconModule,
         MatToolbarModule,
-        MatSidenavModule
+        MatSidenavModule,
+        AnalyticsModuleMock
       ],
-      declarations: [ AppContainerComponent ]
+      declarations: [
+        AppContainerComponent,
+        SideMenuComponent
+      ]
     })
     .compileComponents();
   });

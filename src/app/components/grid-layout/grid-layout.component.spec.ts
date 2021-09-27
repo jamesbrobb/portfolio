@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GridLayoutComponent } from './grid-layout.component';
+import {By} from "@angular/platform-browser";
+import {ResponsiveContainerDirectiveMock} from "../responsive/container/responsive-container.directive.mock";
 
 describe('GridLayoutComponent', () => {
   let component: GridLayoutComponent;
@@ -8,7 +10,10 @@ describe('GridLayoutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GridLayoutComponent ]
+      declarations: [
+        GridLayoutComponent,
+        ResponsiveContainerDirectiveMock
+      ]
     })
     .compileComponents();
   });
@@ -21,5 +26,16 @@ describe('GridLayoutComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render the number of supplied data items', () => {
+
+    const dataProvider = [0, 1, 2, 3, 4];
+
+    component.dataProvider = dataProvider;
+
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.queryAll(By.css('.grid-layout-item')).length).toBe(dataProvider.length)
   });
 });
