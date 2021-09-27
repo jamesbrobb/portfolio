@@ -13,12 +13,6 @@ export enum FALLBACK_COLORS {
     PURPLE= 'purple'
 }
 
-const SVGS: string[] = [
-    `background-${FALLBACK_COLORS.BLUE}`,
-    `background-${FALLBACK_COLORS.GREEN}`,
-    `background-${FALLBACK_COLORS.ORANGE}`,
-    `background-${FALLBACK_COLORS.PURPLE}`
-];
 
 @Component({
     selector: 'fallback-image',
@@ -41,16 +35,23 @@ export class FallbackImageComponent implements OnChanges {
         return this._fallbackSvgName;
     }
 
-    public ngOnChanges(changes: SimpleChanges): void {
+    public ngOnChanges(): void {
 
         this._fallbackSvgName = this._getSvgName();
     }
 
     private _getSvgName(): string {
 
-        if (this.color) {
-            return `background-${this.color}`;
+        let col: string | undefined = this.color;
+
+        if (!col) {
+            col = this._calculateColor();
         }
+
+        return `background-${col}`
+    }
+
+    private _calculateColor(): string {
 
         let seedInt: number = NaN;
 
@@ -59,8 +60,9 @@ export class FallbackImageComponent implements OnChanges {
             seedInt = isNaN(seedInt) ? NaN : seedInt;
         }
 
-        const index = !isNaN(seedInt) ? seedInt % SVGS.length : Math.round(Math.random() * (SVGS.length - 1));
+        const svgKeys = Object.keys(FALLBACK_COLORS),
+          index = !isNaN(seedInt) ? seedInt % svgKeys.length : Math.round(Math.random() * (svgKeys.length - 1));
 
-        return SVGS[index];
+        return svgKeys[index].toLowerCase();
     }
 }
