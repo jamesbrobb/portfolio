@@ -23,7 +23,7 @@ describe('ColorOverlayComponent', () => {
         component.ngOnChanges();
         fixture.detectChanges();
 
-        element = fixture.debugElement.query(By.css('.color-overlay.blue')).nativeElement;
+        element = fixture.debugElement.query(By.css('.color-overlay')).nativeElement;
     });
 
     it('should create', () => {
