@@ -21,7 +21,7 @@ export class ImageComponent implements OnChanges {
     public blur: boolean | undefined;
 
 
-    public ngOnChanges(changes: SimpleChanges): void {
+    public ngOnChanges(): void {
 
         this.url = this.ioUrl ? this.ioUrl.replace('{size}', this.ioSize || '1044w') : '';
         this.fallbackSeed = this.iofallbackSeed;
