@@ -20,6 +20,7 @@ import {FallbackImageComponent} from "./media/image/fallback/fallback-image.comp
 import {ImageComponent} from "./media/image/image/image.component";
 import {ColorOverlayComponent} from "./common/overlay/color/color-overlay.component";
 import {PageHeaderComponent} from "./layout/headers/page/page-header.component";
+import {LessonPlanCardComponent} from "./product/lesson-plan/card/lesson-plan-card.component";
 
 
 export const COMPONENTS = [
@@ -31,7 +32,8 @@ export const COMPONENTS = [
   FallbackImageComponent,
   ImageComponent,
   ColorOverlayComponent,
-  PageHeaderComponent
+  PageHeaderComponent,
+  LessonPlanCardComponent
 ];
 
 
