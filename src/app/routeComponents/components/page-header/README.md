@@ -1,6 +1,6 @@
 ## Demonstrates
 
-- Composition of components
+- Composition of reusable components
   - [Image component](/components/media/image/image-component)
   - [Color overlay](/components/common/overlay/color-overlay)
 

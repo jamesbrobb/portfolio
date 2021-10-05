@@ -14,9 +14,13 @@ import {FallbackImageRouteComponent} from "./components/fallback-image/fallback-
 import {ImageComponentRouteComponent} from "./components/image-component/image-component.route.component";
 import {ColorOverlayRouteComponent} from "./components/color-overlay/color-overlay.route.component";
 import {PageHeaderRouteComponent} from "./components/page-header/page-header.route.component";
+import {HomeRouteComponent} from "./home/home.route.component";
 
 const routes: Routes = [
   {
+    path: '',
+    component: HomeRouteComponent
+  }, {
     path: 'components',
     children: [{
       path: 'common',
@@ -60,6 +64,7 @@ const routes: Routes = [
 
 export const COMPONENTS = [
   PageNotFoundComponent,
+  HomeRouteComponent,
   GridLayoutRouteComponent,
   FlexGridRouteComponent,
   ResponsiveContainerRouteComponent,
