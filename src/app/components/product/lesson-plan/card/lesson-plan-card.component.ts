@@ -22,7 +22,7 @@ export class LessonPlanCardComponent implements OnChanges {
     if( !this.dataProvider) {
       return;
     }
-
+    console.log(this.dataProvider.title);
     this.id = this.dataProvider.id;
     this.title = this.dataProvider.title;
     this.description = this.dataProvider.description;

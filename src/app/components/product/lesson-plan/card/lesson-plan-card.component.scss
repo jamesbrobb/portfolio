@@ -1,7 +1,7 @@
 @import "src/app/styles/styles";
 
 :host {
-  --lesson-plan-card-top-height: var(--lesson-plan-card-top-height, 10rem);
+  --card-top-height: var(--lesson-plan-card-top-height, 10rem);
 
   display: block;
   width: 100%;
@@ -12,7 +12,7 @@
 
     .top {
       position: relative;
-      height: var(--lesson-plan-card-top-height);
+      height: var(--card-top-height);
       border-radius: $border-radius-m;
       overflow: hidden;
       box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
@@ -83,6 +83,6 @@
   }
 
   &.large {
-    --lesson-plan-card-top-height: var(--lesson-plan-card-top-height, 16rem);
+    --card-top-height: var(--lesson-plan-card-top-height, 16rem);
   }
 }

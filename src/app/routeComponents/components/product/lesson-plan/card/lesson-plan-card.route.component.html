@@ -1,0 +1,40 @@
+
+<page-container [docURI]="'/components/product/lesson-plan/card/README.md'">
+
+  <div section="controls">
+
+    <div class="control-group">
+
+      <label>dataProvider:</label>
+
+      <!--<ef-class-json-editor
+        [value]="editorData"
+        (onChange)="onDataChangeHandler($event)">
+      </ef-class-json-editor>-->
+
+    </div>
+
+    <div class="control-group">
+
+      <label>Sizes: </label>
+
+      <div>
+        <input type="radio" id="normal" value="0" name="size" (change)="onSizeChangeHandler($event)" checked/>
+        <label for="normal">Normal</label>
+      </div>
+
+      <div>
+        <input type="radio" id="large" value="1" name="size" (change)="onSizeChangeHandler($event)"/>
+        <label for="large">Large</label>
+      </div>
+
+    </div>
+
+  </div>
+
+  <lesson-plan-card [ngClass]="{large: isLarge}"
+    class="card"
+    [dataProvider]="playlist">
+  </lesson-plan-card>
+
+</page-container>

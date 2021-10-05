@@ -58,6 +58,13 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
         path: 'components/media/image/image-component'
       }]
     }]
+  }, {
+    name: 'Product',
+    path: 'product',
+    children: [{
+      name: 'Lesson Plan Card',
+      path: 'components/product/lesson-plan-card'
+    }]
   }]
 }, {
   name: 'Core',
