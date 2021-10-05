@@ -17,6 +17,7 @@ import {PageHeaderRouteComponent} from "./components/page-header/page-header.rou
 import {HomeRouteComponent} from "./home/home.route.component";
 import {LessonPlanCardRouteComponent} from "./components/product/lesson-plan/card/lesson-plan-card.route.component";
 import {LessonPlanHeroRouteComponent} from "./components/product/lesson-plan/hero/lesson-plan-hero.route.component";
+import {LessonPlanGridRouteComponent} from "./components/product/lesson-plan/grid/lesson-plan-grid.route.component";
 
 const routes: Routes = [
   {
@@ -60,7 +61,8 @@ const routes: Routes = [
           path: 'lesson-plan',
           children: [
             {path: 'card', component: LessonPlanCardRouteComponent},
-            {path: 'hero', component: LessonPlanHeroRouteComponent}
+            {path: 'hero', component: LessonPlanHeroRouteComponent},
+            {path: 'grid', component: LessonPlanGridRouteComponent}
           ]
         }
       ]
@@ -89,7 +91,8 @@ export const COMPONENTS = [
   ColorOverlayRouteComponent,
   PageHeaderRouteComponent,
   LessonPlanCardRouteComponent,
-  LessonPlanHeroRouteComponent
+  LessonPlanHeroRouteComponent,
+  LessonPlanGridRouteComponent
 ];
 
 @NgModule({

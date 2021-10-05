@@ -1,0 +1,59 @@
+
+<page-container [docURI]="'/components/product/lesson-plan/grid/README.md'">
+
+  <div section="controls">
+
+    <div class="control-group">
+      <label>Header: </label>
+      <input type="text" value="{{header}}" (input)="onHeaderChange($event)"/>
+    </div>
+
+    <div class="control-group">
+      <label>Title: </label>
+      <input type="text" value="{{title}}" (input)="onTitleChange($event)"/>
+    </div>
+
+    <div class="control-group">
+      <label>[dataProvider]: PlaylistSummaryDTO[]</label>
+      <!--<ef-class-json-editor
+        [value]="editorData"
+        (onChange)="onChangeHandler($event)">
+      </ef-class-json-editor>-->
+    </div>
+
+    <div class="control-group">
+
+      <div>
+        <input type="checkbox" id="hero" name="hero" (change)="onShowHeroChangeHandler($event)"/>
+        <label for="hero">Show hero</label>
+      </div>
+
+    </div>
+
+    <div class="control-group">
+
+      <div>
+        <input type="checkbox" id="fancy" name="fancy" (change)="onFancyLayoutChangeHandler($event)"/>
+        <label for="fancy">Five card layout</label>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="grid-wrapper">
+
+    <lesson-plan-grid *ngIf="dataProvider"
+       class="grid"
+       [dataProvider]="dataProvider"
+       [header]="header"
+       [title]="title"
+       [showHero]="showHero"
+       [fiveCardLayout]="fancyLayout"
+       (lessonPlanSelected)="onLessonPlanSelect($event)">
+
+    </lesson-plan-grid>
+
+  </div>
+
+</page-container>

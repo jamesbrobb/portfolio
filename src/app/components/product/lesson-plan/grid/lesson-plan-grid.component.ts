@@ -12,7 +12,7 @@ import {PlaylistSummaryDTO} from "../../../../product";
 
 
 @Component({
-    selector: 'ef-class-lesson-plan-grid',
+    selector: 'lesson-plan-grid',
     templateUrl: './lesson-plan-grid.component.html',
     styleUrls: ['./lesson-plan-grid.component.scss']
 })

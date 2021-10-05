@@ -70,6 +70,9 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
       }, {
         name: 'Hero',
         path: 'components/product/lesson-plan/hero'
+      }, {
+        name: 'Grid',
+        path: 'components/product/lesson-plan/grid'
       }]
     }]
   }]

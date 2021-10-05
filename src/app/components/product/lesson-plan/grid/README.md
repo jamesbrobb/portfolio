@@ -1,23 +1,25 @@
-### EF Class Lesson Plan Grid
-
-## Acceptance Criteria
-
+# **Lesson Plan Grid**
 
 ## IO
 
-- **@Input [dataProvider] :** [`PlaylistSummaryDto`](https://github.com/EFEducationFirstMobile/ef-class-web/blob/master/libraries/core/src/lib/playlist/summary/playlist-summary.dto.ts)[]
-- **@Input [header]: string**
-- **@Input [title]: string**
-- **@Input [showHero]: boolean**
-- **@Input [fiveCardLayout]: boolean**
-- **@Input [itemTemplate]: TemplateRef**
+**@Input [dataProvider] :** [`PlaylistSummaryDto`]()[]
 
-- **@Output (lessonPlanSelected)** - triggered through a lesson plan card click
+**@Input [header]: string**
+
+**@Input [title]: string**
+
+**@Input [showHero]: boolean**
+
+**@Input [fiveCardLayout]: boolean**
+
+**@Input [itemTemplate]: TemplateRef**
+
+**@Output (lessonPlanSelected)** - triggered through a lesson plan card click
 
 ## Usage
 
 ```html
-<ef-class-lesson-plan-grid
+<lesson-plan-grid
     [dataProvider]="dataProvider"
     [header]="'header'"
     [title]="'title'"
@@ -25,5 +27,5 @@
     [fiveCardLayout]="true"
     [itemTemplate]="itemTemplate"
     (lessonPlanSelected)="onLessonPlanSelect($event)">
-</ef-class-lesson-plan-grid>
+</lesson-plan-grid>
 ```
