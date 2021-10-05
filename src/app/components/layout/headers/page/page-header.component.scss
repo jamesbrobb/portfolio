@@ -8,9 +8,9 @@
 
         --LG: 710px;
 
-        --bottom-padding: var(--page-header-bottom-padding, 3.2rem);
+        --bottom-padding: var(--page-header-bottom-padding, #{$gap-xxl});
         --top-slot-display: var(--page-header-top-slot-display, none);
-        --top-slot-margin-bottom: var(--page-header-top-slot-margin-bottom, 0.8rem);
+        --top-slot-margin-bottom: var(--page-header-top-slot-margin-bottom, #{$gap-m});
 
         --horizontal-padding: 2.2rem;
         --title-font-size: 2.8rem;
@@ -24,11 +24,11 @@
 
         &.LG {
             --top-slot-display: var(--page-header-top-slot-display, flex);
-            --horizontal-padding: 3.2rem;
+            --horizontal-padding: #{$gap-xxl};
             --title-font-size: 4.4rem;
             --content-slot-flex-direction: row;
             --content-slot-empty-display: var(--content-slot-display);
-            --content-slot-min-height: 2.4rem;
+            --content-slot-min-height: #{$gap-xl};
         }
 
         > .image {
@@ -52,9 +52,9 @@
             display: flex;
             flex-direction: column;
 
-            padding: 3.2rem var(--horizontal-padding) var(--bottom-padding);
+            padding: $gap-xxl var(--horizontal-padding) var(--bottom-padding);
 
-            color: #FFFFFF;
+            color: $palette-white;
 
             .top-slot {
                 display: var(--top-slot-display);
@@ -77,7 +77,7 @@
                     font-size: var(--title-font-size);
                     line-height: 1.5;
                     text-align: center;
-                    color: #FFFFFF;
+                    color: $palette-white;
 
                     @include prevent-text-break-out;
                 }
@@ -92,7 +92,7 @@
                 max-width: 90rem;
                 min-height: var(--content-slot-min-height);
                 margin: 0 auto;
-                margin-top: 0.8rem;
+                margin-top: $gap-m;
 
                 &:empty {
                     display: var(--content-slot-empty-display);

@@ -12,6 +12,9 @@ export interface MenuItemNode {
 }
 
 const MENU_DATA_PROVIDER: MenuItemNode[] = [{
+  name: 'About',
+  path: ''
+}, {
   name: 'Components',
   path: 'components',
   children: [{
