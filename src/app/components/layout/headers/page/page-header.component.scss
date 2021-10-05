@@ -12,8 +12,8 @@
         --top-slot-display: var(--page-header-top-slot-display, none);
         --top-slot-margin-bottom: var(--page-header-top-slot-margin-bottom, #{$gap-m});
 
-        --horizontal-padding: 2.2rem;
-        --title-font-size: 2.8rem;
+        --horizontal-padding: 22px;
+        --title-font-size: 28px;
         --content-slot-flex-direction: column;
         --content-slot-display: flex;
         --content-slot-empty-display: none;
@@ -25,7 +25,7 @@
         &.LG {
             --top-slot-display: var(--page-header-top-slot-display, flex);
             --horizontal-padding: #{$gap-xxl};
-            --title-font-size: 4.4rem;
+            --title-font-size: 44px;
             --content-slot-flex-direction: row;
             --content-slot-empty-display: var(--content-slot-display);
             --content-slot-min-height: #{$gap-xl};
@@ -62,7 +62,7 @@
                 align-items: flex-start;
                 justify-content: space-between;
                 width: 100%;
-                min-height: 3rem;
+                min-height: 30px;
                 margin-bottom: var(--top-slot-margin-bottom);
             }
 
@@ -73,7 +73,7 @@
                 align-items: center;
 
                 .title {
-                    max-width: 90rem;
+                    max-width: 900px;
                     font-size: var(--title-font-size);
                     line-height: 1.5;
                     text-align: center;
@@ -89,7 +89,7 @@
                 align-items: flex-start;
                 justify-content: space-between;
                 width: 100%;
-                max-width: 90rem;
+                max-width: 900px;
                 min-height: var(--content-slot-min-height);
                 margin: 0 auto;
                 margin-top: $gap-m;

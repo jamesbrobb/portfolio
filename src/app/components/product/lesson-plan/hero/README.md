@@ -1,16 +1,13 @@
-### EF Class Lesson Plan Hero
-
-## Acceptance Criteria
-
+# **Lesson Plan Hero**
 
 ## IO
 
-- **@Input [dataProvider] :** [`PlaylistSummaryDto`](https://github.com/EFEducationFirstMobile/ef-class-web/blob/master/libraries/core/src/lib/course/summary/course-summary.dto.ts)
+**@Input [dataProvider] :** [`PlaylistSummaryDto`]()
 
 ## Usage
 
 ```html
-<ef-class-lesson-plan-hero
+<lesson-plan-hero
     [dataProvider]="playlist">
-</ef-class-lesson-plan-hero>
+</lesson-plan-hero>
 ```

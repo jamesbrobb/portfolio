@@ -1,11 +1,11 @@
 @import "src/app/styles/styles";
 
 :host {
-  --card-top-height: var(--lesson-plan-card-top-height, 10rem);
+  --card-top-height: var(--lesson-plan-card-top-height, 100px);
 
   display: block;
   width: 100%;
-  min-width: 26.4rem;
+  min-width: 264px;
 
   .lesson-plan-card {
     color: $palette-grey-900;
@@ -43,12 +43,12 @@
         align-items: flex-end;
 
         .tag {
-          font-size: 1.13rem;
+          font-size: 11.3px;
           line-height: 1.45;
           opacity: 0.9;
           border-radius: $border-radius-s;
           background-color: $palette-white;
-          padding: 0.2rem 0.5rem;
+          padding: 0.20px 5px;
           margin-top: $gap-s;
 
           &:not(:last-child) {
@@ -62,7 +62,7 @@
       margin-top: $gap-s;
 
       .title {
-        font-size: 1.8rem;
+        font-size: 18px;
         line-height: 1.45;
         font-weight: 600;
 
@@ -72,7 +72,7 @@
 
       .description {
         display: block;
-        font-size: 1.27rem;
+        font-size: 12.7px;
         line-height: 1.49;
         padding-top: $gap-s;
 
@@ -83,6 +83,6 @@
   }
 
   &.large {
-    --card-top-height: var(--lesson-plan-card-top-height, 16rem);
+    --card-top-height: var(--lesson-plan-card-top-height, 160px);
   }
 }
