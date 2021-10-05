@@ -22,6 +22,7 @@ import {ColorOverlayComponent} from "./common/overlay/color/color-overlay.compon
 import {PageHeaderComponent} from "./layout/headers/page/page-header.component";
 import {LessonPlanCardComponent} from "./product/lesson-plan/card/lesson-plan-card.component";
 import {LessonPlanHeroComponent} from "./product/lesson-plan/hero/lesson-plan-hero.component";
+import {LessonPlanGridComponent} from "./product/lesson-plan/grid/lesson-plan-grid.component";
 
 
 export const COMPONENTS = [
@@ -35,7 +36,8 @@ export const COMPONENTS = [
   ColorOverlayComponent,
   PageHeaderComponent,
   LessonPlanCardComponent,
-  LessonPlanHeroComponent
+  LessonPlanHeroComponent,
+  LessonPlanGridComponent
 ];
 
 
