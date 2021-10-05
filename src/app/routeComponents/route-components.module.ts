@@ -16,6 +16,7 @@ import {ColorOverlayRouteComponent} from "./components/color-overlay/color-overl
 import {PageHeaderRouteComponent} from "./components/page-header/page-header.route.component";
 import {HomeRouteComponent} from "./home/home.route.component";
 import {LessonPlanCardRouteComponent} from "./components/product/lesson-plan/card/lesson-plan-card.route.component";
+import {LessonPlanHeroRouteComponent} from "./components/product/lesson-plan/hero/lesson-plan-hero.route.component";
 
 const routes: Routes = [
   {
@@ -55,7 +56,13 @@ const routes: Routes = [
     }, {
       path: 'product',
       children: [
-        {path: 'lesson-plan-card', component: LessonPlanCardRouteComponent}
+        {
+          path: 'lesson-plan',
+          children: [
+            {path: 'card', component: LessonPlanCardRouteComponent},
+            {path: 'hero', component: LessonPlanHeroRouteComponent}
+          ]
+        }
       ]
     }]
   }, {
@@ -81,7 +88,8 @@ export const COMPONENTS = [
   ImageComponentRouteComponent,
   ColorOverlayRouteComponent,
   PageHeaderRouteComponent,
-  LessonPlanCardRouteComponent
+  LessonPlanCardRouteComponent,
+  LessonPlanHeroRouteComponent
 ];
 
 @NgModule({
