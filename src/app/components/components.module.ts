@@ -21,6 +21,7 @@ import {ImageComponent} from "./media/image/image/image.component";
 import {ColorOverlayComponent} from "./common/overlay/color/color-overlay.component";
 import {PageHeaderComponent} from "./layout/headers/page/page-header.component";
 import {LessonPlanCardComponent} from "./product/lesson-plan/card/lesson-plan-card.component";
+import {LessonPlanHeroComponent} from "./product/lesson-plan/hero/lesson-plan-hero.component";
 
 
 export const COMPONENTS = [
@@ -33,7 +34,8 @@ export const COMPONENTS = [
   ImageComponent,
   ColorOverlayComponent,
   PageHeaderComponent,
-  LessonPlanCardComponent
+  LessonPlanCardComponent,
+  LessonPlanHeroComponent
 ];
 
 
