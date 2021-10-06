@@ -1,0 +1,23 @@
+
+<page-container [docURI]="'/components/product/lesson-plan/header/README.md'">
+
+  <div section="controls">
+
+    <div class="control-group">
+
+      <label>dataProvider:</label>
+
+      <!--<ef-class-json-editor
+        [value]="editorData"
+        (onChange)="handleOnInputChanged($event)">
+      </ef-class-json-editor>-->
+
+    </div>
+
+  </div>
+
+  <lesson-plan-header
+    [dataProvider]="lessonPlan">
+  </lesson-plan-header>
+
+</page-container>

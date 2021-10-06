@@ -20,7 +20,7 @@ export class PageHeaderRouteComponent {
 
     public urls = [{
       label: 'Image 1',
-      path: '/assets/media-examples/sample.jpg'
+      path: '/assets/media-examples/sample.png'
     }, {
       label: 'Image 2',
       path: '/assets/media-examples/sample_2.png'

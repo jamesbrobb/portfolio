@@ -18,6 +18,9 @@ import {HomeRouteComponent} from "./home/home.route.component";
 import {LessonPlanCardRouteComponent} from "./components/product/lesson-plan/card/lesson-plan-card.route.component";
 import {LessonPlanHeroRouteComponent} from "./components/product/lesson-plan/hero/lesson-plan-hero.route.component";
 import {LessonPlanGridRouteComponent} from "./components/product/lesson-plan/grid/lesson-plan-grid.route.component";
+import {LessonPlanHeaderRouteComponent} from "./components/product/lesson-plan/header/lesson-plan-header.route.component";
+import {LessonPlanParser} from "../product/lesson-plan";
+import {AssetService, AssetServiceConfiguration} from "../product";
 
 const routes: Routes = [
   {
@@ -62,7 +65,8 @@ const routes: Routes = [
           children: [
             {path: 'card', component: LessonPlanCardRouteComponent},
             {path: 'hero', component: LessonPlanHeroRouteComponent},
-            {path: 'grid', component: LessonPlanGridRouteComponent}
+            {path: 'grid', component: LessonPlanGridRouteComponent},
+            {path: 'header', component: LessonPlanHeaderRouteComponent}
           ]
         }
       ]
@@ -76,6 +80,17 @@ const routes: Routes = [
     ]
   }
 ]
+
+
+const lessonPlanParserFactory = () => {
+
+    const assetServiceConfig: AssetServiceConfiguration = {
+        baseUrl: '',
+        paths: {}
+    }
+
+    return new LessonPlanParser(new AssetService(assetServiceConfig));
+}
 
 export const COMPONENTS = [
   PageNotFoundComponent,
@@ -92,7 +107,8 @@ export const COMPONENTS = [
   PageHeaderRouteComponent,
   LessonPlanCardRouteComponent,
   LessonPlanHeroRouteComponent,
-  LessonPlanGridRouteComponent
+  LessonPlanGridRouteComponent,
+  LessonPlanHeaderRouteComponent
 ];
 
 @NgModule({
@@ -103,6 +119,10 @@ export const COMPONENTS = [
     ComponentsModule
   ],
   declarations: COMPONENTS,
-  exports: COMPONENTS
+  exports: COMPONENTS,
+  providers: [{
+    provide: LessonPlanParser,
+    useFactory: lessonPlanParserFactory
+  }]
 })
 export class RouteComponentsModule {}

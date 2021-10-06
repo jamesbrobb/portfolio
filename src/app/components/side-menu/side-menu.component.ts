@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy} from '@angular/core';
+import {Component} from '@angular/core';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {NavigationEnd, Router, RouterEvent} from "@angular/router";
@@ -73,6 +73,9 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
       }, {
         name: 'Grid',
         path: 'components/product/lesson-plan/grid'
+      }, {
+        name: 'Header',
+        path: 'components/product/lesson-plan/header'
       }]
     }]
   }]
