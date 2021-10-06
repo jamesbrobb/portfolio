@@ -1,8 +1,7 @@
 import {
     Component,
     Input,
-    OnChanges,
-    SimpleChanges
+    OnChanges
 } from '@angular/core';
 
 
@@ -10,7 +9,8 @@ export enum FALLBACK_COLORS {
     BLUE= 'blue',
     GREEN= 'green',
     ORANGE= 'orange',
-    PURPLE= 'purple'
+    PURPLE= 'purple',
+    WHITE= 'white'
 }
 
 
