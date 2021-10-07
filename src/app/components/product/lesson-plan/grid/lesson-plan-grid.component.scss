@@ -48,10 +48,12 @@ $min-column-width: 264px;
         @supports (display: grid) {
 
             &.five-card-layout.LG {
+              max-width: 1000px;
+
                 .grid {
                     --grid-min-column-width: #{(($min-column-width - $lesson-plan-grid-gap) / 2)};
 
-                    .grid-item {
+                    ::ng-deep.grid-layout-item {
                         grid-column: span 2;
 
                         &:nth-of-type(5n+1):not(:only-of-type),
@@ -62,7 +64,7 @@ $min-column-width: 264px;
                         }
 
                         &:first-of-type:nth-last-of-type(3),
-                        &:first-of-type:nth-last-of-type(3) ~ .grid-item {
+                        &:first-of-type:nth-last-of-type(3) ~ .grid-layout-item {
                             grid-column: span 2;
 
                             --lesson-plan-card-top-height: 100px;
@@ -71,9 +73,5 @@ $min-column-width: 264px;
                 }
             }
         }
-
-        /*@supports not (display: grid) {
-            --ef-class-grid-flex-columns: 3;
-        }*/
     }
 }

@@ -19,7 +19,8 @@
 
     display: flex;
     flex-flow: row wrap;
-    align-items: flex-start;
+    justify-content: flex-start;
+    align-content: flex-start;
     margin: calc((var(--flex-grid-vertical-gap) * -1)/2) calc((var(--flex-grid-horizontal-gap) * -1)/2);
 
     > .#{$grid_item_class_name} {

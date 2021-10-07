@@ -2,17 +2,17 @@
 
 ## IO
 
-**@Input [dataProvider] :** [`PlaylistSummaryDto`]()[]
+**@Input (dataProvider) :** [`PlaylistSummaryDto`]()[]
 
-**@Input [header]: string**
+**@Input (header): `string`**
 
-**@Input [title]: string**
+**@Input (title): `string`**
 
-**@Input [showHero]: boolean**
+**@Input (showHero): `boolean`**
 
-**@Input [fiveCardLayout]: boolean**
+**@Input (fiveCardLayout): `boolean`**
 
-**@Input [itemTemplate]: TemplateRef**
+**@Input (itemTemplate): `TemplateRef`**
 
 **@Output (lessonPlanSelected)** - triggered through a lesson plan card click
 

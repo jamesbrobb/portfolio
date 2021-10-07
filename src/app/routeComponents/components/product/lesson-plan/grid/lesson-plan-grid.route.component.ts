@@ -12,7 +12,6 @@ import {playlistSummaryCollectionMock} from "../../../../../product/index.mock";
 export class LessonPlanGridRouteComponent {
 
     public dataProvider: PlaylistSummaryDTO[] = playlistSummaryCollectionMock as PlaylistSummaryDTO[];
-    //public editorData: PlaylistSummaryDTO[];
 
     public header = 'Header';
     public title = 'Title';
@@ -22,16 +21,6 @@ export class LessonPlanGridRouteComponent {
 
     get showHero(): boolean { return this._showHero; }
     get fancyLayout(): boolean { return this._fancyLayout; }
-
-    public handleOnMockLoaded(mock: any): void {
-
-        //this.editorData = mock.response;
-        this.dataProvider = mock.response;
-    }
-
-    public onChangeHandler(data: any): void {
-        this.dataProvider = data;
-    }
 
     public onHeaderChange(event: Event): void {
         this.header = (<HTMLInputElement>event.target).value;
