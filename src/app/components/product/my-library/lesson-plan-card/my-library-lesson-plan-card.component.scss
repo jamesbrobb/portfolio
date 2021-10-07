@@ -1,0 +1,102 @@
+@import 'ef-class-resources';
+
+
+:host {
+    display: block;
+    position: relative;
+    width: 100%;
+    min-width: 26.4rem;
+
+    .my-library-lesson-plan-card {
+        border-radius: 0.2rem;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+        background-color: $ef-class-palette-white;
+
+        .top {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            min-height: 8.2rem;
+            padding: $gap-m;
+            padding-bottom: 1rem;
+            border-bottom: $ef-class-palette-grey-light-700 1px solid;
+
+            .left {
+                display: flex;
+                flex-direction: row;
+
+                &:not(:last-child) {
+                    margin-right: 1rem;
+                }
+
+                > .image {
+                    display: block;
+                    flex-shrink: 0;
+                    width: 6.4rem;
+                    height: 6.4rem;
+                    border-radius: 0.5rem;
+                    overflow: hidden;
+                    margin-right: $gap-m;
+                }
+
+                .title {
+                    font-size: 1.6rem;
+                    font-weight: 600;
+                    line-height: normal;
+                    color: $ef-class-palette-dark-blue-700;
+
+                    @include prevent-text-break-out;
+                    @include multi-line-ellipsis(3);
+                }
+            }
+
+            .options {
+                @include button_reset;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-shrink: 0;
+                width: 2.8rem;
+                height: 3.2rem;
+                fill: $ef-class-palette-dark-blue-600;
+            }
+        }
+
+        .bottom {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 3.6rem;
+            padding: $gap-m;
+
+            .tags {
+                display: flex;
+                flex-direction: row;
+                flex-shrink: 1;
+                min-width: 0;
+
+                .tag {
+                    font-size: 1.13rem;
+                    line-height: 1.45;
+                    color: $ef-class-palette-dark-blue-700;
+                    border-radius: $border-radius-s;
+                    background-color: rgba(170, 179, 187, 0.4);;
+                    padding: 0.2rem 0.5rem;
+                    margin-right: $gap-s;
+                    text-overflow:ellipsis;
+                    white-space:nowrap;
+                    overflow:hidden;
+                }
+            }
+
+            .modified-date {
+                font-size: 1.13rem;
+                line-height: 1.45;
+                color: $ef-class-palette-dark-blue-700;
+                flex-shrink: 0;
+            }
+        }
+    }
+}
