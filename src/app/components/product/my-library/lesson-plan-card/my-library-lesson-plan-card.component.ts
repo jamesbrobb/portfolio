@@ -1,29 +1,41 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef} from '@angular/core';
-import {PlaylistSummaryDTO} from '@ef-class/core';
-import {DateUtils} from '@ef-class/util';
-import {MatMenu} from '@angular/material';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  TemplateRef
+} from '@angular/core';
+
+import {MatMenu} from "@angular/material/menu";
+
+import {PlaylistSummaryDTO} from "../../../../product";
+import {DateUtils} from "../../../../core";
 
 
 
 @Component({
-    selector: 'ef-class-my-library-lesson-plan-card',
+    selector: 'my-library-lesson-plan-card',
     templateUrl: './my-library-lesson-plan-card.component.html',
     styleUrls: ['./my-library-lesson-plan-card.component.scss']
 })
 export class MyLibraryLessonPlanCardComponent implements OnChanges {
 
-    @Input() dataProvider: PlaylistSummaryDTO;
-    @Input() menu: TemplateRef<MatMenu>;
+    @Input() dataProvider: PlaylistSummaryDTO | undefined;
+    @Input() menu: MatMenu | undefined;
 
-    public id: string;
-    public title: string;
-    public description: string;
-    public backgroundImageUrl: string;
-    public skills: string[];
-    public cefr: string;
-    public modifiedDate: string;
+    public id: string | undefined;
+    public title: string | undefined;
+    public description: string | undefined;
+    public backgroundImageUrl: string | undefined;
+    public skills: string[] | undefined;
+    public cefr: string | undefined;
+    public modifiedDate: string | undefined;
 
     public ngOnChanges(changes: SimpleChanges): void {
+
+        if (!this.dataProvider) {
+            return;
+        }
 
         this.id = this.dataProvider.id;
         this.title = this.dataProvider.title;

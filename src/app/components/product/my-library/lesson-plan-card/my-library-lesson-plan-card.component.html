@@ -5,11 +5,11 @@
 
         <div class="left">
 
-            <ef-class-image class="image"
+            <image-component class="image"
                 [url]="backgroundImageUrl"
                 [fallbackSeed]="id"
                 [size]="'800w'">
-            </ef-class-image>
+            </image-component>
 
             <div class="title">{{title}}</div>
 
@@ -20,7 +20,7 @@
             [matMenuTriggerFor]="menu"
             (click)="onOptionsClick($event)">
 
-            <ef-class-icon [name]="'options'"></ef-class-icon>
+            <icon-component [name]="'options'"></icon-component>
 
         </button>
 
