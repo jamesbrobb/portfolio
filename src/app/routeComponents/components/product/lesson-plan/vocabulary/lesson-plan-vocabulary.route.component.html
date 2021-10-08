@@ -1,0 +1,20 @@
+
+<page-container [docURI]="'/components/product/lesson-plan/vocabulary/README.md'">
+
+  <div section="controls">
+
+    <div class="control-group">
+      <label>[dataProvider]: WordSenseDS[]</label>
+      <!--<ef-class-json-editor
+        [value]="editorData"
+        (onChange)="onDataChangeHandler($event)">
+      </ef-class-json-editor>-->
+    </div>
+
+  </div>
+
+  <lesson-plan-vocabulary
+    [dataProvider]="dataProvider">
+  </lesson-plan-vocabulary>
+
+</page-container>

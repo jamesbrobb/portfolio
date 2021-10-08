@@ -16,7 +16,7 @@
     <div class="control-group">
 
       <div>
-        <input type="checkbox" id="hero" name="hero" (change)="onShowHeroChangeHandler($event)"/>
+        <input type="checkbox" id="hero" name="hero" [disabled]="showMyLibraryCard" (change)="onShowHeroChangeHandler($event)"/>
         <label for="hero">Show hero</label>
       </div>
 
@@ -25,24 +25,57 @@
     <div class="control-group">
 
       <div>
-        <input type="checkbox" id="fancy" name="fancy" (change)="onFancyLayoutChangeHandler($event)"/>
+        <input type="checkbox" id="fancy" name="fancy" [disabled]="showMyLibraryCard" (change)="onFancyLayoutChangeHandler($event)"/>
         <label for="fancy">Five card layout</label>
+      </div>
+
+    </div>
+
+    <div class="control-group">
+
+      <div>
+        <input type="checkbox" id="card" name="card" (change)="onCardChangeHandler($event)"/>
+        <label for="card">Show my library lesson plan card</label>
       </div>
 
     </div>
 
   </div>
 
-  <div class="grid-wrapper">
+  <div class="grid-wrapper" [ngClass]="{'grey-bg': showMyLibraryCard}">
 
-    <lesson-plan-grid *ngIf="dataProvider"
-       class="grid"
-       [dataProvider]="dataProvider"
-       [header]="header"
-       [title]="title"
-       [showHero]="showHero"
-       [fiveCardLayout]="fancyLayout"
-       (lessonPlanSelected)="onLessonPlanSelect($event)">
+    <lesson-plan-grid class="grid"
+      [dataProvider]="dataProvider"
+      [header]="header"
+      [title]="title"
+      [showHero]="showHero && !showMyLibraryCard"
+      [fiveCardLayout]="fancyLayout && !showMyLibraryCard"
+      [itemTemplate]="showMyLibraryCard ? itemTemplate : undefined"
+      (lessonPlanSelected)="onLessonPlanSelect($event)">
+
+      <ng-template let-item="item" #itemTemplate>
+
+        <my-library-lesson-plan-card
+          [dataProvider]="item"
+          [menu]="menu">
+
+          <mat-menu #menu="matMenu"
+                    [overlapTrigger]="false"
+                    [xPosition]="'before'">
+
+            <button mat-menu-item
+                    [disableRipple]="true"
+                    (click)="onDuplicateClick(item)">Duplicate</button>
+
+            <button mat-menu-item class="destructive"
+                    disableRipple="true"
+                    (click)="onDeleteClick(item)">Delete</button>
+
+          </mat-menu>
+
+        </my-library-lesson-plan-card>
+
+      </ng-template>
 
     </lesson-plan-grid>
 

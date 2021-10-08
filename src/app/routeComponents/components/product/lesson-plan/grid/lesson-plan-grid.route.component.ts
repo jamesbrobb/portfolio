@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
 import {PlaylistSummaryDTO} from "../../../../../product";
 import {playlistSummaryCollectionMock} from "../../../../../product/index.mock";
 
@@ -18,9 +18,11 @@ export class LessonPlanGridRouteComponent {
 
     private _showHero: boolean = false;
     private _fancyLayout: boolean = false;
+    private _showMyLibraryCard: boolean = false;
 
     get showHero(): boolean { return this._showHero; }
     get fancyLayout(): boolean { return this._fancyLayout; }
+    get showMyLibraryCard(): boolean { return this._showMyLibraryCard; }
 
     public onHeaderChange(event: Event): void {
         this.header = (<HTMLInputElement>event.target).value;
@@ -40,5 +42,17 @@ export class LessonPlanGridRouteComponent {
 
     public onFancyLayoutChangeHandler(event: Event): void {
         this._fancyLayout = (<HTMLInputElement>event.target).checked;
+    }
+
+    public onCardChangeHandler(event: Event): void {
+        this._showMyLibraryCard = (<HTMLInputElement>event.target).checked;
+    }
+
+    public onDuplicateClick(item: PlaylistSummaryDTO): void {
+        console.log('Duplcate:', item);
+    }
+
+    public onDeleteClick(item: PlaylistSummaryDTO): void {
+      console.log('Delete:', item);
     }
 }

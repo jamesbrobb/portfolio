@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {LessonPlanDS, LessonPlanDTO, LessonPlanParser} from "../../../../../product/lesson-plan";
+import {LessonPlanDS, LessonPlanDTO, LessonPlanParser} from "../../../../../product/";
 import {lessonPlanMock} from "../../../../../product/lesson-plan/index.mock";
 
 
