@@ -5,10 +5,10 @@ import {WordSenseDS, WordSenseParser} from '@ef-class/core';
 import {wordSenseDTOCollectionMock} from '@ef-class/core/mocks';
 
 import { LessonPlanVocabularyComponent } from './lesson-plan-vocabulary.component';
-import {EfClassSvgRegistry} from '../../../common/svg';
-import {EfClassSvgRegistryMock} from '../../../common/svg/registry/ef-class-svg-registry.mock';
-import {EfClassIconRegistryMock} from '../../../common/icons/registry/ef-class-icon-registry.mock';
-import {EfClassIconRegistry} from '../../../common/icons';
+import {SvgRegistry} from '../../../common/svg';
+import {SvgRegistryMock} from '../../../common/svg/registry/svg-registry.mock';
+import {IconRegistryMock} from '../../../common/icons/registry/icon-registry.mock';
+import {IconRegistry} from '../../../common/icons';
 import {EfClassLessonPlanComponentsModule} from '../ef-class-lesson-plan-components.module';
 import {DebugElement} from '@angular/core';
 
@@ -27,11 +27,11 @@ describe('LessonPlanVocabularyComponent', () => {
             ],
             providers: [
                 {
-                    provide: EfClassIconRegistry,
-                    useClass: EfClassIconRegistryMock
+                    provide: IconRegistry,
+                    useClass: IconRegistryMock
                 }, {
-                    provide: EfClassSvgRegistry,
-                    useClass: EfClassSvgRegistryMock
+                    provide: SvgRegistry,
+                    useClass: SvgRegistryMock
                 }
             ]
         })
