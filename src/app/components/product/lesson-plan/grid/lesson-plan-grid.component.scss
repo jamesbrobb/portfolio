@@ -41,6 +41,7 @@ $min-column-width: 264px;
             --grid-min-column-width: #{$min-column-width};
 
             .grid-item {
+                width: 100%;
                 @include button_reset;
             }
         }

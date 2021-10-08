@@ -24,7 +24,7 @@ export class LessonPlanGridComponent implements OnChanges {
     @Input('showHero') ioShowHero: boolean = false;
     @Input('fiveCardLayout') ioFiveCardLayout: boolean = false;
 
-    @Input() itemTemplate: TemplateRef<any> | undefined;
+    @Input() itemTemplate: TemplateRef<unknown> | undefined;
 
     @Output() lessonPlanSelected = new EventEmitter<PlaylistSummaryDTO>();
 
