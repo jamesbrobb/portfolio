@@ -21,6 +21,9 @@ import {LessonPlanGridRouteComponent} from "./components/product/lesson-plan/gri
 import {LessonPlanHeaderRouteComponent} from "./components/product/lesson-plan/header/lesson-plan-header.route.component";
 import {LessonPlanParser} from "../product/lesson-plan";
 import {AssetService, AssetServiceConfiguration} from "../product";
+import {MyLibraryLessonPlanCardRouteComponent} from "./components/product/my-library/lesson-plan-card/my-library-lesson-plan-card.route.component";
+import {LessonPlanVocabularyRouteComponent} from "./components/product/lesson-plan/vocabulary/lesson-plan-vocabulary.route.component";
+import {MatMenuModule} from "@angular/material/menu";
 
 const routes: Routes = [
   {
@@ -66,7 +69,13 @@ const routes: Routes = [
             {path: 'card', component: LessonPlanCardRouteComponent},
             {path: 'hero', component: LessonPlanHeroRouteComponent},
             {path: 'grid', component: LessonPlanGridRouteComponent},
-            {path: 'header', component: LessonPlanHeaderRouteComponent}
+            {path: 'header', component: LessonPlanHeaderRouteComponent},
+            {path: 'vocabulary', component: LessonPlanVocabularyRouteComponent}
+          ]
+        }, {
+          path: 'my-library',
+          children: [
+            {path: 'lesson-plan-card', component: MyLibraryLessonPlanCardRouteComponent}
           ]
         }
       ]
@@ -108,7 +117,9 @@ export const COMPONENTS = [
   LessonPlanCardRouteComponent,
   LessonPlanHeroRouteComponent,
   LessonPlanGridRouteComponent,
-  LessonPlanHeaderRouteComponent
+  LessonPlanHeaderRouteComponent,
+  LessonPlanVocabularyRouteComponent,
+  MyLibraryLessonPlanCardRouteComponent
 ];
 
 @NgModule({
@@ -116,7 +127,8 @@ export const COMPONENTS = [
     RouterModule.forChild(routes),
     CommonModule,
     FormsModule,
-    ComponentsModule
+    ComponentsModule,
+    MatMenuModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

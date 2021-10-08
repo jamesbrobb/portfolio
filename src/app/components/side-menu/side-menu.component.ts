@@ -76,6 +76,16 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
       }, {
         name: 'Header',
         path: 'components/product/lesson-plan/header'
+      }, {
+        name: 'Vocabulary',
+        path: 'components/product/lesson-plan/vocabulary'
+      }]
+    }, {
+      name: 'My library',
+      path: 'my-library',
+      children: [{
+        name: 'Lesson plan card',
+        path: 'components/product/my-library/lesson-plan-card'
       }]
     }]
   }]

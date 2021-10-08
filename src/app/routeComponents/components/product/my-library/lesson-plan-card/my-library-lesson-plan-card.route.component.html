@@ -1,0 +1,24 @@
+
+<page-container [docURI]="'/components/product/my-library/card/README.md'">
+
+  <div section="controls">
+
+    <div class="control-group">
+
+      <label>dataProvider:</label>
+
+      <!--<ef-class-json-editor
+        [value]="editorData"
+        (onChange)="onDataChangeHandler($event)">
+      </ef-class-json-editor>-->
+
+    </div>
+
+  </div>
+
+  <my-library-lesson-plan-card
+    class="card"
+    [dataProvider]="playlist">
+  </my-library-lesson-plan-card>
+
+</page-container>
