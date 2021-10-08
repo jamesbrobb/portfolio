@@ -1,0 +1,165 @@
+@import "src/app/styles/styles";
+
+.rounded-corner-background {
+    align-items: center;
+    display: flex;
+    font-family: 'Open Sans', helvetica, arial, sans !important;
+
+    --background-color: var(--icon-background-color, #{rgba($palette-blue-50, 0.4)});
+    --background-size: var(--icon-background-size, #{$icon-background-size-xxl});
+    --size: var(--icon-size, #{$icon-size-xxl});
+
+    .icon {
+        margin: 0 auto;
+    }
+
+    &.blue {
+        --background-color: #{rgba($palette-blue-50, 0.4)};
+    }
+
+    &.red {
+        --background-color: #{rgba($palette-red-50, 0.4)};
+    }
+
+    &.green {
+        --background-color: #{rgba($palette-green-50, 0.4)};
+    }
+
+    &.purple {
+        --background-color: #{rgba($palette-purple-50, 0.4)};
+    }
+
+    &.pink {
+        --background-color: #{rgba($palette-pink-50, 0.4)};
+    }
+
+    &.grey {
+        --background-color: #{rgba($palette-grey-50, 0.4)};
+    }
+
+    &.yellow {
+        --background-color: #{$palette-yellow-50};
+    }
+
+    &.size-xs {
+        --background-size: #{$icon-background-size-xs};
+    }
+
+    &.size-s {
+        --background-size: #{$icon-background-size-s};
+    }
+
+    &.size-m {
+        --background-size: #{$icon-background-size-m};
+    }
+
+    &.size-l {
+        --background-size: #{$icon-background-size-l};
+    }
+
+    &.size-xl {
+        --background-size: #{$icon-background-size-xl};
+    }
+
+    &.size-xxl {
+        --background-size: #{$icon-background-size-xxl};
+    }
+
+    &.size-xxxl {
+        --background-size: #{$icon-background-size-xxxl};
+    }
+
+    background-color: var(--background-color);
+    width: var(--background-size);
+    height: var(--background-size);
+
+    &.radius-s {
+        border-radius: $border-radius-s;
+    }
+
+    &.radius-m {
+        border-radius: $border-radius-m;
+    }
+
+    &.radius-l {
+        border-radius: $border-radius-l;
+    }
+
+    &.radius-xl {
+        border-radius: $border-radius-xl;
+    }
+
+    &.radius-xxl {
+        border-radius: $border-radius-xxl;
+    }
+
+    &.radius-xxxl {
+        border-radius: $border-radius-xxxl;
+    }
+
+    ef-class-svg {
+
+        &.size-xs {
+            --size: #{$icon-size-xs};
+        }
+
+        &.size-s {
+            --size: #{$icon-size-s};
+        }
+
+        &.size-m {
+            --size: #{$icon-size-m};
+        }
+
+        &.size-l {
+            --size: #{$icon-size-l};
+        }
+
+        &.size-xl {
+            --size: #{$icon-size-xl};
+        }
+
+        &.size-xxl {
+            --size: #{$icon-size-xxl};
+        }
+
+        &.size-xxxl {
+            --size: #{$icon-size-xxxl};
+        }
+
+        width: var(--size);
+        height: var(--size);
+
+        &.dark-blue {
+            fill: $palette-dark-blue-500;
+        }
+
+        &.blue {
+            fill: $palette-blue-500;
+        }
+
+        &.red {
+            fill: $palette-red-500;
+        }
+
+        &.green {
+            fill: $palette-green-500;
+        }
+
+        &.purple {
+            fill: $palette-purple-500;
+        }
+
+        &.pink {
+            fill: $palette-pink-500;
+        }
+
+        &.grey {
+            fill: $palette-grey-500;
+        }
+    }
+}
+
+.icon {
+    margin: 0 auto;
+}

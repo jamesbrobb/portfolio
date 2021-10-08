@@ -9,6 +9,11 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {AnalyticsModule} from "./ng/core/analytics/analytics.module";
 import {GoogleAnalyticsModule} from "./ng/core/analytics/trackers/google-analytics/google-analytics.module";
 import {AppConfigModule} from "./app-config.module";
+import {IconsModule} from "./components/common/icons";
+import {environment} from "../environments/environment";
+import {SvgModule} from "./components/common/svg";
+
+const config = environment.configuration;
 
 
 @NgModule({
@@ -23,7 +28,9 @@ import {AppConfigModule} from "./app-config.module";
     AnalyticsModule,
     GoogleAnalyticsModule,
     AppRoutingModule,
-    ComponentsModule
+    ComponentsModule,
+    IconsModule.forRoot(config.icons),
+    SvgModule.forRoot(config.svgs)
   ],
   bootstrap: [AppComponent]
 })

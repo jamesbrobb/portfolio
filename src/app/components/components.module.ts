@@ -9,6 +9,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatMenuModule} from "@angular/material/menu";
 import {MarkdownModule} from 'ngx-markdown';
 import {GridLayoutComponent} from "./grid-layout/grid-layout.component";
 import {ResponsiveContainerDirective} from "./responsive/container/responsive-container.directive";
@@ -31,6 +32,8 @@ import {LessonPlanBriefComponent} from "./product/lesson-plan/brief/lesson-plan-
 import {TextTagsComponent} from "./product/playlist-item/text-tags/text-tags";
 import {HtmlRendererComponent} from "./common/renderers/html-renderer/html-renderer.component";
 import {LessonPlanCreditsComponent} from "./product/lesson-plan/credits/lesson-plan-credits.component";
+import {MyLibraryLessonPlanCardComponent} from "./product/my-library/lesson-plan-card/my-library-lesson-plan-card.component";
+import {IconsModule} from "./common/icons";
 
 
 export const COMPONENTS = [
@@ -52,7 +55,8 @@ export const COMPONENTS = [
   LessonPlanBriefComponent,
   LessonPlanCreditsComponent,
   TextTagsComponent,
-  HtmlRendererComponent
+  HtmlRendererComponent,
+  MyLibraryLessonPlanCardComponent
 ];
 
 
@@ -69,7 +73,9 @@ export const COMPONENTS = [
     MatIconModule,
     MatToolbarModule,
     MatSidenavModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatMenuModule,
+    IconsModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
