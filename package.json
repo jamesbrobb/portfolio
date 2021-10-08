@@ -24,6 +24,7 @@
     "@juggle/resize-observer": "^3.3.1",
     "bowser": "^2.11.0",
     "deepmerge": "^4.2.2",
+    "moment": "^2.29.1",
     "ngx-markdown": "^12.0.1",
     "normalize.css": "^8.0.1",
     "resize-observer-polyfill": "^1.5.1",
