@@ -1,4 +1,8 @@
 
 :host {
   display: block;
+
+  fallback-image {
+    min-height: 300px;
+  }
 }

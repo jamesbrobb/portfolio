@@ -1,5 +1,7 @@
 
-<page-container [docURI]="'/components/product/lesson-plan/grid/README.md'">
+<page-container [docURI]="'/components/product/lesson-plan/grid/README.md'"
+  [detailsURI]="'/routeComponents/components/product/lesson-plan/grid/README.md'"
+  [githubLink]="'components/product/lesson-plan/grid'">
 
   <div section="controls">
 
@@ -26,7 +28,7 @@
 
       <div>
         <input type="checkbox" id="fancy" name="fancy" [disabled]="showMyLibraryCard" (change)="onFancyLayoutChangeHandler($event)"/>
-        <label for="fancy">Five card layout</label>
+        <label for="fancy">Five card layout (<code>max-width</code> set to 1000px)</label>
       </div>
 
     </div>
@@ -35,7 +37,7 @@
 
       <div>
         <input type="checkbox" id="card" name="card" (change)="onCardChangeHandler($event)"/>
-        <label for="card">Show my library lesson plan card</label>
+        <label for="card">Use my library lesson plan card</label>
       </div>
 
     </div>

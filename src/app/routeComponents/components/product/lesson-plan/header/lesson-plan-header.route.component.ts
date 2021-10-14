@@ -12,12 +12,17 @@ import {lessonPlanMock} from "../../../../../product/lesson-plan/index.mock";
 export class LessonPlanHeaderRouteComponent {
 
     public lessonPlan: LessonPlanDS;
-    //public editorData: LessonPlanDTO | undefined;
+    public editorData: LessonPlanDS;
 
     private _parser: LessonPlanParser;
 
     constructor(parser: LessonPlanParser) {
         this._parser = parser;
         this.lessonPlan = this._parser.fromDTOToDS(lessonPlanMock as LessonPlanDTO);
+        this.editorData = this.lessonPlan;
+    }
+
+    public onDataChangeHandler(data: any): void {
+        this.lessonPlan = data;
     }
 }

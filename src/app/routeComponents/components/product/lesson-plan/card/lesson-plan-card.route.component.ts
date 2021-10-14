@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {PlaylistSummaryDTO} from "../../../../../product";
-import {playlistSummaryMock} from "../../../../../product/index.mock";
+import {LessonPlanSummaryDs} from "../../../../../product";
+import {lessonPlanSummaryDTOMock} from "../../../../../product/index.mock";
 
 
 
@@ -11,7 +11,8 @@ import {playlistSummaryMock} from "../../../../../product/index.mock";
 })
 export class LessonPlanCardRouteComponent {
 
-    public playlist: PlaylistSummaryDTO = playlistSummaryMock as PlaylistSummaryDTO;
+    public lessonPlan: LessonPlanSummaryDs = lessonPlanSummaryDTOMock as LessonPlanSummaryDs;
+    public editorData: LessonPlanSummaryDs = this.lessonPlan;
 
     private _isLarge: boolean = false;
 
@@ -22,6 +23,6 @@ export class LessonPlanCardRouteComponent {
     }
 
     public onDataChangeHandler(data: any): void {
-        this.playlist = data;
+        this.lessonPlan = data;
     }
 }

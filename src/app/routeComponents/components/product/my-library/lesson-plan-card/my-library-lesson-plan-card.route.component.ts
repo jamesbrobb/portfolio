@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {PlaylistSummaryDTO} from "../../../../../product";
-import {playlistSummaryMock} from "../../../../../product/index.mock";
+import {LessonPlanSummaryDs} from "../../../../../product";
+import {lessonPlanSummaryDTOMock} from "../../../../../product/index.mock";
 
 
 @Component({
@@ -10,9 +10,24 @@ import {playlistSummaryMock} from "../../../../../product/index.mock";
 })
 export class MyLibraryLessonPlanCardRouteComponent {
 
-  public playlist: PlaylistSummaryDTO = playlistSummaryMock as PlaylistSummaryDTO;
+    public lessonPlan: LessonPlanSummaryDs = lessonPlanSummaryDTOMock as LessonPlanSummaryDs;
+    public editorData: LessonPlanSummaryDs = this.lessonPlan;
+
+    public showMenu: boolean = false;
 
     public onDataChangeHandler(data: any): void {
-        this.playlist = data;
+        this.lessonPlan = data;
+    }
+
+    public onShowMenuChangeHandler(event: Event): void {
+      this.showMenu = (<HTMLInputElement>event.target).checked;
+    }
+
+    public onDoSomethingClick(item: LessonPlanSummaryDs): void {
+        console.log('onDoSomethingClick', item);
+    }
+
+    public onDoSomethingElseClick(item: LessonPlanSummaryDs): void {
+      console.log('onDoSomethingElseClick', item);
     }
 }

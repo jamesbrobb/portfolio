@@ -1,5 +1,6 @@
 
-<page-container [docURI]="'/components/product/lesson-plan/hero/README.md'">
+<page-container [docURI]="'/components/product/lesson-plan/hero/README.md'"
+  [githubLink]="'components/product/lesson-plan/hero'">
 
   <div section="controls">
 
@@ -7,10 +8,10 @@
 
       <label>dataProvider:</label>
 
-      <!--<ef-class-json-editor
+      <json-editor
         [value]="editorData"
         (onChange)="onDataChangeHandler($event)">
-      </ef-class-json-editor>-->
+      </json-editor>
 
     </div>
 
@@ -18,7 +19,7 @@
 
   <lesson-plan-hero
      class="card"
-     [dataProvider]="playlist">
+     [dataProvider]="lessonPlan">
   </lesson-plan-hero>
 
 </page-container>

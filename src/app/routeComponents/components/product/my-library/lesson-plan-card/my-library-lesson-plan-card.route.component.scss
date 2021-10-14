@@ -1,21 +1,9 @@
 
 :host {
+    display: block;
 
-    .control-group {
-        display: flex;
-        flex-direction: column;
-
-        label {
-            font-size: 1.2rem;
-        }
-
-        &:not(:last-child) {
-            margin-bottom: 10px;
-        }
-    }
-
-    .component-examples {
+    .card {
         width: 100%;
-        max-width: 42rem;
+        max-width: 420px;
     }
 }

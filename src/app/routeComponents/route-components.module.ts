@@ -20,15 +20,19 @@ import {LessonPlanHeroRouteComponent} from "./components/product/lesson-plan/her
 import {LessonPlanGridRouteComponent} from "./components/product/lesson-plan/grid/lesson-plan-grid.route.component";
 import {LessonPlanHeaderRouteComponent} from "./components/product/lesson-plan/header/lesson-plan-header.route.component";
 import {LessonPlanParser} from "../product/lesson-plan";
-import {AssetService, AssetServiceConfiguration} from "../product";
+import {AssetService, AssetServiceConfiguration, TagParser} from "../product";
 import {MyLibraryLessonPlanCardRouteComponent} from "./components/product/my-library/lesson-plan-card/my-library-lesson-plan-card.route.component";
 import {LessonPlanVocabularyRouteComponent} from "./components/product/lesson-plan/vocabulary/lesson-plan-vocabulary.route.component";
 import {MatMenuModule} from "@angular/material/menu";
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'about',
     component: HomeRouteComponent
+  }, {
+    path: '',
+    redirectTo: 'about',
+    pathMatch: 'full'
   }, {
     path: 'components',
     children: [{
@@ -98,7 +102,7 @@ const lessonPlanParserFactory = () => {
         paths: {}
     }
 
-    return new LessonPlanParser(new AssetService(assetServiceConfig));
+    return new LessonPlanParser(new AssetService(assetServiceConfig), new TagParser());
 }
 
 export const COMPONENTS = [

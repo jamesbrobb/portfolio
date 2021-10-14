@@ -1,5 +1,6 @@
 
-<page-container [docURI]="'/components/product/lesson-plan/card/README.md'">
+<page-container [docURI]="'/components/product/lesson-plan/card/README.md'"
+  [githubLink]="'components/product/lesson-plan/card'">
 
   <div section="controls">
 
@@ -7,10 +8,10 @@
 
       <label>dataProvider:</label>
 
-      <!--<ef-class-json-editor
+      <json-editor
         [value]="editorData"
         (onChange)="onDataChangeHandler($event)">
-      </ef-class-json-editor>-->
+      </json-editor>
 
     </div>
 
@@ -36,7 +37,7 @@
 
     <lesson-plan-card [ngClass]="{large: isLarge}"
       class="card"
-      [dataProvider]="playlist">
+      [dataProvider]="lessonPlan">
     </lesson-plan-card>
 
   </div>

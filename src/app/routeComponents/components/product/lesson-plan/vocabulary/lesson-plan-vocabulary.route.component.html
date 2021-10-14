@@ -1,14 +1,15 @@
 
-<page-container [docURI]="'/components/product/lesson-plan/vocabulary/README.md'">
+<page-container [docURI]="'/components/product/lesson-plan/vocabulary/README.md'"
+  [githubLink]="'components/product/lesson-plan/vocabulary'">
 
   <div section="controls">
 
     <div class="control-group">
-      <label>[dataProvider]: WordSenseDS[]</label>
-      <!--<ef-class-json-editor
+      <label>dataProvider:</label>
+      <json-editor
         [value]="editorData"
         (onChange)="onDataChangeHandler($event)">
-      </ef-class-json-editor>-->
+      </json-editor>
     </div>
 
   </div>

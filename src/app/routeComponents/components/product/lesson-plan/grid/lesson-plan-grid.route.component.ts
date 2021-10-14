@@ -1,6 +1,6 @@
-import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
-import {PlaylistSummaryDTO} from "../../../../../product";
-import {playlistSummaryCollectionMock} from "../../../../../product/index.mock";
+import {Component} from '@angular/core';
+import {LessonPlanSummaryDs} from "../../../../../product";
+import {lessonPlanSummaryDTOCollectionMock} from "../../../../../product/index.mock";
 
 
 
@@ -11,7 +11,7 @@ import {playlistSummaryCollectionMock} from "../../../../../product/index.mock";
 })
 export class LessonPlanGridRouteComponent {
 
-    public dataProvider: PlaylistSummaryDTO[] = playlistSummaryCollectionMock as PlaylistSummaryDTO[];
+    public dataProvider: LessonPlanSummaryDs[] = lessonPlanSummaryDTOCollectionMock as LessonPlanSummaryDs[];
 
     public header = 'Header';
     public title = 'Title';
@@ -32,8 +32,8 @@ export class LessonPlanGridRouteComponent {
         this.title = (<HTMLInputElement>event.target).value;
     }
 
-    public onLessonPlanSelect(playlist: PlaylistSummaryDTO): void {
-        console.log(playlist);
+    public onLessonPlanSelect(lessonPlan: LessonPlanSummaryDs): void {
+        console.log(lessonPlan);
     }
 
     public onShowHeroChangeHandler(event: Event): void {
@@ -48,11 +48,11 @@ export class LessonPlanGridRouteComponent {
         this._showMyLibraryCard = (<HTMLInputElement>event.target).checked;
     }
 
-    public onDuplicateClick(item: PlaylistSummaryDTO): void {
+    public onDuplicateClick(item: LessonPlanSummaryDs): void {
         console.log('Duplcate:', item);
     }
 
-    public onDeleteClick(item: PlaylistSummaryDTO): void {
+    public onDeleteClick(item: LessonPlanSummaryDs): void {
       console.log('Delete:', item);
     }
 }

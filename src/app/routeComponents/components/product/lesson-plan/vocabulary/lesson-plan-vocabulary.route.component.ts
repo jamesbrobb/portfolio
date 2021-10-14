@@ -13,9 +13,14 @@ import {wordSenseDTOCollectionMock} from "../../../../../product/word-sense/inde
 export class LessonPlanVocabularyRouteComponent {
 
     public dataProvider: WordSenseDS[];
-    //public editorData: WordSenseDTO[] | undefined;
+    public editorData: WordSenseDS[];
 
     constructor() {
-        this.dataProvider = WordSenseParser.fromDTOArrayToDSArray(wordSenseDTOCollectionMock as WordSenseDTO[])
+        this.dataProvider = WordSenseParser.fromDTOArrayToDSArray(wordSenseDTOCollectionMock as WordSenseDTO[]);
+        this.editorData = this.dataProvider;
+    }
+
+    public onDataChangeHandler(data: any): void {
+        this.dataProvider = data;
     }
 }

@@ -1,5 +1,7 @@
 
-<page-container [docURI]="'/components/product/lesson-plan/header/README.md'">
+<page-container [docURI]="'/components/product/lesson-plan/header/README.md'"
+  [detailsURI]="'/routeComponents/components/product/lesson-plan/header/README.md'"
+  [githubLink]="'components/product/lesson-plan/header'">
 
   <div section="controls">
 
@@ -7,10 +9,10 @@
 
       <label>dataProvider:</label>
 
-      <!--<ef-class-json-editor
+      <json-editor
         [value]="editorData"
-        (onChange)="handleOnInputChanged($event)">
-      </ef-class-json-editor>-->
+        (onChange)="onDataChangeHandler($event)">
+      </json-editor>
 
     </div>
 

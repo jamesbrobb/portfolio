@@ -1,5 +1,6 @@
 
-<page-container [docURI]="'/components/product/my-library/card/README.md'">
+<page-container [docURI]="'/components/product/my-library/lesson-plan-card/README.md'"
+  [githubLink]="'components/product/my-library/lesson-plan-card'">
 
   <div section="controls">
 
@@ -7,18 +8,38 @@
 
       <label>dataProvider:</label>
 
-      <!--<ef-class-json-editor
+      <json-editor
         [value]="editorData"
         (onChange)="onDataChangeHandler($event)">
-      </ef-class-json-editor>-->
+      </json-editor>
+
+    </div>
+
+    <div class="control-group">
+
+      <div>
+        <input type="checkbox" id="show-menu" name="show-menu" (change)="onShowMenuChangeHandler($event)"/>
+        <label for="show-menu">Show contextual menu</label>
+      </div>
 
     </div>
 
   </div>
 
-  <my-library-lesson-plan-card
-    class="card"
-    [dataProvider]="playlist">
+  <my-library-lesson-plan-card class="card"
+    [dataProvider]="lessonPlan"
+    [menu]="showMenu ? menu : undefined">
+
+    <mat-menu #menu="matMenu">
+
+      <button mat-menu-item
+              (click)="onDoSomethingClick(lessonPlan)">Do something</button>
+
+      <button mat-menu-item
+              (click)="onDoSomethingElseClick(lessonPlan)">Do something else</button>
+
+    </mat-menu>
+
   </my-library-lesson-plan-card>
 
 </page-container>
