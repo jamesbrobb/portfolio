@@ -1,22 +1,52 @@
+@import "src/app/styles/styles";
+
+
 :host {
   display: block;
+  position: relative;
   width: 100%;
   height: 100%;
-  padding: 20px;
+  padding: 10px;
+  padding-top: 20px;
 
-  --controls-width: 250px;
+  --controls-width: 100%;
 
-  @media(max-width: 600px) {
-    --controls-width: 100%;
+  @media(min-width: 320px) {
+    padding: 20px;
+    padding-top: 30px;
+  }
+
+  @media(min-width: 600px) {
+    --controls-width: 250px;
+  }
+
+  .details {
+    position: relative;
+    padding: 20px;
+    border: rgba(255, 255, 255, 0.2) solid 1px;
+    margin-bottom: 50px;
+  }
+
+  .docs {
+    position: relative;
+  }
+
+  .github-link {
+    position: absolute;
+    color: white;
+    top: 5px;
+    right: 8px;
+    transform: scale(1.5);
+    @include button_reset;
   }
 
   .controls {
 
+    margin: 40px 0;
+
     &:empty {
       display: none;
     }
-
-    margin: 20px 0;
 
     ::ng-deep .control-group {
       display: flex;
@@ -24,6 +54,19 @@
 
       &:not(:last-child) {
         margin-bottom: 10px;
+      }
+
+      .CodeMirror {
+        background-color: #272822;
+        color: #f8f8f2;
+
+        .CodeMirror-gutters {
+          background-color: #272822;
+        }
+
+        span.cm-string {
+          color: #a6e22e
+        }
       }
 
       label {
@@ -39,6 +82,13 @@
       [type="radio"] {
         margin-right: 7px;
       }
+
+      json-editor {
+        height: fit-content;
+        max-height: 300px;
+        border: solid 1px rgba(255, 255, 255, 0.2);
+        margin-bottom: 20px;
+      }
     }
   }
 
@@ -47,20 +97,33 @@
     resize: both;
     overflow: auto;
     max-width: 100%;
-    min-height: 400px;
+    height: fit-content;
     background-color: #424242;
     border: solid 1px rgba(255,255,255,.12);
     padding: 10px;
+
+    &:empty {
+      display: none;
+    }
   }
 
   markdown {
     display: block;
+    color: #D7D7D7;
 
     & + markdown {
       margin-top: 50px;
     }
 
     ::ng-deep {
+
+      h1, h2, h3, h4, code {
+        color: #E9E9E9;
+      }
+
+      code {
+        font-weight: normal;
+      }
 
       p + h2,
       pre + h2 {
@@ -69,6 +132,15 @@
 
       a {
         color: white;
+        text-decoration: none;
+
+        > code {
+          color: white;
+        }
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
 
       li {
@@ -78,10 +150,6 @@
       li > ul {
         margin-top: 10px;
       }
-
-      /*p {
-        font-size: 16px;
-      }*/
     }
   }
 }

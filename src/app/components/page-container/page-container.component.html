@@ -1,24 +1,38 @@
 
-<section class="markdown" [style.visibility]="hasLoaded ? 'visible' : 'hidden'">
+<section class="markdown details" [style.display]="hasLoaded && detailsURI ? 'block' : 'none'">
 
-  <markdown *ngFor="let docUri of docURIs" ngPreserveWhitespaces [src]="'/assets/docs/' + docUri" (load)="onLoad($event)" (error)="onError($event)"></markdown>
-
-</section>
-
-<section class="error" *ngIf="hasError && hasLoaded">
-
-  <p>An error occurred whilst loading the docs.</p>
+  <markdown [src]="'/assets/docs/' + detailsURI"></markdown>
 
 </section>
 
-<section class="controls" [style.visibility]="hasLoaded ? 'visible' : 'hidden'">
+<div class="docs" [style.display]="hasLoaded ? 'block' : 'none'">
 
-  <ng-content select="[section=controls]"></ng-content>
+  <button class="github-link" *ngIf="githubLink" (click)="onGithubLinkSelect()">
+    <icon-component [name]="'github'"></icon-component>
+  </button>
 
-</section>
+  <section class="markdown">
 
-<section [style.visibility]="hasLoaded && !noExample ? 'visible' : 'hidden'" class="example">
+    <markdown *ngFor="let docUri of docURIs" [src]="'/assets/docs/' + docUri" (load)="onLoad($event)" (error)="onError($event)"></markdown>
 
-  <ng-content></ng-content>
+  </section>
 
-</section>
+  <section class="error" *ngIf="hasError">
+
+    <p>An error occurred whilst loading the docs.</p>
+
+  </section>
+
+  <section class="controls">
+
+    <ng-content select="[section=controls]"></ng-content>
+
+  </section>
+
+  <section class="example">
+
+    <ng-content></ng-content>
+
+  </section>
+
+</div>

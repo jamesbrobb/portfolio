@@ -1,4 +1,13 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, Inject, InjectionToken, Input, OnChanges, SimpleChanges} from '@angular/core';
+
+
+export interface GithubConfig {
+  root: string;
+}
+
+export const githubConfigService = new InjectionToken<GithubConfig>('githubConfigService')
+
+
 
 @Component({
   selector: 'page-container',
@@ -7,19 +16,27 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 })
 export class PageContainerComponent implements OnChanges {
 
+  @Input('detailsURI') ioDetailsURI: string | undefined;
+  @Input('githubLink') ioGithubLink: string | undefined;
   @Input('docURI') ioDocURI: string | string[] | undefined;
-  @Input('noExample') ioNoExample: boolean | undefined;
 
+  detailsURI: string | undefined;
+  githubLink: string | undefined;
   docURIs: string[] | undefined;
-  noExample: boolean | undefined;
   hasLoaded: boolean = false;
   hasError: boolean = false;
 
+  private _githubConfig: GithubConfig;
   private _loadCount = 0;
+
+  constructor(@Inject(githubConfigService) githubConfig: GithubConfig) {
+    this._githubConfig = githubConfig;
+  }
 
   ngOnChanges(changes: SimpleChanges) {
 
-    this.noExample = !!this.ioNoExample;
+    this.detailsURI = this.ioDetailsURI;
+    this.githubLink = this.ioGithubLink;
 
     this.hasLoaded = false;
     this.hasError = false;
@@ -49,6 +66,10 @@ export class PageContainerComponent implements OnChanges {
   onError($event: string): void {
     this._onLoad();
     this.hasError = true;
+  }
+
+  onGithubLinkSelect(): void {
+    window.open(`${this._githubConfig.root}${this.githubLink}`);
   }
 
   private _onLoad(): void {
