@@ -5,13 +5,13 @@ import {TagDS} from '../tag.ds';
 
 export class TagParser {
 
-    private static _familyLabels: {[key: string]: string} = {};
+    private _familyLabels: {[key: string]: string} = {};
 
-    public static setFamilyLabels(arg: {[key: string]: string}): void {
+    public setFamilyLabels(arg: {[key: string]: string}): void {
         this._familyLabels = arg;
     }
 
-    public static fromDTOToDS(dto: TagDTO): TagDS {
+    public fromDTOToDS(dto: TagDTO): TagDS {
 
         const familyLabel: string = this._familyLabels && this._familyLabels[dto.family] ? this._familyLabels[dto.family] : dto.family;
 
@@ -23,7 +23,7 @@ export class TagParser {
         };
     }
 
-    public static fromDTOArrayToDSArray(dto: TagDTO[]): TagDS[] {
+    public fromDTOArrayToDSArray(dto: TagDTO[]): TagDS[] {
         const result = dto.map((item: TagDTO) => this.fromDTOToDS(item));
         return result;
     }

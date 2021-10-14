@@ -1,4 +1,4 @@
-import {WordSenseDS} from '../word-sense/index';
+import {WordSenseDS} from '../word-sense/';
 import {TagDS} from '../tag';
 
 export interface LessonPlanDS {

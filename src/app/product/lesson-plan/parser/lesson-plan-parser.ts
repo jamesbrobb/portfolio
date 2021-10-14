@@ -11,9 +11,11 @@ import { AssetService, ASSET_TYPE } from '../../asset/';
 export class LessonPlanParser {
 
     private _assetService: AssetService;
+    private _tagParser: TagParser;
 
-    constructor(assetService: AssetService) {
+    constructor(assetService: AssetService, tagParser: TagParser) {
         this._assetService = assetService;
+        this._tagParser = tagParser;
     }
 
     public fromDTOToDS(dto: LessonPlanDTO): LessonPlanDS {
@@ -25,10 +27,10 @@ export class LessonPlanParser {
             topic: dto.topic,
             title: dto.title,
             description: dto.description,
-            skills: dto.skill ? TagParser.fromDTOArrayToDSArray(dto.skill) : [],
-            CEFRStages: dto.CEFRStages ? TagParser.fromDTOArrayToDSArray(dto.CEFRStages) : [],
+            skills: dto.skill ? this._tagParser.fromDTOArrayToDSArray(dto.skill) : [],
+            CEFRStages: dto.CEFRStages ? this._tagParser.fromDTOArrayToDSArray(dto.CEFRStages) : [],
             recommendedStudyEnvironment: dto.recommendedStudyEnvironment ?
-                TagParser.fromDTOArrayToDSArray(dto.recommendedStudyEnvironment) :
+              this._tagParser.fromDTOArrayToDSArray(dto.recommendedStudyEnvironment) :
                 [],
             objectives: dto.lessonObjectives,
             duration: duration,

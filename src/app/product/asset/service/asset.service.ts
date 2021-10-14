@@ -37,7 +37,7 @@ export class AssetService {
 
     public getUrlFromId(type: ASSET_TYPE, id: string): string {
 
-        if (!this._config.paths || !this._config.paths[type]) {
+        if (!this._config.paths || this._config.paths[type] === undefined) {
             console.warn(`AssetService:getUrlFromId:: No path configured for type '${type}'`);
             return id;
         }
