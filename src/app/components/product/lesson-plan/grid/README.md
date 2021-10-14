@@ -1,22 +1,24 @@
-# **Lesson Plan Grid**
+# Lesson Plan Grid
 
 ## IO
 
-**@Input (dataProvider) :** [`PlaylistSummaryDto`]()[]
+**@Input (dataProvider):** [`Array<LessonPlanSummaryDs>`]()
 
-**@Input (header): `string`**
+**@Input (header):** `string`
 
-**@Input (title): `string`**
+**@Input (title):** `string`
 
-**@Input (showHero): `boolean`**
+**@Input (showHero):** `boolean`
 
-**@Input (fiveCardLayout): `boolean`**
+**@Input (fiveCardLayout):** `boolean`
 
-**@Input (itemTemplate): `TemplateRef`**
+**@Input (itemTemplate):** `TemplateRef`
 
-**@Output (lessonPlanSelected)** - triggered through a lesson plan card click
+**@Output (lessonPlanSelected):** [`LessonPlanSummaryDs`]() - Triggered through a lesson plan card click
 
 ## Usage
+
+Renders the [LessonPlanCardComponent](https://github.com/jamesbrobb/portfolio/tree/main/src/app/components/product/lesson-plan/card) by default
 
 ```html
 <lesson-plan-grid
@@ -25,7 +27,24 @@
     [title]="'title'"
     [showHero]="true"
     [fiveCardLayout]="true"
-    [itemTemplate]="itemTemplate"
     (lessonPlanSelected)="onLessonPlanSelect($event)">
+</lesson-plan-grid>
+```
+
+Or can be supplied with an `itemTemplate`
+```html
+<lesson-plan-grid
+  [dataProvider]="dataProvider"
+  [header]="'header'"
+  [title]="'title'"
+  [itemTemplate]="itemTemplate"
+  (lessonPlanSelected)="onLessonPlanSelect($event)">
+
+  <ng-template let-item="item" #itemTemplate>
+    
+    <some-other-component-to-render [dataProvider]="item"></some-other-component-to-render>
+    
+  </ng-template>
+  
 </lesson-plan-grid>
 ```

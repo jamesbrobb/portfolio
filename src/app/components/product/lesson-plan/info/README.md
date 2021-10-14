@@ -1,4 +1,4 @@
-# **Lesson plan info**
+# Lesson plan info
 
 Given a [LessonPlan]()
 renders its:
@@ -9,12 +9,12 @@ renders its:
 
 ## IO
 
-**@Input [dataProvider] :** [`LessonPlan`]()
+**@Input (dataProvider):** [`LessonPlan`]()
 
 ## Usage
 
 ```html
 <lesson-plan-info
-    [lessonPlan]="LessonPlan"
-></lesson-plan-info>
+    [dataProvider]="LessonPlan">
+</lesson-plan-info>
 ```

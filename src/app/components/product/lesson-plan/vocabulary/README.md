@@ -1,8 +1,8 @@
-# **Lesson Plan Vocabulary**
+# Lesson Plan Vocabulary
 
 ## IO
 
-**@Input [dataProvider] :** [`WordSenseDS`]()[]
+**@Input (dataProvider):** [`WordSenseDS`]()[]
 
 ## Usage
 

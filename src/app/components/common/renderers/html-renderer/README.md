@@ -1,4 +1,4 @@
-# **Html Renderer Component**
+# Html Renderer Component
 
 Converts a string into html and place it in the DOM.
 
@@ -8,7 +8,7 @@ Automatic link parsing: Text will be automatically converted to a link if it has
 
 ## IO
 
-**@Input(html):** `string`. The text to be transformed
+**@Input(html):** `string` - The text to be transformed
 
 ## Usage
 

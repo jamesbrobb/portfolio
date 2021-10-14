@@ -1,13 +1,13 @@
-# **Lesson Plan Hero**
+# Lesson Plan Hero
 
 ## IO
 
-**@Input [dataProvider] :** [`PlaylistSummaryDto`]()
+**@Input (dataProvider):** [`LessonPlanSummaryDs`]()
 
 ## Usage
 
 ```html
 <lesson-plan-hero
-    [dataProvider]="playlist">
+    [dataProvider]="lessonPlan">
 </lesson-plan-hero>
 ```

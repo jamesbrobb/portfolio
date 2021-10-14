@@ -1,8 +1,8 @@
-# **Lesson plan credits**
+# Lesson plan credits
 
 ## IO
 
-**@Input(isPublishedByUser) :** boolean
+**@Input(isPublishedByUser):** boolean
 
 ## Usage
 
