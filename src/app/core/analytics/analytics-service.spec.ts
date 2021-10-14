@@ -64,7 +64,7 @@ describe('AnalyticsService', () => {
 
         beforeEach(() => {
             spy = spyOn(adaptor, 'track').and.callThrough();
-            consoleSpy = spyOn(console, 'warn').and.callThrough();
+            consoleSpy = spyOn(console, 'warn').and.stub();
         });
 
         it('should throw an error if the supplied action id does not exist on the supplied actions', () => {

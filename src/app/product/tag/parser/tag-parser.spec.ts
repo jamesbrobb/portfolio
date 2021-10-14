@@ -1,9 +1,9 @@
-import * as dtoMock from '../tag.dto.mock.json';
 
 import { TagParser } from './tag-parser';
 import {TagDTO} from '../tag.dto';
+import {tagDTOMock} from "../index.mock";
 
-const TAG_FAMILY_LABELS = {
+const TAG_FAMILY_LABELS: {[index:string]: string} = {
     'Study Environment': 'Study environment',
     'Lesson Type': 'Skill',
     'CEFR Stage': 'CEFR stage'
@@ -13,16 +13,16 @@ const TAG_FAMILY_LABELS = {
 
 describe('TagParser', () => {
 
-    const parser = TagParser;
-    let mock;
+    const parser = new TagParser();
+    let mock: {dto:TagDTO};
 
     beforeEach(() => {
 
         mock = {
-            dto: Object.assign({}, dtoMock as any)
+            dto: Object.assign({}, tagDTOMock) as TagDTO
         };
 
-        TagParser.setFamilyLabels(TAG_FAMILY_LABELS);
+        parser.setFamilyLabels(TAG_FAMILY_LABELS);
     });
 
     describe('setFamilyLabels', () => {

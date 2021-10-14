@@ -1,17 +1,21 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import {LessonPlanDS, LessonPlanParser, AssetService, AssetServiceConfiguration} from '@ef-class/core';
-import {lessonPlanDTOMock} from '@ef-class/core/mocks';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import {CommonModule} from "@angular/common";
 
 import { LessonPlanHeaderComponent } from './lesson-plan-header.component';
-import {EfClassLessonPlanComponentsModule} from '../ef-class-lesson-plan-components.module';
 import {IconRegistry} from '../../../common/icons';
 import {IconRegistryMock} from '../../../common/icons/registry/icon-registry.mock';
 import {SvgRegistry} from '../../../common/svg';
 import {SvgRegistryMock} from '../../../common/svg/registry/svg-registry.mock';
-import {ResponsiveContainerDirective} from '../../../responsive/container/responsive-container.directive';
-import {EfClassResponsiveComponentsModule} from '../../../responsive/ef-class-responsive-components.module';
-import {ResponsiveContainerMockDirective} from '../../../responsive/container/responsive-container.directive.mock';
+import {AssetServiceConfiguration, LessonPlanDS} from "../../../../product";
+import {lessonPlanDSMock} from "../../../../product/lesson-plan/index.mock";
+import {PageHeaderComponent} from "../../../layout/headers/page/page-header.component";
+import {ComponentsModule} from "../../../components.module";
+import {ResponsiveContainerDirective} from "../../../responsive/container/responsive-container.directive";
+import {AnalyticsModule} from "../../../../ng/core";
+import {ResponsiveContainerDirectiveMock} from "../../../responsive/container/responsive-container.directive.mock";
+import {AnalyticsModuleMock} from "../../../../ng/core/analytics/analytics.module.mock";
+import {ObjectUtils} from "../../../../core";
+
 
 
 
@@ -23,16 +27,19 @@ describe('LessonPlanHeaderComponent', () => {
 
     const assetConfig: AssetServiceConfiguration = {
         baseUrl: '',
-        paths: {}
+        paths: {
+          image:''
+        }
     };
 
-    const parser: LessonPlanParser = new LessonPlanParser(new AssetService(assetConfig));
-
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                EfClassLessonPlanComponentsModule,
-                EfClassResponsiveComponentsModule
+                CommonModule,
+                ComponentsModule
+            ],
+            declarations: [
+              PageHeaderComponent
             ],
             providers: [
                 {
@@ -44,22 +51,24 @@ describe('LessonPlanHeaderComponent', () => {
                 }
             ]
         })
-        .overrideModule(EfClassResponsiveComponentsModule, {
-            remove: {
-                declarations: [ResponsiveContainerDirective],
-                exports: [ResponsiveContainerDirective]
-            },
-            add: {
-                declarations: [ResponsiveContainerMockDirective],
-                exports: [ResponsiveContainerMockDirective]
-            }
+        .overrideModule(ComponentsModule, {
+          remove: {
+            declarations: [ResponsiveContainerDirective],
+            exports: [ResponsiveContainerDirective],
+            imports: [AnalyticsModule]
+          },
+          add: {
+            declarations: [ResponsiveContainerDirectiveMock],
+            exports: [ResponsiveContainerDirectiveMock],
+            imports: [AnalyticsModuleMock]
+          }
         })
         .compileComponents();
     }));
 
     beforeEach(() => {
 
-        dataProvider = parser.fromDTOToDS(lessonPlanDTOMock as any);
+        dataProvider = ObjectUtils.clone(lessonPlanDSMock)
 
         fixture = TestBed.createComponent(LessonPlanHeaderComponent);
 
@@ -74,3 +83,4 @@ describe('LessonPlanHeaderComponent', () => {
         expect(component).toBeTruthy();
     });
 });
+

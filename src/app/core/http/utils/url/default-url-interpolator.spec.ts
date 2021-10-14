@@ -1,4 +1,4 @@
-/*import { UrlInterpolator } from './url-interpolator';
+import { UrlInterpolator } from './url-interpolator';
 import {DefaultUrlInterpolator} from './default-url-interpolator';
 
 
@@ -32,5 +32,5 @@ describe('DefaultUrlInterpolator', () => {
         })
         .toThrowError();
     });
-});*/
+});
 

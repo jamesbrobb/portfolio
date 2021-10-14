@@ -1,14 +1,17 @@
-import * as dtoMock from '../lesson-plan.dto.mock.json';
-import * as dsMock from '../lesson-plan.ds.mock.json';
-
 import { LessonPlanParser } from './lesson-plan-parser';
 import {ASSET_TYPE, AssetService} from '../../asset';
+import {lessonPlanDSMock, lessonPlanDTOMock} from "../index.mock";
+import {LessonPlanDTO} from "../lesson-plan.dto";
+import {LessonPlanDS} from "../lesson-plan.ds";
+import {ObjectUtils} from "../../../core";
+import {TagParser} from "../../tag";
 
 
 
 describe('LessonPlanParser', () => {
 
-    let parser, mock;
+    let parser: LessonPlanParser,
+      mock: {dto: LessonPlanDTO, ds: LessonPlanDS, grid: any}
 
     const assetService = {
         getUrl: (type: ASSET_TYPE, path: string) => path,
@@ -16,10 +19,10 @@ describe('LessonPlanParser', () => {
     } as AssetService;
 
     beforeEach(() => {
-        parser = new LessonPlanParser(assetService);
+        parser = new LessonPlanParser(assetService, new TagParser());
         mock = {
-            dto: dtoMock,
-            ds: dsMock,
+            dto: ObjectUtils.clone(lessonPlanDTOMock) as LessonPlanDTO,
+            ds: ObjectUtils.clone(lessonPlanDSMock) as LessonPlanDS,
             grid: undefined
         };
     });
@@ -98,12 +101,12 @@ describe('LessonPlanParser', () => {
             describe('without vocabulary defined', () => {
 
                 beforeEach(() => {
-                    mock.dto['vocabulary'] = undefined;
+                    mock.dto.vocabulary = [];
                     mock.ds.vocabulary = [] ;
                 });
 
                 it('returns a LessonPlanDS without vocabulary information', () => {
-                    expect( parser.fromDTOToDS(<any>mock.dto) ).toEqual(mock.ds);
+                    expect( parser.fromDTOToDS(mock.dto) ).toEqual(mock.ds);
                 });
             });
 
@@ -120,3 +123,4 @@ describe('LessonPlanParser', () => {
         });
     });
 });
+

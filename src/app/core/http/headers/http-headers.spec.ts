@@ -1,7 +1,7 @@
 import {HttpHeaders, HttpHeadersConfig} from './http-headers';
 
 
-/*describe('HttpHeaders', () => {
+describe('HttpHeaders', () => {
 
     var headersConfig: HttpHeadersConfig = {
             value1: 'value1',
@@ -110,4 +110,4 @@ import {HttpHeaders, HttpHeadersConfig} from './http-headers';
             expect(headers.get('value4')).toEqual('mergedValue4');
         });
     });
-});*/
+});

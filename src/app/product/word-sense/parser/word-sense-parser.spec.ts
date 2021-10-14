@@ -1,8 +1,7 @@
-import * as dtoMock from '../word-sense.dto.mock.json';
-import * as dsMock from '../word-sense.ds.mock.json';
 import {WordSenseParser} from './word-sense-parser';
 import {WordSenseDTO} from '../word-sense.dto';
 import {WordSenseDS} from '../word-sense.ds';
+import {wordSenseDTOMock, wordSenseDSMock} from "../index.mock";
 
 
 
@@ -19,8 +18,8 @@ describe('WordSenseParser', () => {
     beforeEach(() => {
         parser = WordSenseParser;
         mock = {
-            dto: <any>dtoMock,
-            ds: <any>dsMock
+            dto: <any>wordSenseDTOMock,
+            ds: <any>wordSenseDSMock
         };
     });
 

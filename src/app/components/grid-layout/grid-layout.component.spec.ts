@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {By} from "@angular/platform-browser";
 
 import { GridLayoutComponent } from './grid-layout.component';
-import {By} from "@angular/platform-browser";
 import {ResponsiveContainerDirectiveMock} from "../responsive/container/responsive-container.directive.mock";
 
 describe('GridLayoutComponent', () => {

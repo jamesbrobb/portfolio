@@ -1,21 +1,18 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
 import {DebugElement} from '@angular/core';
-
-import {PlaylistSummaryDTO} from '@ef-class/core';
-import {playlistSummaryCollectionMock} from '@ef-class/core/mocks';
-
-import {EfClassImageModule} from '../../../media/image/ef-class-image.module';
 
 import {LessonPlanGridComponent} from './lesson-plan-grid.component';
 import {LessonPlanCardComponent} from '../card/lesson-plan-card.component';
 import {LessonPlanHeroComponent} from '../hero/lesson-plan-hero.component';
 
-import {EfClassLayoutComponentsModule} from '../../../layout/ef-class-layout-components.module';
-import {ResponsiveContainerMockDirective} from '../../../index.mock';
-import {ResponsiveContainerDirective} from '../../../responsive/container/responsive-container.directive';
-import {EfClassResponsiveComponentsModule} from '../../../responsive/ef-class-responsive-components.module';
+import {LessonPlanSummaryDs} from "../../../../product";
+import {lessonPlanSummaryDTOCollectionMock} from "../../../../product/lesson-plan/summary/index.mock";
+import {GridLayoutComponent} from "../../../grid-layout/grid-layout.component";
+import {ImageComponent} from "../../../media/image/image/image.component";
+import {FallbackImageComponent} from "../../../media/image/fallback/fallback-image.component";
+import {ResponsiveContainerDirectiveMock} from "../../../responsive/container/responsive-container.directive.mock";
 
 
 
@@ -23,38 +20,29 @@ describe('LessonPlanGridComponent', () => {
 
     let component: LessonPlanGridComponent,
         fixture: ComponentFixture<LessonPlanGridComponent>,
-        mock: PlaylistSummaryDTO[];
+        mock: LessonPlanSummaryDs[];
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                CommonModule,
-                EfClassImageModule,
-                EfClassLayoutComponentsModule,
-                EfClassResponsiveComponentsModule
+                CommonModule
             ],
             declarations: [
                 LessonPlanHeroComponent,
                 LessonPlanCardComponent,
-                LessonPlanGridComponent
+                LessonPlanGridComponent,
+                GridLayoutComponent,
+                ImageComponent,
+                FallbackImageComponent,
+                ResponsiveContainerDirectiveMock
             ]
-        })
-        .overrideModule(EfClassResponsiveComponentsModule, {
-            remove: {
-                declarations: [ResponsiveContainerDirective],
-                exports: [ResponsiveContainerDirective]
-            },
-            add: {
-                declarations: [ResponsiveContainerMockDirective],
-                exports: [ResponsiveContainerMockDirective]
-            }
         })
         .compileComponents();
     }));
 
     beforeEach(() => {
 
-        mock = <any>playlistSummaryCollectionMock;
+        mock = lessonPlanSummaryDTOCollectionMock as LessonPlanSummaryDs[];
 
         fixture = TestBed.createComponent(LessonPlanGridComponent);
 
@@ -82,7 +70,8 @@ describe('LessonPlanGridComponent', () => {
 
             const headerValue = 'Header';
 
-            component.header = headerValue;
+            component.ioHeader = headerValue;
+            component.ngOnChanges();
             fixture.detectChanges();
 
             const headerElement = fixture.debugElement.query(By.css('.header')).nativeElement;
@@ -104,7 +93,8 @@ describe('LessonPlanGridComponent', () => {
 
             const titleValue = 'Title';
 
-            component.title = titleValue;
+            component.ioTitle = titleValue;
+            component.ngOnChanges();
             fixture.detectChanges();
 
             const titleElement = fixture.debugElement.query(By.css('.lesson-plan-grid > .title')).nativeElement;
@@ -126,28 +116,31 @@ describe('LessonPlanGridComponent', () => {
 
             const heroElement = fixture.debugElement.query(By.css('.hero'));
 
+            expect(component.showHero).toBeFalse();
             expect(heroElement).toBeNull();
         });
 
         it('should be displayed when showHero is true', () => {
 
-            component.showHero = true;
+            component.ioShowHero = true;
             component.ngOnChanges();
             fixture.detectChanges();
 
             const heroElement = fixture.debugElement.query(By.css('.hero'));
 
-            expect(heroElement).toBeDefined();
+            expect(component.showHero).toBeTrue();
+            expect(heroElement).not.toBeNull();
         });
 
         it('should display one less item than dataprovider length when hero is shown', () => {
 
-            component.showHero = true;
+            component.ioShowHero = true;
             component.ngOnChanges();
             fixture.detectChanges();
 
             const cards: DebugElement[] = fixture.debugElement.queryAll(By.css('.grid-item'));
 
+            expect(component.showHero).toBeTrue();
             expect(cards.length).toEqual(mock.length - 1);
         });
     });

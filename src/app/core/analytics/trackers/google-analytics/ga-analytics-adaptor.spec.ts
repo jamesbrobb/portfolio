@@ -31,7 +31,7 @@ describe('GaAnalyticsAdaptor', () => {
 
         adaptor = new GaAnalyticsAdaptor(gtag, config);
 
-        consoleSpy = spyOn(console, 'warn').and.callThrough();
+        consoleSpy = spyOn(console, 'warn').and.stub();
     });
 
     describe('.track()', () => {

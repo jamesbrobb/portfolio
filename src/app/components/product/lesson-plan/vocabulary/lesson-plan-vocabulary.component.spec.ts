@@ -1,16 +1,17 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {CommonModule} from "@angular/common";
+import {DebugElement} from '@angular/core';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {WordSenseDS, WordSenseParser} from '@ef-class/core';
-import {wordSenseDTOCollectionMock} from '@ef-class/core/mocks';
-
 import { LessonPlanVocabularyComponent } from './lesson-plan-vocabulary.component';
-import {SvgRegistry} from '../../../common/svg';
+import {SvgComponent, SvgRegistry} from '../../../common/svg';
 import {SvgRegistryMock} from '../../../common/svg/registry/svg-registry.mock';
 import {IconRegistryMock} from '../../../common/icons/registry/icon-registry.mock';
-import {IconRegistry} from '../../../common/icons';
-import {EfClassLessonPlanComponentsModule} from '../ef-class-lesson-plan-components.module';
-import {DebugElement} from '@angular/core';
+import {IconComponent, IconRegistry} from '../../../common/icons';
+import {WordSenseDS, WordSenseParser} from "../../../../product";
+import {wordSenseDTOCollectionMock} from "../../../../product/word-sense/index.mock";
+import {GridLayoutComponent} from "../../../grid-layout/grid-layout.component";
+import {MatIcon} from "@angular/material/icon";
 
 
 
@@ -20,10 +21,17 @@ describe('LessonPlanVocabularyComponent', () => {
         fixture: ComponentFixture<LessonPlanVocabularyComponent>,
         dataProvider: WordSenseDS[];
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                EfClassLessonPlanComponentsModule
+                CommonModule
+            ],
+            declarations: [
+                IconComponent,
+                MatIcon,
+                SvgComponent,
+                GridLayoutComponent,
+                LessonPlanVocabularyComponent
             ],
             providers: [
                 {
@@ -59,7 +67,7 @@ describe('LessonPlanVocabularyComponent', () => {
 
         const countElement: HTMLElement = fixture.debugElement.query(By.css('.count')).nativeElement;
 
-        expect(countElement.textContent.indexOf(dataProvider.length.toString())).toEqual(1);
+        expect(countElement.textContent?.indexOf(dataProvider.length.toString())).toEqual(1);
     });
 
     it('should display the correct number of word senses', () => {

@@ -4,7 +4,9 @@ import { HttpHeaders } from '../../headers/http-headers';
 import { HttpRequest } from '../../request/http-request';
 import { HttpRequestOptions } from '../../request/http-request-options';
 
-/*describe('HttpEndpointMethod', () => {
+
+
+describe('HttpEndpointMethod', () => {
 
     let method: HttpEndpointMethod,
         signature: HttpEndpointMethodSignature;
@@ -60,9 +62,9 @@ import { HttpRequestOptions } from '../../request/http-request-options';
                         'Content-type': 'application/json'
                     }),
                     timeout: 1000,
-                    requestHooks: [null],
-                    responseHooks: [null],
-                    errorHooks: [null]
+                    requestHooks: [],
+                    responseHooks: [],
+                    errorHooks: []
                 };
 
                 method = new HttpEndpointMethod(signature);
@@ -76,12 +78,12 @@ import { HttpRequestOptions } from '../../request/http-request-options';
                 expect(request.url).toEqual(signature.url);
                 expect(request.withCredentials).toEqual(signature.withCredentials);
                 expect(request.cache).toEqual(signature.cache);
-                expect(request.headers.get('Content-type')).toEqual(signature.headers.get('Content-type'));
+                expect((request.headers as HttpHeaders).get('Content-type')).toEqual((signature.headers as HttpHeaders).get('Content-type'));
                 expect(request.timeout).toEqual(signature.timeout);
 
-                expect(method.requestHooks).toEqual(signature.requestHooks);
-                expect(method.responseHooks).toEqual(signature.responseHooks);
-                expect(method.errorHooks).toEqual(signature.errorHooks);
+                expect(method.requestHooks).toEqual(signature.requestHooks as string[]);
+                expect(method.responseHooks).toEqual(signature.responseHooks as string[]);
+                expect(method.errorHooks).toEqual(signature.errorHooks as string[]);
             });
 
             it('creates a copy of the supplied headers to enforce encapsulation', () => {
@@ -121,7 +123,7 @@ import { HttpRequestOptions } from '../../request/http-request-options';
                 expect(request.url).toEqual(signature.url);
                 expect(request.withCredentials).toEqual(signature.withCredentials);
                 expect(request.cache).toEqual(signature.cache);
-                expect(request.headers.get('Content-type')).toEqual(signature.headers.get('Content-type'));
+                expect((request.headers as HttpHeaders).get('Content-type')).toEqual(signature.headers?.get('Content-type'));
                 expect(request.timeout).toEqual(signature.timeout);
             });
         });
@@ -168,14 +170,14 @@ import { HttpRequestOptions } from '../../request/http-request-options';
                     data: {}
                 };
 
-                request = method.toRequest(null, options);
+                request = method.toRequest(undefined, options);
             });
 
             it('returns an HttpRequest object with the previously set constructor values overriden', () => {
 
                 expect(request.withCredentials).toEqual(options.withCredentials);
                 expect(request.cache).toEqual(options.cache);
-                expect(request.headers.get('Content-type')).toEqual(options.headers.get('Content-type'));
+                expect((request.headers as HttpHeaders).get('Content-type')).toEqual(options.headers?.get('Content-type'));
                 expect(request.timeout).toEqual(options.timeout);
                 expect(request.search).toEqual(options.search);
                 expect(request.data).toEqual(options.data);
@@ -187,4 +189,4 @@ import { HttpRequestOptions } from '../../request/http-request-options';
             });
         });
     });
-});*/
+});

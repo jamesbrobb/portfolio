@@ -1,55 +1,44 @@
-/*import {CommonModule} from '@angular/common';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {CommonModule} from '@angular/common';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {DebugElement} from '@angular/core';
 
 import {By} from '@angular/platform-browser';
-import {PlaylistSummaryDTO} from '@ef-class/core';
-import {playlistSummaryMock} from '@ef-class/core/mocks';
-
 import { LessonPlanHeroComponent } from './lesson-plan-hero.component';
-import {EfClassImageModule} from '../../../media/image/ef-class-image.module';
 
-import {ResponsiveContainerMockDirective} from '../../../index.mock';
-import {ResponsiveContainerDirective} from '../../../responsive/container/responsive-container.directive';
-import {EfClassResponsiveComponentsModule} from '../../../responsive/ef-class-responsive-components.module';
+import {LessonPlanSummaryDto} from "../../../../product";
+import {lessonPlanSummaryDTOMock} from "../../../../product/lesson-plan/index.mock";
+import {ImageComponent} from "../../../media/image/image/image.component";
+import {FallbackImageComponent} from "../../../media/image/fallback/fallback-image.component";
+import {ResponsiveContainerDirectiveMock} from "../../../responsive/container/responsive-container.directive.mock";
 
 
 
-describe('LessonPlanCardComponent', () => {
+describe('LessonPlanHeroComponent', () => {
 
     let component: LessonPlanHeroComponent,
         fixture: ComponentFixture<LessonPlanHeroComponent>,
-        mock: PlaylistSummaryDTO,
+        mock: LessonPlanSummaryDto,
         titleElement: HTMLElement,
         tagElements: DebugElement[];
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                CommonModule,
-                EfClassImageModule,
-                EfClassResponsiveComponentsModule
+                CommonModule
             ],
             declarations: [
-                LessonPlanHeroComponent
+                FallbackImageComponent,
+                ImageComponent,
+                LessonPlanHeroComponent,
+                ResponsiveContainerDirectiveMock
             ]
-        })
-        .overrideModule(EfClassResponsiveComponentsModule, {
-            remove: {
-                declarations: [ResponsiveContainerDirective],
-                exports: [ResponsiveContainerDirective]
-            },
-            add: {
-                declarations: [ResponsiveContainerMockDirective],
-                exports: [ResponsiveContainerMockDirective]
-            }
         })
         .compileComponents();
     }));
 
     beforeEach(() => {
 
-        mock = <any>playlistSummaryMock;
+        mock = <any>lessonPlanSummaryDTOMock;
 
         fixture = TestBed.createComponent(LessonPlanHeroComponent);
 
@@ -82,4 +71,4 @@ describe('LessonPlanCardComponent', () => {
     it('should display title', () => {
         expect(titleElement.textContent).toEqual(mock.title);
     });
-});*/
+});

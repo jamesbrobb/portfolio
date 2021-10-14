@@ -1,16 +1,16 @@
 import { HttpEndpointConfigParser } from './http-endpoint-config-parser';
 import { HttpRequest } from '../../../request/http-request';
-import { HttpHeaders } from '../../../headers/http-headers';
+import {HttpHeaders, HttpHeadersConfig} from '../../../headers/http-headers';
 import { HttpEndpointMethod } from '../../method/http-endpoint-method';
 import { HttpSearchParams } from '../http-endpoint-config';
 import { HttpEndpointConfig } from '../http-endpoint-config';
 
 
-/*describe('HttpEndpointConfigParser', () => {
+describe('HttpEndpointConfigParser', () => {
 
     let parser: HttpEndpointConfigParser,
         config: HttpEndpointConfig,
-        methods: Map < string, HttpEndpointMethod > ,
+        methods: Map<string, HttpEndpointMethod>,
         method: HttpEndpointMethod,
         request: HttpRequest;
 
@@ -20,7 +20,7 @@ import { HttpEndpointConfig } from '../http-endpoint-config';
 
     function parse(): void {
         methods = parser.parse(config);
-        method = methods.get(methodId);
+        method = methods.get(methodId) as HttpEndpointMethod;
         request = method.toRequest();
     }
 
@@ -73,7 +73,7 @@ import { HttpEndpointConfig } from '../http-endpoint-config';
 
     describe('parse', () => {
 
-        it('creates a map of methods whose keys match those of the supplied config', () => {
+        it('should create a map of methods whose keys match those of the supplied config', () => {
 
             parse();
 
@@ -82,7 +82,7 @@ import { HttpEndpointConfig } from '../http-endpoint-config';
 
         describe('type', () => {
 
-            it('be set to GET', () => {
+            it('should be set to GET', () => {
 
                 parse();
 
@@ -92,23 +92,23 @@ import { HttpEndpointConfig } from '../http-endpoint-config';
 
         describe('url', () => {
 
-            it('prepend the config baseUrl to the method url', () => {
+            it('should prepend the config baseUrl to the method url', () => {
 
                 parse();
 
-                expect(request.url).toEqual(config.baseUrl + config.methods[methodId].url);
+                expect(request.url).toEqual(`${config.baseUrl}${config.methods[methodId].url}`);
             });
 
-            it('does not prepend baseUrl if non is supplied', () => {
+            it('should not prepend baseUrl if non is supplied', () => {
 
                 config.baseUrl = undefined;
 
                 parse();
 
-                expect(request.url).toEqual(config.methods[methodId].url);
+                expect(request.url).toEqual(config.methods[methodId].url as String);
             });
 
-            it('override config baseUrl if method baseUrl is supplied', () => {
+            it('should override config baseUrl if method baseUrl is supplied', () => {
 
                 const methodBaseUrl = 'api2/';
 
@@ -122,27 +122,31 @@ import { HttpEndpointConfig } from '../http-endpoint-config';
 
         describe('search', () => {
 
-            it('be set', () => {
+            beforeEach(() => {
+
+            });
+
+            it('should be set', () => {
 
                 parse();
 
-                const search: HttpSearchParams = request.search;
+                const search: HttpSearchParams = request.search as HttpSearchParams;
 
-                expect(search['field1']).toEqual(config.search['field1']);
-                expect(search['field2']).toEqual(config.methods[methodId].search['field2']);
+                expect(search['field1']).toEqual(config.search?.['field1'] as String);
+                expect(search['field2']).toEqual(config.methods?.[methodId]?.search?.['field2'] as String);
             });
         });
 
         describe('withCredentials', () => {
 
-            it('use default to false if no setting is supplied', () => {
+            it('should use default to false if no setting is supplied', () => {
 
                 parse();
 
                 expect(request.withCredentials).toBe(false);
             });
 
-            it('use the config setting if no method specific setting is supplied', () => {
+            it('should use the config setting if no method specific setting is supplied', () => {
 
                 config.withCredentials = true;
 
@@ -151,7 +155,7 @@ import { HttpEndpointConfig } from '../http-endpoint-config';
                 expect(request.withCredentials).toBe(true);
             });
 
-            it('override the config setting if a method specific setting is supplied', () => {
+            it('should override the config setting if a method specific setting is supplied', () => {
 
                 config.withCredentials = true;
                 config.methods[methodId].withCredentials = false;
@@ -161,7 +165,7 @@ import { HttpEndpointConfig } from '../http-endpoint-config';
                 expect(request.withCredentials).toBe(false);
             });
 
-            it('use method specific setting if supplied', () => {
+            it('should use method specific setting if supplied', () => {
 
                 config.withCredentials = undefined;
                 config.methods[methodId].withCredentials = true;
@@ -174,14 +178,14 @@ import { HttpEndpointConfig } from '../http-endpoint-config';
 
         describe('cache', () => {
 
-            it('use default to false if no setting is supplied', () => {
+            it('should use default to false if no setting is supplied', () => {
 
                 parse();
 
                 expect(request.cache).toBe(false);
             });
 
-            it('use the config setting if no method specific setting is supplied', () => {
+            it('should use the config setting if no method specific setting is supplied', () => {
 
                 config.cache = true;
 
@@ -190,7 +194,7 @@ import { HttpEndpointConfig } from '../http-endpoint-config';
                 expect(request.cache).toBe(true);
             });
 
-            it('override the config setting if a method specific setting is supplied', () => {
+            it('should override the config setting if a method specific setting is supplied', () => {
 
                 config.cache = true;
                 config.methods[methodId].cache = false;
@@ -200,7 +204,7 @@ import { HttpEndpointConfig } from '../http-endpoint-config';
                 expect(request.cache).toBe(false);
             });
 
-            it('use method specific setting if supplied', () => {
+            it('should use method specific setting if supplied', () => {
 
                 config.cache = undefined;
                 config.methods[methodId].cache = true;
@@ -213,44 +217,44 @@ import { HttpEndpointConfig } from '../http-endpoint-config';
 
         describe('headers', () => {
 
-            it('sets headers to empty object literal if none supplied', () => {
+            it('should set headers to empty object literal if none supplied', () => {
 
                 config.headers = undefined;
                 config.methods[methodId].headers = undefined;
 
                 parse();
 
-                expect(request.headers).toEqual(jasmine.any(HttpHeaders));
+                expect((request.headers as HttpHeaders)).toEqual(jasmine.any(HttpHeaders));
             });
 
-            it('sets config headers', () => {
+            it('should set config headers', () => {
 
                 parse();
 
-                expect(request.headers.get('Accept')).toEqual('application/json');
+                expect((request.headers as HttpHeaders).get('Accept')).toEqual('application/json');
             });
 
-            it('sets method specific headers', () => {
+            it('should set method specific headers', () => {
 
                 parse();
 
-                expect(request.headers.get('Cache-control')).toEqual('no-cache');
+                expect((request.headers as HttpHeaders).get('Cache-control')).toEqual('no-cache');
             });
 
-            it('override config headers with method specific headers', () => {
+            it('should override config headers with method specific headers', () => {
 
-                config.methods[methodId].headers['Accept'] = 'application/xml';
+                (config.methods[methodId].headers as HttpHeadersConfig)['Accept'] = 'application/xml';
 
                 parse();
 
-                expect(request.headers.get('Accept')).toEqual('application/xml');
+                expect((request.headers as HttpHeaders).get('Accept')).toEqual('application/xml');
             });
         });
 
         describe('hooks maps', () => {
 
 
-            it('returns an empty array for hooks if no config hooks are present for a specific type', () => {
+            it('should return an empty array for hooks if no config hooks are present for a specific type', () => {
 
                 parser = new HttpEndpointConfigParser();
 
@@ -271,4 +275,4 @@ import { HttpEndpointConfig } from '../http-endpoint-config';
         });
 
     });
-});*/
+});

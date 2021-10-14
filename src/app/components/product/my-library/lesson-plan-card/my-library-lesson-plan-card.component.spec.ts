@@ -1,13 +1,13 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import {By} from '@angular/platform-browser';
 import {DebugElement} from '@angular/core';
 
-import {playlistSummaryMock} from '@ef-class/core/mocks';
-import {PlaylistSummaryDTO} from '@ef-class/core';
-
 import { MyLibraryLessonPlanCardComponent } from './my-library-lesson-plan-card.component';
-import {EfClassMyLibraryComponentsModule} from '../ef-class-my-library-components.module';
+import {LessonPlanSummaryDto} from "../../../../product";
+import {lessonPlanSummaryDTOMock} from "../../../../product/index.mock";
+import {ImageComponent} from "../../../media/image/image/image.component";
+import {FallbackImageComponent} from "../../../media/image/fallback/fallback-image.component";
 
 
 
@@ -15,14 +15,19 @@ describe('MyLibraryLessonPlanCardComponent', () => {
 
     let component: MyLibraryLessonPlanCardComponent,
         fixture: ComponentFixture<MyLibraryLessonPlanCardComponent>,
-        mock: PlaylistSummaryDTO,
+        mock: LessonPlanSummaryDto,
         titleElement: HTMLElement,
         tagElements: DebugElement[];
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                EfClassMyLibraryComponentsModule
+
+            ],
+            declarations: [
+                FallbackImageComponent,
+                ImageComponent,
+                MyLibraryLessonPlanCardComponent
             ]
         })
         .compileComponents();
@@ -30,7 +35,7 @@ describe('MyLibraryLessonPlanCardComponent', () => {
 
     beforeEach(() => {
 
-        mock = <any>playlistSummaryMock;
+        mock = <any>lessonPlanSummaryDTOMock;
 
         fixture = TestBed.createComponent(MyLibraryLessonPlanCardComponent);
 
@@ -64,3 +69,4 @@ describe('MyLibraryLessonPlanCardComponent', () => {
         expect(titleElement.textContent).toEqual(mock.title);
     });
 });
+

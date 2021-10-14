@@ -1,25 +1,20 @@
+
 import {
     TestBed,
-    async,
+    waitForAsync,
     ComponentFixture
 } from '@angular/core/testing';
 
 import { HtmlRendererComponent } from './html-renderer.component';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {DomSanitizer} from '@angular/platform-browser';
 import {SecurityContext} from '@angular/core';
 
 
-/******************************************************
- *
- * HtmlRendererComponent Spec
- *
- ******************************************************/
+describe('HtmlRendererComponent', () => {
 
-describe('EfClassHtmlRendererComponent', () => {
+    let helper: Helper;
 
-    let helper;
-
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 HtmlRendererComponent
@@ -31,11 +26,11 @@ describe('EfClassHtmlRendererComponent', () => {
         helper = new Helper('<h1>foo</h1> <h2>bar</h2>');
     });
 
-    it('renders the text provided by the [ html-renderer ] Input in the DOM', async(() => {
+    it('renders the text provided by the [ html-renderer ] Input in the DOM', waitForAsync(() => {
         expect(helper.textContent).toBe('foo bar');
     }));
 
-    it('renders a url as a link', async(() => {
+    it('renders a url as a link', waitForAsync(() => {
 
         helper = new Helper('<p>http://google.com</p>');
 
@@ -43,11 +38,6 @@ describe('EfClassHtmlRendererComponent', () => {
     }));
 });
 
-/******************************************************
- *
- * Helper
- *
- ******************************************************/
 
 class Helper {
 
@@ -76,21 +66,22 @@ class Helper {
         return this._fixture.nativeElement.textContent.trim();
     }
 
-    set html(value: string) {
+    set html(value: string | undefined) {
         if (!value) {
             return;
         }
         this._component.html = value;
     }
 
-    get safeHtml(): string {
+    get safeHtml(): string | null {
 
         const sanitizer: DomSanitizer = TestBed.get(DomSanitizer);
 
-        return sanitizer.sanitize(SecurityContext.HTML, this._component.safeHTML);
+        return sanitizer.sanitize(SecurityContext.HTML, this._component.safeHTML || null);
     }
 
     detectChanges(): void {
         this._fixture.detectChanges();
     }
 }
+
