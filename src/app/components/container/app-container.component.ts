@@ -43,4 +43,13 @@ export class AppContainerComponent implements OnInit, OnDestroy {
     this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
   }
 
+  onMenuItemSelected(): void {
+
+    if(!this.mobileQuery.matches) {
+      return;
+    }
+
+    this.sidenav?.close();
+  }
+
 }
