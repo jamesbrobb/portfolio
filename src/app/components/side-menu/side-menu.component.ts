@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Output, EventEmitter} from '@angular/core';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {NavigationEnd, Router, RouterEvent} from "@angular/router";
@@ -13,7 +13,7 @@ export interface MenuItemNode {
 
 const MENU_DATA_PROVIDER: MenuItemNode[] = [{
   name: 'About',
-  path: ''
+  path: 'about'
 }, {
   name: 'Components',
   path: 'components',
@@ -113,6 +113,8 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
 })
 export class SideMenuComponent {
 
+  @Output() menuItemSelected = new EventEmitter()
+
   private _router: Router;
 
   treeControl = new NestedTreeControl<MenuItemNode>(node => node.children);
@@ -130,6 +132,10 @@ export class SideMenuComponent {
   }
 
   hasChild = (_: number, node: MenuItemNode) => !!node.children && node.children.length > 0;
+
+  public onItemClick(): void {
+      this.menuItemSelected.emit();
+  }
 
   private _handleRouteChange = (event: any): void => {
 

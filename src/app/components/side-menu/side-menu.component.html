@@ -3,7 +3,8 @@
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
     <button mat-button [attr.aria-label]="node.name"
        [routerLink]="node.path"
-       routerLinkActive="active">
+       routerLinkActive="active"
+       (click)="onItemClick()">
       {{node.name}}
     </button>
   </mat-tree-node>
