@@ -10,7 +10,7 @@ export class IconRegistryMock {
     }
 
     public isIconRegistered(iconName: string): boolean {
-        return;
+        return false;
     }
 
     public getIconSvgByName(name: string): any {
