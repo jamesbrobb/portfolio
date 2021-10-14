@@ -34,6 +34,8 @@ import {HtmlRendererComponent} from "./common/renderers/html-renderer/html-rende
 import {LessonPlanCreditsComponent} from "./product/lesson-plan/credits/lesson-plan-credits.component";
 import {MyLibraryLessonPlanCardComponent} from "./product/my-library/lesson-plan-card/my-library-lesson-plan-card.component";
 import {IconsModule} from "./common/icons";
+import {CodemirrorComponent} from "./forms/codemirror/codemirror.component";
+import {JsonEditorComponent} from "./forms/json-editor/json-editor.component";
 
 
 export const COMPONENTS = [
@@ -56,7 +58,9 @@ export const COMPONENTS = [
   LessonPlanCreditsComponent,
   TextTagsComponent,
   HtmlRendererComponent,
-  MyLibraryLessonPlanCardComponent
+  MyLibraryLessonPlanCardComponent,
+  CodemirrorComponent,
+  JsonEditorComponent
 ];
 
 
