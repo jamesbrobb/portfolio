@@ -1,7 +1,6 @@
 import {Component, Input, OnChanges} from '@angular/core';
-import {LessonPlanDS} from "../../../../product/lesson-plan";
+import {LessonPlanDS, WordSenseDS} from "../../../../product/";
 import {OVERLAY_COLORS} from "../../../common/overlay/color/color-overlay.component";
-import {WordSenseDS} from "../../../../product/word-sense";
 import {FALLBACK_COLORS} from "../../../media/image/fallback/fallback-image.component";
 
 

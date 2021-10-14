@@ -1,5 +1,6 @@
 import {Component, Input, OnChanges} from '@angular/core';
-import {PlaylistSummaryDTO} from "../../../../product";
+import {LessonPlanSummaryDs} from "../../../../product";
+
 
 @Component({
   selector: 'lesson-plan-card',
@@ -8,7 +9,7 @@ import {PlaylistSummaryDTO} from "../../../../product";
 })
 export class LessonPlanCardComponent implements OnChanges {
 
-  @Input() dataProvider: PlaylistSummaryDTO | undefined;
+  @Input() dataProvider: LessonPlanSummaryDs | undefined;
 
   public id: string | undefined;
   public title: string | undefined;

@@ -8,7 +8,7 @@ import {
 
 import {MatMenu} from "@angular/material/menu";
 
-import {PlaylistSummaryDTO} from "../../../../product";
+import {LessonPlanSummaryDs} from "../../../../product";
 import {DateUtils} from "../../../../core";
 
 
@@ -20,7 +20,7 @@ import {DateUtils} from "../../../../core";
 })
 export class MyLibraryLessonPlanCardComponent implements OnChanges {
 
-    @Input() dataProvider: PlaylistSummaryDTO | undefined;
+    @Input() dataProvider: LessonPlanSummaryDs | undefined;
     @Input() menu: MatMenu | undefined;
 
     public id: string | undefined;

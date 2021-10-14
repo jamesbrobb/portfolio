@@ -7,7 +7,7 @@ import {
   TemplateRef
 } from '@angular/core';
 
-import {PlaylistSummaryDTO} from "../../../../product";
+import {LessonPlanSummaryDs} from "../../../../product";
 
 
 
@@ -18,7 +18,7 @@ import {PlaylistSummaryDTO} from "../../../../product";
 })
 export class LessonPlanGridComponent implements OnChanges {
 
-    @Input() dataProvider: PlaylistSummaryDTO[] | undefined;
+    @Input() dataProvider: LessonPlanSummaryDs[] | undefined;
     @Input('header') ioHeader: string | undefined;
     @Input('title') ioTitle: string | undefined;
     @Input('showHero') ioShowHero: boolean = false;
@@ -26,10 +26,10 @@ export class LessonPlanGridComponent implements OnChanges {
 
     @Input() itemTemplate: TemplateRef<unknown> | undefined;
 
-    @Output() lessonPlanSelected = new EventEmitter<PlaylistSummaryDTO>();
+    @Output() lessonPlanSelected = new EventEmitter<LessonPlanSummaryDs>();
 
-    public data: PlaylistSummaryDTO[] | undefined;
-    public heroData: PlaylistSummaryDTO | undefined;
+    public data: LessonPlanSummaryDs[] | undefined;
+    public heroData: LessonPlanSummaryDs | undefined;
     public header: string | undefined;
     public title: string | undefined;
     public showHero: boolean = false;
@@ -61,7 +61,7 @@ export class LessonPlanGridComponent implements OnChanges {
         this.data = data;
     }
 
-    public onLessonPlanSelect(playlist: PlaylistSummaryDTO): void {
+    public onLessonPlanSelect(playlist: LessonPlanSummaryDs): void {
         this.lessonPlanSelected.emit(playlist);
     }
 }
