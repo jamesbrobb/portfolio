@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {AnalyticsActionsService} from './ng/core';
+import {githubConfigService} from "./components/page-container/page-container.component";
+import {environment} from "../environments/environment";
 
 
 
@@ -33,6 +35,9 @@ import {AnalyticsActionsService} from './ng/core';
         }
       }
     }
+  }, {
+    provide: githubConfigService,
+    useValue: environment.configuration.githubConfig
   }]
 })
 export class AppConfigModule { }

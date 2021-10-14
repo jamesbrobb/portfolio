@@ -11,7 +11,7 @@ type VALID_JSON = {[key: string]: VALID_JSON_TYPES};
 
 export class ObjectUtils {
 
-  public static clone(source: VALID_JSON): VALID_JSON {
+  public static clone<R>(source: VALID_JSON): R {
     return JSON.parse(JSON.stringify(source));
   }
 
