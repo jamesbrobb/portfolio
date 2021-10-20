@@ -1,3 +1,7 @@
 # Analytics
 
-a description of analytics
+A configurable analytics management implementation, that's both framework and tracking library agnostic.
+
+Interface for adaptor
+
+

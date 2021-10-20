@@ -1,4 +1,4 @@
-import {InjectionToken, NgModule, Optional} from '@angular/core';
+import {InjectionToken, NgModule, Optional, Provider} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AnalyticsActions,
@@ -24,37 +24,37 @@ export const AnalyticsAdaptorService = new InjectionToken<AnalyticsAdaptor>('Ana
  */
 export const AnalyticsHooksService = new InjectionToken<AnalyticsHook[]>('AnalyticsHooksService');
 
+const ANALYTICS_SERVICE_PROVIDER: Provider = {
+  provide: AnalyticsService,
+  useFactory: (
+      actions: AnalyticsActions,
+      adaptor: AnalyticsAdaptor,
+      hooks: AnalyticsHook[]): AnalyticsService => {
 
-export function analyticsServiceFactory(
-  actions: AnalyticsActions,
-  adaptor: AnalyticsAdaptor,
-  hooks: AnalyticsHook[]): AnalyticsService {
+    if (Array.isArray(hooks)) {
+      hooks = ([] as AnalyticsHook[]).concat(...hooks)
+    }
 
-  if (Array.isArray(hooks)) {
-    hooks = ([] as AnalyticsHook[]).concat(...hooks)
-  }
-
-  return new AnalyticsService(actions, adaptor, hooks);
+    return new AnalyticsService(actions, adaptor, hooks);
+  },
+  deps: [
+    AnalyticsActionsService,
+    AnalyticsAdaptorService,
+    [new Optional(), AnalyticsHooksService]
+  ]
 }
 
 const COMPONENTS = [
   AnalyticsEventDirective
 ];
 
+
 @NgModule({
   imports: [
     CommonModule
   ],
   providers: [
-    {
-      provide: AnalyticsService,
-      useFactory: analyticsServiceFactory,
-      deps: [
-        AnalyticsActionsService,
-        AnalyticsAdaptorService,
-        [new Optional(), AnalyticsHooksService]
-      ]
-    }
+    ANALYTICS_SERVICE_PROVIDER
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS

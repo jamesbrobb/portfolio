@@ -1,3 +1,3 @@
 # Google Analytics (gtag)
 
-Description of module
+A Google analytics adaptor 

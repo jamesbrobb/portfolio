@@ -1,3 +1,74 @@
 # Analytics NgModule
 
-Description of module
+A module that exposes:
+
+- a directive to track interaction
+- url change tracking
+
+It has 3 injection tokens, 2 required and one optional
+
+- AnalyticsActionsService: `AnalyticsActions` - for config
+- AnalyticsAdaptorService: `AnalyticsAdaptor` - to supply a tracking library specific adaptor
+- AnalyticsHooksService: `AnalyticsHook[]` - Optional - enables a way to configure hooks
+
+## Usage
+
+```ts
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppRoutingModule } from './app-routing.module';
+import {AnalyticsModule, GoogleAnalyticsModule} from "./ng/core/";
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    AnalyticsModule,
+    GoogleAnalyticsModule, // importing this module automatically creates and registers the GaAnalyticsAdaptor for the AnalyticsAdaptorService token
+    //...
+  ],
+  providers: [{
+    provide: AnalyticsActionsService,
+    useValue: analyticsActionsObject    
+  }
+      
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+Switching to another analytics tracking service is as simple as removing the `GoogleAnalyticsModule` from imports and creating another 3rd party analytics service adaptor. Hooks can be used to create 
+
+```ts
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppRoutingModule } from './app-routing.module';
+import {AnalyticsModule, SomeOtherThirdPartyAnalyticsModule} from "./ng/core/";
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    AnalyticsModule,
+    SomeOtherThirdPartyAnalyticsModule,
+    //...
+  ],
+  providers: [{
+    provide: AnalyticsActionsService,
+    useValue: analyticsActionsObject    
+  }
+      
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```

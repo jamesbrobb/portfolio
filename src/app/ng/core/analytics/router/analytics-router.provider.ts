@@ -1,8 +1,8 @@
 import {APP_BOOTSTRAP_LISTENER, ComponentRef, Provider} from "@angular/core";
-import {AnalyticsService, AnalyticsTrackingTypes} from "../../../../core";
+import {DOCUMENT} from "@angular/common";
 import {NavigationEnd, Router, RouterEvent} from "@angular/router";
 import {filter} from "rxjs/operators";
-import {DOCUMENT} from "@angular/common";
+import {AnalyticsService, AnalyticsTrackingTypes} from "../../../../core";
 
 
 

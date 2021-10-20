@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {InjectionToken, NgModule, Provider} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AnalyticsAdaptorService} from "../../analytics.module";
 import {
@@ -8,14 +8,16 @@ import {
 } from "../../../../../core";
 
 
-const config: GaAnalyticsConfig = {
-  trackerId: 'G-EJZC3TV0QZ',
-  trackerName: '',
-  cookieDomain: ''
-}
+export const GAConfigService = new InjectionToken<GaAnalyticsConfig>('GAConfigService');
 
-export function createAnalyticsAdaptor(): AnalyticsAdaptor {
-  return new GaAnalyticsAdaptor((window as any)?.gtag, config);
+const GOOGLE_ANALYTICS_ADAPTOR_PROVIDER: Provider = {
+  provide: AnalyticsAdaptorService,
+  useFactory: (config: GaAnalyticsConfig): AnalyticsAdaptor => {
+    return new GaAnalyticsAdaptor((window as any)?.gtag, config);
+  },
+  deps: [
+    GAConfigService
+  ]
 }
 
 
@@ -25,10 +27,8 @@ export function createAnalyticsAdaptor(): AnalyticsAdaptor {
   imports: [
     CommonModule
   ],
-  providers: [{
-    provide: AnalyticsAdaptorService,
-    useFactory: createAnalyticsAdaptor,
-    deps: []
-  }]
+  providers: [
+    GOOGLE_ANALYTICS_ADAPTOR_PROVIDER
+  ]
 })
 export class GoogleAnalyticsModule { }

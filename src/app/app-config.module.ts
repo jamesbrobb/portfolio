@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {AnalyticsActionsService} from './ng/core';
+import {AnalyticsActionsService, GAConfigService} from './ng/core';
 import {githubConfigService} from "./components/page-container/page-container.component";
 import {environment} from "../environments/environment";
 
@@ -38,6 +38,9 @@ import {environment} from "../environments/environment";
   }, {
     provide: githubConfigService,
     useValue: environment.configuration.githubConfig
+  }, {
+    provide: GAConfigService,
+    useValue: environment.configuration.analyticsConfig
   }]
 })
 export class AppConfigModule { }

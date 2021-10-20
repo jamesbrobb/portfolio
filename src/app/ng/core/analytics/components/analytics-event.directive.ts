@@ -1,5 +1,5 @@
 import {Directive, HostListener, Input} from '@angular/core';
-import {AnalyticsEvent, AnalyticsService} from "../../../../core/analytics/index";
+import {AnalyticsEvent, AnalyticsService} from "../../../../core/";
 
 
 

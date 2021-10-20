@@ -5,7 +5,6 @@ import {PageNotFoundComponent} from "./routeComponents/page-not-found/page-not-f
 import {ANALYTICS_ROUTER_PROVIDER} from "./ng/core";
 
 const ROUTES: Routes = [
-  //{ path: '' },
   { path: '**', component: PageNotFoundComponent },
 ]
 
