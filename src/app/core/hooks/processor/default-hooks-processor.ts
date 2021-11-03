@@ -10,6 +10,8 @@ import {
   HooksProcessorBypassConditionArgType
 } from './hooks-processor';
 
+import {HookMap} from "../hook-map";
+
 
 
 export class DefaultHooksProcessor implements HooksProcessor {
@@ -28,7 +30,7 @@ export class DefaultHooksProcessor implements HooksProcessor {
 
         return hooks.reduce(
 
-          (observable: Observable<IOType | BypassType>, hook: Hook<IOType> | Hook<IOType, BypassType>) => {
+          (observable: Observable<IOType | BypassType>, hook: Hook<IOType> | Hook<IOType, BypassType>): HooksProcessorReturnType<IOType, BypassType> => {
 
             return observable.pipe(
               mergeMap(
@@ -44,6 +46,44 @@ export class DefaultHooksProcessor implements HooksProcessor {
                 })
             );
 
-          }, initialValue) as HooksProcessorReturnType<IOType, BypassType>;
+          }, initialValue);
     }
+}
+
+
+export class HookProcessor2 {
+
+    public execute<IOType, BypassType = void>(
+
+        input: IOType | Observable<IOType>,
+        hookMap: HookMap<IOType, BypassType>,
+        ...args: HooksProcessorBypassConditionArgType<IOType, BypassType>
+
+    ): HooksProcessorReturnType<IOType, BypassType> {
+
+        const initialValue: Observable<IOType> = input instanceof Observable ? input : of(input),
+            bypassCondition = args[0],
+            hooks = hookMap.getHooks();
+
+        return hooks.reduce(
+
+            (observable: Observable<IOType | BypassType>,
+             hook: Hook<IOType> | Hook<IOType, BypassType>): HooksProcessorReturnType<IOType, BypassType> => {
+
+                return observable.pipe(
+                    mergeMap(
+                        (inpt: IOType | BypassType) => {
+
+                        if(bypassCondition?.(inpt)) {
+                            return of(inpt);
+                        }
+
+                        const result = hook.execute(inpt as IOType);
+
+                    return result instanceof Observable ? result : of(result);
+              })
+            );
+
+        }, initialValue);
+  }
 }

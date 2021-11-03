@@ -86,7 +86,7 @@ export class AnalyticsService {
 
         } catch (e) {
 
-            console.warn(e.message);
+            console.warn((e as Error).message);
         }
     }
 
