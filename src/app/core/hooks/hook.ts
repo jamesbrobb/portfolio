@@ -13,7 +13,7 @@ export type GetHookParams<HT extends Hook<unknown, unknown>> =
     [IO, ReplaceNeverWith<Exclude<A, IO>, void>] :
     never;
 
-§
+
 export interface Hook<IOType, AdditionalOutputType = void> {
     execute(input: IOType): HookReturnType<IOType, AdditionalOutputType>;
 }
