@@ -33,7 +33,6 @@
     "normalize.css": "^8.0.1",
     "resize-observer-polyfill": "^1.5.1",
     "rxjs": "~6.6.0",
-    "tsd": "^0.18.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
   },
@@ -49,7 +48,8 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
-    "typescript": "~4.3.2"
+    "typescript": "~4.3.2",
+    "tsd": "^0.18.0"
   },
   "tsd": {
     "directory": "./src"
