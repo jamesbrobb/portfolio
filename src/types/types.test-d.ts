@@ -1,5 +1,14 @@
-import {Conditional, DoesExtend, ReplaceNeverWith, TypeEqualsType} from './types';
-import {expectError, expectType} from "tsd";
+import {expectError, expectType} from 'tsd';
+
+import {
+    Conditional,
+    DoesExtend,
+    EqualsNever,
+    ReplaceNeverWith,
+    TypeEqualsType,
+    ReplaceTypeWith
+} from './types';
+
 
 class TypeA {
   doSomething(): TypeA {
@@ -23,64 +32,147 @@ class TypeC {
   }
 }
 
+interface TestInterface<U, T = void> {
+    doSomething(arg:U): U | T;
+}
+
+class TestClass implements TestInterface<number, string> {
+
+    doSomething(arg: number): number | string {
+
+        if(arg < 5) {
+            return arg
+        }
+
+        return 'test'
+    }
+}
+
+class TestClass2 implements TestInterface<number> {
+
+    doSomething(arg: number): number {
+        return arg;
+    }
+}
+
+declare const bool: boolean;
+declare const str: string;
+declare const num: number;
+declare const strOrNum: string | number;
 
 
-// Tests for Conditional
 
-declare const type1: Conditional<true, TypeA, TypeB>;
-expectType<TypeA>(type1);
-expectError<TypeB>(type1);
+// assertions for Conditional
 
-declare const type2: Conditional<false, TypeA, TypeB>;
-expectType<TypeB>(type2);
-expectError<TypeA>(type2);
+expectType<Conditional<true, TypeA, TypeB>>(new TypeA);
+
+expectType<Conditional<false, TypeA, TypeB>>(new TypeB);
 
 
-// Tests for DoesExtend
+// assertions for DoesExtend
 
-declare const type3: DoesExtend<Object, Function>;
-expectType<false>(type3);
-expectError<true>(type3);
+expectType<DoesExtend<Object, Function>>(false);
 
-declare const type4: DoesExtend<Function, Object>;
-expectType<true>(type4);
-expectError<false>(type4);
+expectType<DoesExtend<Function, Object>>(true);
 
-declare const type5: DoesExtend<Function, Function>;
-expectType<true>(type5);
-expectError<false>(type5);
+expectType<DoesExtend<Function, Function>>(true);
+
+expectType<DoesExtend<number | string, number>>(bool); // distributive
+
+expectError<DoesExtend<number | string, number, false>>(bool); // non-distributive
+
+expectType<DoesExtend<number | string, number, false>>(false); // non-distributive
+
+expectType<DoesExtend<TestInterface<string, number>, TestInterface<string, number>>>(true);
+expectError<DoesExtend<TestInterface<string, number>, TestInterface<string, number>>>(bool);
+
+expectType<DoesExtend<TestInterface<string, number>, TestInterface<string, number>, false>>(true);
+expectError<DoesExtend<TestInterface<string, number>, TestInterface<string, number>, false>>(bool);
+
+expectType<DoesExtend<TestInterface<number, string>, TestInterface<string, number>>>(false);
+expectError<DoesExtend<TestInterface<number, string>, TestInterface<string, number>>>(bool);
+
+expectType<DoesExtend<TestInterface<number>, TestInterface<string, number>>>(false);
+expectError<DoesExtend<TestInterface<number>, TestInterface<string, number>>>(bool);
+
+expectType<DoesExtend<TestInterface<string>, TestInterface<string, number>>>(false);
+expectError<DoesExtend<TestInterface<string>, TestInterface<string, number>>>(bool);
+
+expectType<DoesExtend<TestInterface<string>, TestInterface<string, number>, false>>(false);
+expectError<DoesExtend<TestInterface<string>, TestInterface<string, number>, false>>(bool);
+
+expectType<DoesExtend<TestInterface<string, number>, TestInterface<string>>>(false);
+expectError<DoesExtend<TestInterface<string, number>, TestInterface<string>>>(bool);
+
+expectType<DoesExtend<TestInterface<string, number>, TestInterface<number>>>(false);
+expectError<DoesExtend<TestInterface<string, number>, TestInterface<number>>>(bool);
+
+expectType<DoesExtend<TestClass, TestClass>>(true);
+expectError<DoesExtend<TestClass, TestClass>>(bool);
+
+expectType<DoesExtend<TestClass, TestClass2>>(false);
+expectError<DoesExtend<TestClass, TestClass2>>(bool);
+
+expectType<DoesExtend<TestClass2, TestClass>>(true);
+expectError<DoesExtend<TestClass2, TestClass>>(bool);
+
+expectType<DoesExtend<TestClass, TestClass2, false>>(false);
+expectError<DoesExtend<TestClass, TestClass2, false>>(bool);
+
+expectType<DoesExtend<TestClass2, TestClass, false>>(true);
+expectError<DoesExtend<TestClass2, TestClass, false>>(bool);
 
 
-// tests for TypeEqualsType
+// assertions for TypeEqualsType
 
-declare const type6: TypeEqualsType<TypeA, TypeB>;
-expectType<false>(type6);
+expectType<TypeEqualsType<TypeA, TypeB>>(false);
 
-declare const type7: TypeEqualsType<TypeB, TypeA>;
-expectType<false>(type7);
+expectType<TypeEqualsType<TypeB, TypeA>>(false);
 
-declare const type8: TypeEqualsType<TypeB, TypeC>;
-expectType<false>(type8);
+expectType<TypeEqualsType<TypeB, TypeC>>(false);
 
-declare const type9: TypeEqualsType<TypeB, TypeC, true>;
-expectType<false>(type9);
+expectType<TypeEqualsType<TypeB, TypeC, true>>(false);
 
-declare const type10: TypeEqualsType<TypeC, TypeB, true>;
-expectType<true>(type10);
+expectType<TypeEqualsType<TypeC, TypeB, true>>(true);
 
-declare const type11: TypeEqualsType<TypeA, TypeB, true>;
-expectType<false>(type11);
+expectType<TypeEqualsType<TypeA, TypeB, true>>(false);
 
-declare const type12: TypeEqualsType<TypeB, TypeA, true>;
-expectType<false>(type12);
+expectType<TypeEqualsType<TypeB, TypeA, true>>(false);
+
+expectType<TypeEqualsType<TypeB | TypeA, TypeA>>(false);
+expectError<TypeEqualsType<TypeB | TypeA, TypeA>>(bool);
+
+expectType<TypeEqualsType<TypeA, TypeA | TypeB>>(false);
+expectError<TypeEqualsType<TypeA, TypeA | TypeB>>(bool);
+
+expectType<TypeEqualsType<TypeB | TypeA, TypeA | TypeB>>(true);
+expectError<TypeEqualsType<TypeB | TypeA, TypeA | TypeB>>(bool);
+
+// assertions for EqualsNever
+
+expectType<EqualsNever<never>>(true);
+
+expectType<EqualsNever<true>>(false);
 
 
-// tests for ReplaceNeverWith
-declare const type13: ReplaceNeverWith<never, string>;
-expectType<string>(type13);
+// assertions for ReplaceNeverWith
 
-declare const type14: ReplaceNeverWith<number, string>;
-expectType<number>(type14);
+expectType<ReplaceNeverWith<never, string>>(str);
+
+expectType<ReplaceNeverWith<number, string>>(num);
+
+expectType<ReplaceNeverWith<Exclude<string | number, string | number>, true>>(true);
+
+
+// assertions for ReplaceTypeWith
+
+expectType<ReplaceTypeWith<void, void, string>>(str);
+
+expectType<ReplaceTypeWith<string | number, string, never>>(num);
+
+expectType<ReplaceTypeWith<string | number, boolean, never>>(strOrNum);
+
+expectType<ReplaceTypeWith<string | void, void, never>>(str);
 
 
 

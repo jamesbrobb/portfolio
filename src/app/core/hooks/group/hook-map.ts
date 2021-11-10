@@ -9,11 +9,7 @@ import {Conditional, TypeEqualsType} from "../../../types";
 export type CalculateValidAdditionalType<ADT, HKADT> =
   Conditional<
     TypeEqualsType<ADT, void>,
-    Conditional<
-      TypeEqualsType<HKADT, void>,
-      void,
-      HKADT
-    >,
+    HKADT,
     Conditional<
       TypeEqualsType<HKADT, void>,
       ADT,

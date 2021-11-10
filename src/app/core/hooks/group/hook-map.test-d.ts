@@ -1,5 +1,5 @@
 import {expectError, expectType} from "tsd";
-import {GetHookParams, Hook} from "./hook";
+import {Hook} from "./hook";
 import {CalculateValidAdditionalType, HookMap, IsValidHook, ValidateHookParams} from "./hook-map";
 
 
@@ -34,9 +34,9 @@ class TypeBHook implements Hook<TypeB> {
   }
 }
 
-class MixedTypeHook implements Hook<TypeA | TypeB, string | number> {
+class MixedTypeHook implements Hook<TypeA | TypeB> {
 
-  execute(input: TypeA | TypeB): TypeA | TypeB | string | number {
+  execute(input: TypeA | TypeB): TypeA | TypeB {
 
     if(input instanceof TypeA) {
       return input.doSomething();
@@ -59,13 +59,6 @@ class BypassHookType implements Hook<TypeB, TypeA> {
 
 
 // GetHookParams
-
-type hp1 = GetHookParams<MixedTypeHook>
-let a: hp1 = [new TypeB(), new TypeA()];
-
-type ex = Exclude<hp1[1], hp1[0]>
-
-let blah: ex = new TypeA();
 
 
 // CalculateValidAdditionalType
@@ -113,9 +106,6 @@ expectType<[TypeA, TypeA]>(type9);
 declare const type10: ValidateHookParams<Hook<TypeA, TypeB>, TypeA>
 expectType<[TypeA, TypeB]>(type10);
 
-declare const type10a: ValidateHookParams<BypassHookType, TypeA>
-expectType<[TypeB, TypeA]>(type10a);
-
 
 
 // IsValidHook
@@ -157,7 +147,7 @@ declare const type22: IsValidHook<BypassHookType, TypeB | TypeA, TypeA | TypeB>;
 expectType<BypassHookType>(type22);
 
 
-
+/*
 // HookMap
 
 // no type params
@@ -198,5 +188,5 @@ expectError<void>(hookMap6.addHook(new TypeAHook()));
 expectType<void>(hookMap6.addHook(new TypeBHook()));
 expectType<void>(hookMap6.addHook(new BypassHookType()));
 expectError(hookMap6.addHook(new MixedTypeHook()));
-
+*/
 
