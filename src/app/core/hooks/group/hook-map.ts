@@ -1,5 +1,5 @@
-import {GetHookParams, Hook} from "./hook";
-import {Conditional, TypeEqualsType} from "../../../types";
+import {GetHookParams, Hook} from "../hook";
+import {Conditional, TypeEqualsType} from "../../../../types";
 
 
 /*
@@ -22,7 +22,7 @@ export type ValidateHookParams<HKT extends Hook<unknown, unknown>, ADT> =
   ReplaceAdditionalType<GetHookParams<HKT>, ADT>;
 
 
-export type ReplaceAdditionalType<T extends any[], ADT> =
+export type ReplaceAdditionalType<T extends unknown[], ADT> =
   [T[0], CalculateValidAdditionalType<ADT, T[1]>];
 
 

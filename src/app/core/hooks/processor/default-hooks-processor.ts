@@ -10,7 +10,7 @@ import {
   HooksProcessorBypassConditionArgType
 } from './hooks-processor';
 
-import {HookMap} from "../hook-map";
+import {HookMap} from "../group/hook-map";
 
 
 
@@ -27,8 +27,8 @@ export class DefaultHooksProcessor implements HooksProcessor {
 
         const initialValue: Observable<IOType> = input instanceof Observable ? input : of(input),
           bypassCondition = args[0];
-
-        return hooks.reduce(
+        return initialValue;
+        /*return hooks.reduce(
 
           (observable: Observable<IOType | BypassType>, hook: Hook<IOType> | Hook<IOType, BypassType>): HooksProcessorReturnType<IOType, BypassType> => {
 
@@ -44,14 +44,14 @@ export class DefaultHooksProcessor implements HooksProcessor {
 
                   return result instanceof Observable ? result : of(result);
                 })
-            );
+            )
 
-          }, initialValue);
+          }, initialValue);*/
     }
 }
 
 
-export class HookProcessor2 {
+/*export class HookProcessor2 {
 
     public execute<IOType, BypassType = void>(
 
@@ -86,4 +86,4 @@ export class HookProcessor2 {
 
         }, initialValue);
   }
-}
+}*/

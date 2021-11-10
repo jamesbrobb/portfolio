@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import {GetHookParams, Hook} from '../hook';
+import {Hook} from '../hook';
 
 
 export type HookBypassCondition<A, B> = (input: A | B) => input is B;

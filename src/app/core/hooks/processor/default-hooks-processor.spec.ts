@@ -51,7 +51,7 @@ class BypassConditionTriggerHook implements Hook<TypeA, TypeB> {
 }
 
 
-describe('DefaultHooksProcessor', () => {
+xdescribe('DefaultHooksProcessor', () => {
 
     let processor: DefaultHooksProcessor,
         hooks: Hook<TypeA>[],

@@ -1,64 +1,27 @@
 import {expectError, expectType} from "tsd";
-import {Hook} from "./hook";
-import {CalculateValidAdditionalType, HookMap, IsValidHook, ValidateHookParams} from "./hook-map";
+import {Hook} from "../hook";
+import {
+    CalculateValidAdditionalType,
+    HookMap,
+    IsValidHook,
+    ValidateHookParams
+} from "./hook-map";
 
+import {
+    TypeA,
+    TypeB,
+    TypeAHook,
+    TypeBHook,
+    TypeCHook,
+    TypeDHook,
+    TypeEHook,
+    BypassHookType,
+    MixedDuplicateTypeHook,
+    MixedTypeHook,
+    MixedTypeObservableHook,
+    MixedTypeObservableHookV2
+} from "../hook.mocks";
 
-class TypeA {
-  index = 0;
-  doSomething(): TypeA {
-    this.index++;
-    return this;
-  }
-}
-
-class TypeB {
-  index = 0;
-  doSomethingElse(): TypeB {
-    this.index++;
-    return this;
-  }
-}
-
-
-class TypeAHook implements Hook<TypeA, void> {
-
-  execute(input: TypeA): TypeA {
-    return input.doSomething();
-  }
-}
-
-class TypeBHook implements Hook<TypeB> {
-
-  execute(input: TypeB): TypeB {
-    return input.doSomethingElse();
-  }
-}
-
-class MixedTypeHook implements Hook<TypeA | TypeB> {
-
-  execute(input: TypeA | TypeB): TypeA | TypeB {
-
-    if(input instanceof TypeA) {
-      return input.doSomething();
-    }
-    return input.doSomethingElse();
-  }
-}
-
-class BypassHookType implements Hook<TypeB, TypeA> {
-
-  execute(input: TypeB): TypeB | TypeA {
-
-    if(input instanceof TypeB) {
-      return input.doSomethingElse();
-    }
-
-    return new TypeA();
-  }
-}
-
-
-// GetHookParams
 
 
 // CalculateValidAdditionalType
@@ -66,46 +29,64 @@ class BypassHookType implements Hook<TypeB, TypeA> {
 // supplied generic === void
 
 // hook value === void :ok:
-declare const type1: CalculateValidAdditionalType<void, void>;
-expectType<void>(type1);
+declare const cvat1: CalculateValidAdditionalType<void, void>;
+expectType<void>(cvat1);
 
 // hook value !== void :no:
-declare const type2: CalculateValidAdditionalType<TypeB, void>;
-expectType<TypeB>(type2);
+declare const cvat2: CalculateValidAdditionalType<TypeB, void>;
+expectType<TypeB>(cvat2);
 
 // supplied generic !== void
 
 // hook value === void :ok:
-declare const type3: CalculateValidAdditionalType<void, TypeA>;
-expectType<TypeA>(type3);
+declare const cvat3: CalculateValidAdditionalType<void, TypeA>;
+expectType<TypeA>(cvat3);
 
 // generic === hook value :ok:
-declare const type4: CalculateValidAdditionalType<TypeA, TypeA>;
-expectType<TypeA>(type4);
+declare const cvat4: CalculateValidAdditionalType<TypeA, TypeA>;
+expectType<TypeA>(cvat4);
 
 // generic !== hook value :no:
-declare const type5: CalculateValidAdditionalType<TypeB, TypeA>;
-expectType<TypeA>(type5);
+declare const cvat5: CalculateValidAdditionalType<TypeB, TypeA>;
+expectType<TypeA>(cvat5);
 
 
 
 // ValidateHookParams
 
-declare const type6: ValidateHookParams<TypeAHook, void>
-expectType<[TypeA, void]>(type6);
+// supplied additional type === void
 
-declare const type7: ValidateHookParams<Hook<TypeA, TypeB>, void>
-expectType<[TypeA, TypeB]>(type7);
+// hook additional type !== void
+declare const vhp1: ValidateHookParams<Hook<TypeA, TypeB>, void>
+expectType<[TypeA, TypeB]>(vhp1);
 
-declare const type8: ValidateHookParams<TypeAHook, TypeA>
-expectType<[TypeA, TypeA]>(type8);
+// hook additional type === void
+declare const vhp2: ValidateHookParams<TypeAHook, void>
+expectType<[TypeA, void]>(vhp2);
 
-declare const type9: ValidateHookParams<Hook<TypeA, TypeA>, TypeA>
-expectType<[TypeA, TypeA]>(type9);
+// supplied additional type !== void
 
-declare const type10: ValidateHookParams<Hook<TypeA, TypeB>, TypeA>
-expectType<[TypeA, TypeB]>(type10);
+// hook additional type === supplied additional type
+declare const vhp3: ValidateHookParams<Hook<TypeA, TypeA>, TypeA>
+expectType<[TypeA, TypeA]>(vhp3);
 
+// hook additional type !== supplied additional type
+declare const vhp4: ValidateHookParams<Hook<TypeA, TypeB>, TypeA>
+expectType<[TypeA, TypeB]>(vhp4);
+
+// hook additional type === void
+declare const vhp5: ValidateHookParams<TypeAHook, TypeA>
+expectType<[TypeA, TypeA]>(vhp5);
+
+
+declare const vhp6: ValidateHookParams<MixedTypeObservableHookV2, void>
+expectType<[string | number, boolean | Function]>(vhp6);
+
+declare const vhp7: ValidateHookParams<MixedTypeObservableHookV2, TypeA>
+expectType<[string | number, boolean | Function]>(vhp7);
+
+declare const vhp8: ValidateHookParams<MixedTypeObservableHookV2, Function>
+expectType<[string | number, boolean | Function]>(vhp8);
 
 
 // IsValidHook
@@ -143,8 +124,16 @@ expectType<MixedTypeHook>(type20);
 declare const type21: IsValidHook<MixedTypeHook, TypeB | TypeA, TypeA | TypeB>;
 expectType<MixedTypeHook>(type21);
 
-declare const type22: IsValidHook<BypassHookType, TypeB | TypeA, TypeA | TypeB>;
+declare const type22: IsValidHook<BypassHookType, TypeB, TypeA>;
 expectType<BypassHookType>(type22);
+
+declare const type23: IsValidHook<BypassHookType, TypeB | TypeA, TypeA>;
+expectType<never>(type23);
+
+declare const type24: IsValidHook<BypassHookType, TypeB, TypeA | TypeB>;
+expectType<BypassHookType>(type24);
+
+declare const type25: ValidateHookParams<BypassHookType, TypeB>
 
 
 /*
