@@ -73,20 +73,5 @@ fdescribe('CommandProcessor', () => {
                     done();
                 });
         });
-
-        fit('should error', (done: Function) => {
-
-            const commands3 = [new MixedTypeCommand(), new TypeACommand(), new TypeACommand()];
-
-            expect(() => {
-
-                processor.execute(new TypeB(), commands3)
-                    .subscribe((output: TypeB | TypeA) => {
-                        //expect(output.value).toEqual(40);
-                        //done();
-                    });
-
-            }).toThrow();
-        });
     });
 });

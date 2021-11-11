@@ -1,4 +1,4 @@
-import {Conditional, TypeEqualsType} from "../../../../types";
+import {Conditional, EqualsNever, TypeEqualsType} from "../../../../types";
 import {Observable, of} from "rxjs";
 import {mergeMap} from "rxjs/operators";
 import {Command, ObservableCommand} from "../command";
@@ -8,7 +8,7 @@ export type CommandProcessorBypassCondition<A, B> = (input: A | B) => input is B
 
 export type CommandProcessorBypassConditionArgType<A, B> =
     Conditional<
-        TypeEqualsType<A, B>,
+        EqualsNever<B>,
         [],
         [bypassCondition: CommandProcessorBypassCondition<A, B>]
     >
@@ -18,7 +18,7 @@ type CommandsType<A, B> = (Command<A, A | B> | ObservableCommand<A, A | B>)
 
 export class CommandProcessor {
 
-    execute<IOType, BypassType = IOType>(
+    execute<IOType, BypassType = never>(
 
         input: IOType,
         commands: CommandsType<IOType, IOType | BypassType>[],

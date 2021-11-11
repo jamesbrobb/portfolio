@@ -6,8 +6,10 @@ import {
     EqualsNever,
     ReplaceNeverWith,
     TypeEqualsType,
-    ReplaceTypeWith
+    ReplaceTypeWith, UnwrapObservables
 } from './types';
+
+import {Observable} from "rxjs";
 
 
 class TypeA {
@@ -173,6 +175,13 @@ expectType<ReplaceTypeWith<string | number, string, never>>(num);
 expectType<ReplaceTypeWith<string | number, boolean, never>>(strOrNum);
 
 expectType<ReplaceTypeWith<string | void, void, never>>(str);
+
+
+// assertions for UnwrapObservables
+
+expectType<UnwrapObservables<Observable<string>>>(str);
+
+expectType<UnwrapObservables<number | Observable<string>>>(strOrNum);
 
 
 

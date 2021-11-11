@@ -54,6 +54,34 @@ export class TypeECommand {
     }
 }
 
+export class TypeAInBOutCommand implements Command<TypeA, TypeB> {
+
+    execute(input: TypeA): TypeB {
+        return new TypeB()
+    }
+}
+
+export class TypeAInABOutCommand implements Command<TypeA, TypeA | TypeB> {
+
+    execute(input: TypeA): TypeA | TypeB {
+        return new TypeB()
+    }
+}
+
+export class TypeABInABOutCommand implements Command<TypeA | TypeB, TypeA | TypeB> {
+
+    execute(input: TypeA | TypeB): TypeA | TypeB {
+        return new TypeB()
+    }
+}
+
+export class TypeABInAOutCommand implements Command<TypeA | TypeB, TypeA> {
+
+    execute(input: TypeA | TypeB): TypeA {
+        return new TypeA()
+    }
+}
+
 export class MixedTypeCommand implements Command<TypeA | TypeB> {
 
     execute(input: TypeA | TypeB): TypeA | TypeB {
