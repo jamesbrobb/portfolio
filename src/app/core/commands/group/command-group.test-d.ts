@@ -1,6 +1,6 @@
 import {expectType} from "tsd";
 import {
-    CalculateValidBypassType,
+    CalculateValidBypassType, CommandGroup,
     GroupAndCommandBypassTypeMismatchError,
     GroupAndSuppliedCommandIOMismatchError,
     GroupBypassTypeNeverError,
@@ -16,7 +16,18 @@ import {
     TypeB,
     TypeABInABOutCommand,
     TypeACommand,
-    TypeAInBOutCommand, TypeAInABOutCommand, TypeABInAOutCommand
+    TypeAInBOutCommand,
+    TypeAInABOutCommand,
+    TypeABInAOutCommand,
+    TypeBCommand,
+    TypeCCommand,
+    TypeDCommand,
+    TypeECommand,
+    MixedTypeObservableCommand,
+    MixedTypeObservableCommandV2,
+    MixedDuplicateTypeCommand,
+    AsyncTestCommand,
+    ObservableInAndOutCommand
 } from "../command.mocks";
 
 
@@ -109,3 +120,31 @@ import {
 
         declare const icc10: IsCommandCompatible<TypeABInAOutCommand, TypeA, TypeB>
         expectType<TypeABInAOutCommand>(icc10);
+
+        // And its BypassType matches
+        type TestCommand = Command<TypeA | TypeB, TypeA | string>
+        declare const icc11: IsCommandCompatible<TestCommand, TypeA, string>
+        expectType<TestCommand>(icc11);
+
+
+
+// CommandGroup
+
+const group1 = new CommandGroup<TypeACommand>(); // TypeACommand, TypeA, never
+const group2 = new CommandGroup<TypeBCommand>(); // TypeBCommand, TypeB, never
+const group3 = new CommandGroup<TypeAInBOutCommand>(); // TypeAInBOutCommand, never, TypeB - shouldn't be allowed
+const group4 = new CommandGroup<TypeAInABOutCommand>(); // TypeAInABOutCommand, TypeA, TypeB
+const group5 = new CommandGroup<TypeABInABOutCommand>(); // TypeABInABOutCommand, TypeA | TypeB, never
+const group6 = new CommandGroup<TypeABInAOutCommand>(); // TypeABInAOutCommand, TypeA, never
+
+const group7 = new CommandGroup<TypeCCommand>(); // TypeCCommand, string, number | Function
+const group8 = new CommandGroup<TypeDCommand>(); // TypeDCommand, string, never
+const group9 = new CommandGroup<TypeECommand>(); // TypeECommand, string, never
+const group10 = new CommandGroup<MixedTypeObservableCommand>(); // MixedTypeObservableCommand, never, boolean | Function
+const group11 = new CommandGroup<MixedTypeObservableCommandV2>(); // MixedTypeObservableCommandV2, string | number, boolean | Function
+const group12 = new CommandGroup<MixedDuplicateTypeCommand>(); // MixedDuplicateTypeCommand, string, Function
+const group13 = new CommandGroup<AsyncTestCommand>(); // AsyncTestCommand, TypeA, never
+const group14 = new CommandGroup<ObservableInAndOutCommand>(); // ObservableInAndOutCommand, TypeA, never
+
+const groupUnion = new CommandGroup<TypeACommand | TypeAInBOutCommand | TypeABInABOutCommand>(); // TypeAInBOutCommand | TypeACommand | TypeABInABOutCommand, TypeA | TypeB, never
+const groupIntersection = new CommandGroup<TypeACommand & TypeAInBOutCommand & TypeABInABOutCommand>(); // TypeACommand & TypeAInBOutCommand & TypeABInABOutCommand, TypeA | TypeB, never

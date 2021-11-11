@@ -139,3 +139,10 @@ export class AsyncTestCommand implements ObservableCommand<TypeA> {
     }
 }
 
+
+export class ObservableInAndOutCommand {
+
+    execute(input: Observable<TypeA>): Observable<TypeA> {
+        return input;
+    }
+}

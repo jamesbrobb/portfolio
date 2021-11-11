@@ -9,9 +9,9 @@ import {
 
 
 
-export type GetIOType<CommandType extends Command<unknown>> = _GetIOType<GetCommandTypeParams<CommandType>>;
+export type GetIOType<CommandType extends Command<unknown>> = _GetIOType<GetCommandTypeParams<CommandType, true>>;
 type _GetIOType<T extends [unknown, unknown]> = Extract<T[0], T[1]>
-export type GetBypassType<CommandType extends Command<unknown>> = _GetBypassType<GetCommandTypeParams<CommandType>>;
+export type GetBypassType<CommandType extends Command<unknown>> = _GetBypassType<GetCommandTypeParams<CommandType, true>>;
 type _GetBypassType<T extends [unknown, unknown]> = Exclude<T[1], T[0]>;
 
 
