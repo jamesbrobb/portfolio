@@ -3,7 +3,7 @@ import {
     CalculateValidBypassType, CommandGroup,
     GroupAndCommandBypassTypeMismatchError,
     GroupAndSuppliedCommandIOMismatchError,
-    GroupBypassTypeNeverError,
+    GroupBypassTypeNeverError, GroupExtraArgsMismatchError,
     GroupIOMismatchError,
     IsCommandCompatible,
     NoCommandTypeParamError
@@ -27,7 +27,7 @@ import {
     MixedTypeObservableCommandV2,
     MixedDuplicateTypeCommand,
     AsyncTestCommand,
-    ObservableInAndOutCommand
+    ObservableInAndOutCommand, ExtraArgsCommand, ExtraArgsCommandWithBypassType
 } from "../command.mocks";
 
 
@@ -93,6 +93,10 @@ import {
         declare const icc4b: IsCommandCompatible<TypeAInABOutCommand, TypeA, string>
         expectType<GroupAndCommandBypassTypeMismatchError>(icc4b);
 
+    // The Group and supplied command ExtraArgs type does not match
+    declare const icc4c: IsCommandCompatible<TypeACommand, TypeA, never, [string, Function]>
+    expectType<GroupExtraArgsMismatchError>(icc4c);
+
 
 // Should be compatible if
 
@@ -126,25 +130,52 @@ import {
         declare const icc11: IsCommandCompatible<TestCommand, TypeA, string>
         expectType<TestCommand>(icc11);
 
+    // The Group and supplied command ExtraArgs type does not match
+
+        // And its BypassType is never
+        declare const icc12: IsCommandCompatible<ExtraArgsCommand, TypeA, never, [string, Function]>
+        expectType<ExtraArgsCommand>(icc12);
+
+        // And its BypassType matches
+        declare const icc13: IsCommandCompatible<ExtraArgsCommandWithBypassType, TypeA, TypeB, [string, Function]>
+        expectType<ExtraArgsCommandWithBypassType>(icc13);
+
 
 
 // CommandGroup
 
-const group1 = new CommandGroup<TypeACommand>(); // TypeACommand, TypeA, never
-const group2 = new CommandGroup<TypeBCommand>(); // TypeBCommand, TypeB, never
-const group3 = new CommandGroup<TypeAInBOutCommand>(); // TypeAInBOutCommand, never, TypeB - shouldn't be allowed
-const group4 = new CommandGroup<TypeAInABOutCommand>(); // TypeAInABOutCommand, TypeA, TypeB
-const group5 = new CommandGroup<TypeABInABOutCommand>(); // TypeABInABOutCommand, TypeA | TypeB, never
-const group6 = new CommandGroup<TypeABInAOutCommand>(); // TypeABInAOutCommand, TypeA, never
+expectType<CommandGroup<TypeACommand, TypeA, never, []>>(new CommandGroup<TypeACommand>());
 
-const group7 = new CommandGroup<TypeCCommand>(); // TypeCCommand, string, number | Function
-const group8 = new CommandGroup<TypeDCommand>(); // TypeDCommand, string, never
-const group9 = new CommandGroup<TypeECommand>(); // TypeECommand, string, never
-const group10 = new CommandGroup<MixedTypeObservableCommand>(); // MixedTypeObservableCommand, never, boolean | Function
-const group11 = new CommandGroup<MixedTypeObservableCommandV2>(); // MixedTypeObservableCommandV2, string | number, boolean | Function
-const group12 = new CommandGroup<MixedDuplicateTypeCommand>(); // MixedDuplicateTypeCommand, string, Function
-const group13 = new CommandGroup<AsyncTestCommand>(); // AsyncTestCommand, TypeA, never
-const group14 = new CommandGroup<ObservableInAndOutCommand>(); // ObservableInAndOutCommand, TypeA, never
+expectType<CommandGroup<TypeBCommand, TypeB, never, []>>(new CommandGroup<TypeBCommand>());
 
-const groupUnion = new CommandGroup<TypeACommand | TypeAInBOutCommand | TypeABInABOutCommand>(); // TypeAInBOutCommand | TypeACommand | TypeABInABOutCommand, TypeA | TypeB, never
-const groupIntersection = new CommandGroup<TypeACommand & TypeAInBOutCommand & TypeABInABOutCommand>(); // TypeACommand & TypeAInBOutCommand & TypeABInABOutCommand, TypeA | TypeB, never
+expectType<CommandGroup<TypeAInBOutCommand, never, TypeB, []>>(new CommandGroup<TypeAInBOutCommand>());
+
+expectType<CommandGroup<TypeAInABOutCommand, TypeA, TypeB, []>>(new CommandGroup<TypeAInABOutCommand>());
+
+expectType<CommandGroup<TypeABInABOutCommand, TypeA | TypeB, never, []>>(new CommandGroup<TypeABInABOutCommand>());
+
+expectType<CommandGroup<TypeABInAOutCommand, TypeA, never, []>>(new CommandGroup<TypeABInAOutCommand>());
+
+expectType<CommandGroup<TypeCCommand, string, number | Function, []>>(new CommandGroup<TypeCCommand>());
+
+expectType<CommandGroup<TypeDCommand, string, never, []>>(new CommandGroup<TypeDCommand>());
+
+expectType<CommandGroup<TypeECommand, string, never, []>>(new CommandGroup<TypeECommand>());
+
+expectType<CommandGroup<MixedTypeObservableCommand, never, boolean | Function, []>>(new CommandGroup<MixedTypeObservableCommand>());
+
+expectType<CommandGroup<MixedTypeObservableCommandV2, string | number, boolean | Function, []>>(new CommandGroup<MixedTypeObservableCommandV2>());
+
+expectType<CommandGroup<MixedDuplicateTypeCommand, string, Function, []>>(new CommandGroup<MixedDuplicateTypeCommand>());
+
+expectType<CommandGroup<AsyncTestCommand, TypeA, never, []>>(new CommandGroup<AsyncTestCommand>());
+
+expectType<CommandGroup<ObservableInAndOutCommand, never, TypeA, []>>(new CommandGroup<ObservableInAndOutCommand>());
+
+expectType<CommandGroup<TypeAInBOutCommand | TypeACommand | TypeABInABOutCommand, TypeA | TypeB, never, []>>(new CommandGroup<TypeACommand | TypeAInBOutCommand | TypeABInABOutCommand>());
+
+expectType<CommandGroup<TypeACommand & TypeAInBOutCommand & TypeABInABOutCommand, TypeA | TypeB, never, []>>(new CommandGroup<TypeACommand & TypeAInBOutCommand & TypeABInABOutCommand>());
+
+expectType<CommandGroup<ExtraArgsCommand, TypeA, never, []>>(new CommandGroup<TypeACommand>());
+
+expectType<CommandGroup<ExtraArgsCommandWithBypassType, TypeA, never, []>>(new CommandGroup<TypeACommand>());
