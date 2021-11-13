@@ -146,3 +146,17 @@ export class ObservableInAndOutCommand {
         return input;
     }
 }
+
+export class ExtraArgsCommand {
+
+    execute(input: TypeA, arg1: string, arg2: Function): Observable<TypeA> {
+        return of(input);
+    }
+}
+
+export class ExtraArgsCommandWithBypassType {
+
+    execute(input: TypeA, arg1: string, arg2: Function): Observable<TypeA|TypeB> {
+        return of(input);
+    }
+}
