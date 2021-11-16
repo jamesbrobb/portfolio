@@ -6,7 +6,7 @@ import {
     EqualsNever,
     ReplaceNeverWith,
     TypeEqualsType,
-    ReplaceTypeWith, UnwrapObservables
+    ReplaceTypeWith, UnwrapObservables, FilterType, SetIndexToType, SpliceTuple, ReplaceTypeInTupleWith
 } from './types';
 
 import {Observable} from "rxjs";
@@ -64,14 +64,14 @@ declare const strOrNum: string | number;
 
 
 
-// assertions for Conditional
+// Conditional
 
 expectType<Conditional<true, TypeA, TypeB>>(new TypeA);
 
 expectType<Conditional<false, TypeA, TypeB>>(new TypeB);
 
 
-// assertions for DoesExtend
+// DoesExtend
 
 expectType<DoesExtend<Object, Function>>(false);
 
@@ -79,7 +79,10 @@ expectType<DoesExtend<Function, Object>>(true);
 
 expectType<DoesExtend<Function, Function>>(true);
 
-expectType<DoesExtend<number | string, number>>(bool); // distributive
+type a = DoesExtend<number | string, number>
+type b = DoesExtend<number, number | string>
+
+expectType<DoesExtend<number | string, number>>(false); // distributive
 
 expectError<DoesExtend<number | string, number, false>>(bool); // non-distributive
 
@@ -125,7 +128,7 @@ expectType<DoesExtend<TestClass2, TestClass, false>>(true);
 expectError<DoesExtend<TestClass2, TestClass, false>>(bool);
 
 
-// assertions for TypeEqualsType
+// TypeEqualsType
 
 expectType<TypeEqualsType<TypeA, TypeB>>(false);
 
@@ -150,14 +153,14 @@ expectError<TypeEqualsType<TypeA, TypeA | TypeB>>(bool);
 expectType<TypeEqualsType<TypeB | TypeA, TypeA | TypeB>>(true);
 expectError<TypeEqualsType<TypeB | TypeA, TypeA | TypeB>>(bool);
 
-// assertions for EqualsNever
+// EqualsNever
 
 expectType<EqualsNever<never>>(true);
 
 expectType<EqualsNever<true>>(false);
 
 
-// assertions for ReplaceNeverWith
+// ReplaceNeverWith
 
 expectType<ReplaceNeverWith<never, string>>(str);
 
@@ -166,7 +169,7 @@ expectType<ReplaceNeverWith<number, string>>(num);
 expectType<ReplaceNeverWith<Exclude<string | number, string | number>, true>>(true);
 
 
-// assertions for ReplaceTypeWith
+// ReplaceTypeWith
 
 expectType<ReplaceTypeWith<void, void, string>>(str);
 
@@ -177,17 +180,55 @@ expectType<ReplaceTypeWith<string | number, boolean, never>>(strOrNum);
 expectType<ReplaceTypeWith<string | void, void, never>>(str);
 
 
-// assertions for UnwrapObservables
+// UnwrapObservables
 
 expectType<UnwrapObservables<Observable<string>>>(str);
 
 expectType<UnwrapObservables<number | Observable<string>>>(strOrNum);
 
 
+// FilterType
+
+type ftTuple = [undefined, string, undefined, Function, undefined, number];
+
+declare const ft1: [string, Function, number];
+expectType<FilterType<ftTuple>>(ft1);
+
+declare const ft2: [undefined, string, undefined, Function, undefined];
+expectType<FilterType<ftTuple, number>>(ft2);
+
+declare const ft3: [undefined, string, undefined, Function, undefined, number];
+expectType<FilterType<ftTuple, null>>(ft3);
+
+declare const ft4: [string, number];
+expectType<FilterType<ftTuple, undefined | Function>>(ft4);
 
 
+// SetIndexToType
+
+type siTuple = [undefined, string, undefined, Function, undefined, number];
+
+declare const si1: [undefined, undefined, undefined, Function, undefined, number]
+expectType<SetIndexToType<siTuple, 1>>(si1);
+
+declare const si2: [undefined, string, boolean, Function, undefined, number]
+expectType<SetIndexToType<siTuple, 2, boolean>>(si2);
 
 
+// SpliceTuple
+
+type splTuple = [number, string, Function, boolean, number];
+
+declare const spl1: [number, string, boolean, number];
+expectType<SpliceTuple<splTuple,2>>(spl1);
 
 
+// ReplaceTypeInTupleWith
 
+type rtitwTuple = [undefined, string, undefined, Function, undefined, number];
+
+declare const rtitw1: [boolean, string, boolean, Function, boolean, number];
+expectType<ReplaceTypeInTupleWith<rtitwTuple, undefined, boolean>>(rtitw1)
+
+declare const rtitw2: rtitwTuple;
+expectType<ReplaceTypeInTupleWith<rtitwTuple, boolean, number>>(rtitw2)
