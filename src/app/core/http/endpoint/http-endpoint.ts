@@ -1,7 +1,7 @@
 import {Observable, of, throwError} from 'rxjs';
 import {catchError, mergeMap} from 'rxjs/operators';
 
-import {HooksProcessor} from '../../hooks';
+import {CommandProcessor} from "../../commands/processor/command-processor";
 
 import { HttpAdaptor } from '../adaptor/http-adaptor';
 import { HttpEndpointMethod } from './method/http-endpoint-method';
@@ -15,6 +15,7 @@ import { HttpResponseHook } from '../response/hook/http-response-hook';
 import { UrlInterpolator } from '../utils/url/url-interpolator';
 import { UrlInterpolatorHook } from './hooks/url-interpolator-hook';
 import {isHttpError, isHttpRequest, isHttpResponse} from '../utils/http-type-guards';
+import {CommandGroup} from "../../commands/group/command-group";
 
 
 
@@ -23,7 +24,7 @@ export class HttpEndpoint {
     private _methods: Map<string, HttpEndpointMethod>;
     private _adaptor: HttpAdaptor;
     private _interpolator: UrlInterpolatorHook;
-    private _hooksProcessor: HooksProcessor;
+    private _hooksProcessor: CommandProcessor;
     private _hooks: Map<string, HttpRequestHook | HttpResponseHook | HttpErrorHook> | undefined;
 
 
@@ -31,7 +32,7 @@ export class HttpEndpoint {
         methods: Map<string, HttpEndpointMethod>,
         adaptor: HttpAdaptor,
         interpolator: UrlInterpolator,
-        hooksProcessor: HooksProcessor,
+        hooksProcessor: CommandProcessor,
         hooks?: Map<string, HttpRequestHook | HttpResponseHook | HttpErrorHook>
     ) {
         this._methods = methods;
@@ -89,11 +90,11 @@ export class HttpEndpoint {
         return hooks;
     }
 
-    private _processRequest(request: HttpRequest, hooks: HttpRequestHook[]): Observable<HttpResponse | HttpError> {
+    private _processRequest(request: HttpRequest, hooks: CommandGroup<HttpRequestHook>): Observable<HttpResponse | HttpError> {
 
-        hooks.push(this._interpolator);
+        //hooks.push(this._interpolator);
 
-        return this._hooksProcessor.execute<HttpRequest, HttpResponse | HttpError>(request, hooks, isHttpResponse)
+        return this._hooksProcessor.execute(hooks, request, isHttpResponse)
           .pipe(
             mergeMap((result ) => {
 
@@ -106,9 +107,9 @@ export class HttpEndpoint {
           );
     }
 
-    private _processResponse(response: HttpResponse, hooks: HttpResponseHook[]): Observable<HttpResponse | HttpError> {
+    private _processResponse(response: HttpResponse, hooks: CommandGroup<HttpResponseHook>): Observable<HttpResponse | HttpError> {
 
-        return this._hooksProcessor.execute<HttpResponse, HttpError>(response, hooks, isHttpError)
+        return this._hooksProcessor.execute(hooks, response, isHttpError)
             .pipe(
                 mergeMap((result) => {
 
@@ -121,9 +122,9 @@ export class HttpEndpoint {
             );
     }
 
-    private _processError(error: HttpError, hooks: HttpErrorHook[]): Observable<HttpError> {
+    private _processError(error: HttpError, hooks: CommandGroup<HttpErrorHook>): Observable<HttpError> {
 
-        return this._hooksProcessor.execute<HttpError>(error, hooks)
+        return this._hooksProcessor.execute(hooks, error)
             .pipe(
                 mergeMap((output: HttpError) => {
 
