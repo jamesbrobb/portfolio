@@ -1,6 +1,11 @@
 import {AnalyticsAdaptor} from './analytics-adaptor';
 import {AnalyticsHook} from './analytics-hook';
 import {ObjectUtils} from "../utils";
+import {CommandGroup} from "../commands/group/command-group";
+import {CommandProcessor} from "../commands/processor/command-processor";
+import {Observable, of} from "rxjs";
+import {take} from "rxjs/operators";
+import {Conditional, DoesExtend, EqualsNever, TypeEqualsType} from "../../../types";
 
 
 type PropertyValueMapType = {[propertyKey: string]: unknown};
@@ -36,18 +41,26 @@ export type AnalyticsEvent = {
     propertyValueMap?: PropertyValueMapType;
 }
 
+export type CommandProcessorArgType<T> =
+    Conditional<
+        TypeEqualsType<T, undefined>,
+        [],
+        [processor: CommandProcessor]
+    >
 
-export class AnalyticsService {
+
+export class AnalyticsService<T extends CommandGroup<AnalyticsHook> | undefined = undefined> {
 
     private readonly _actions: AnalyticsActions;
     private readonly _adaptor: AnalyticsAdaptor;
 
-    private _preHooks: AnalyticsHook[] | undefined;
+    private _preHooks: CommandGroup<AnalyticsHook> | undefined;
+    private _hookProcessor: CommandProcessor | undefined;
 
     private readonly _matcher: RegExp = /{%\s*([\w.]+)\s*%}/g;
 
 
-    constructor(actions: AnalyticsActions, adaptor: AnalyticsAdaptor, hooks?: AnalyticsHook[]) {
+    constructor(actions: AnalyticsActions, adaptor: AnalyticsAdaptor, hooks?: T, ...args: CommandProcessorArgType<T>) {
 
         this._actions = actions;
         this._adaptor = adaptor;
@@ -56,16 +69,13 @@ export class AnalyticsService {
           return;
         }
 
-        this._preHooks = hooks.concat();
+        this._preHooks = hooks;
+        this._hookProcessor = args[0];
     }
 
     public addHook(hook: AnalyticsHook): void {
 
-        if(!this._preHooks) {
-            this._preHooks = [];
-        }
-
-        this._preHooks.push(hook);
+        this._preHooks?.addCommand(hook);
     }
 
     public track(analyticsEvent: AnalyticsEvent): void {
@@ -75,14 +85,20 @@ export class AnalyticsService {
             let action: AnalyticsAction = ObjectUtils.recursivelyFindProperty(analyticsEvent.actionId, this._actions) as AnalyticsAction;
 
             action = this._interpolateValues(action, analyticsEvent.propertyValueMap);
-            action = this._processHooks(action);
 
-            if(action.disabled) {
-                console.warn(`Analytics action ${action.type} is disabled`, action);
-                return;
-            }
+            this._processHooks(action)
+                .pipe(take(1))
+                .subscribe((action) => {
 
-            this._adaptor.track(action);
+                    action = action;
+
+                    if(action.disabled) {
+                        console.warn(`Analytics action ${action.type} is disabled`, action);
+                        return;
+                    }
+
+                    this._adaptor.track(action);
+                });
 
         } catch (e) {
 
@@ -130,16 +146,12 @@ export class AnalyticsService {
         );
     }
 
-    private _processHooks(action: AnalyticsAction): AnalyticsAction {
+    private _processHooks(action: AnalyticsAction): Observable<AnalyticsAction> {
 
-        if(!this._preHooks) {
-            return action;
+        if(!this._preHooks || !this._hookProcessor) {
+            return of(action);
         }
 
-        this._preHooks.forEach((hook: AnalyticsHook) => {
-            action = hook.execute(this._actions, action, this._adaptor);
-        });
-
-        return action;
+        return this._hookProcessor.execute(this._preHooks, action, [this._actions, this._adaptor]);
     }
 }

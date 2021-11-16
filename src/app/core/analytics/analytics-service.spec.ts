@@ -12,6 +12,8 @@ import {AnalyticsAdaptor} from './analytics-adaptor';
 import {ObjectUtils} from "../utils";
 import {MISSING_OBJECT_PROP_ERROR_MESSAGE} from "../utils/object-utils";
 import {AnalyticsHook} from "./analytics-hook";
+import {CommandGroup} from "../commands/group/command-group";
+import {CommandProcessor} from "../commands/processor/command-processor";
 
 
 describe('AnalyticsService', () => {
@@ -141,15 +143,19 @@ describe('AnalyticsService', () => {
             }
 
             const hook: AnalyticsHook = {
-                execute(actions: AnalyticsActions, action: AnalyticsAction, adaptor: AnalyticsAdaptor): AnalyticsAction {
+                execute(action: AnalyticsAction, actions: AnalyticsActions, adaptor: AnalyticsAdaptor): AnalyticsAction {
                     return action;
                 }
             }
 
+            const hookGroup = new CommandGroup<AnalyticsHook>(),
+                srv = new AnalyticsService(actions, adaptor, hookGroup, new CommandProcessor());
+
             const hookSpy: Spy = spyOn(hook, 'execute').and.callThrough();
 
-            service.addHook(hook);
-            service.track(event);
+            hookGroup.addCommand(hook);
+
+            srv.track(event);
 
             expect(hookSpy).toHaveBeenCalled();
         });

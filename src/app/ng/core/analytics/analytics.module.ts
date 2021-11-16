@@ -7,6 +7,8 @@ import {
   AnalyticsHook
 } from "../../../core";
 import {AnalyticsEventDirective} from "./components/analytics-event.directive";
+import {CommandGroup} from "../../../core/commands/group/command-group";
+import {CommandProcessor} from "../../../core/commands/processor/command-processor";
 
 
 
@@ -31,11 +33,17 @@ const ANALYTICS_SERVICE_PROVIDER: Provider = {
       adaptor: AnalyticsAdaptor,
       hooks: AnalyticsHook[]): AnalyticsService => {
 
+    const hookGroup: CommandGroup<AnalyticsHook> = new CommandGroup<AnalyticsHook>(),
+        processor: CommandProcessor = new CommandProcessor();
+
     if (Array.isArray(hooks)) {
-      hooks = ([] as AnalyticsHook[]).concat(...hooks)
+
+        hooks = ([] as AnalyticsHook[]).concat(...hooks);
+
+        // add hooks to group
     }
 
-    return new AnalyticsService(actions, adaptor, hooks);
+    return new AnalyticsService(actions, adaptor, hookGroup, processor);
   },
   deps: [
     AnalyticsActionsService,
