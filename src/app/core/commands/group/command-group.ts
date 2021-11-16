@@ -2,6 +2,8 @@ import {
     Conditional,
     EqualsNever,
     ErrorBrand,
+    StrictExclude,
+    StrictExtract,
     TypeEqualsType
 } from "../../../../types";
 
@@ -14,11 +16,11 @@ import {
 
 
 
-type GetIOType<CommandType extends CommandTypeTemplate> = _GetIOType<GetCommandTypeParams<CommandType, true>>;
-type _GetIOType<T extends GetCommandTypeParamsResultTemplateType> = Extract<T[0], T[1]>
-type GetBypassType<CommandType extends CommandTypeTemplate> = _GetBypassType<GetCommandTypeParams<CommandType, true>>;
-type _GetBypassType<T extends GetCommandTypeParamsResultTemplateType> = Exclude<T[1], T[0]>;
-type GetExtraArgsType<CommandType extends CommandTypeTemplate> = _GetExtraArgsType<GetCommandTypeParams<CommandType, true>>
+export type GetIOType<CommandType extends CommandTypeTemplate> = _GetIOType<GetCommandTypeParams<CommandType, true>>;
+type _GetIOType<T extends GetCommandTypeParamsResultTemplateType> = StrictExtract<T[0], T[1]>
+export type GetBypassType<CommandType extends CommandTypeTemplate> = _GetBypassType<GetCommandTypeParams<CommandType, true>>;
+type _GetBypassType<T extends GetCommandTypeParamsResultTemplateType> = StrictExclude<T[1], T[0]>;
+export type GetExtraArgsType<CommandType extends CommandTypeTemplate> = _GetExtraArgsType<GetCommandTypeParams<CommandType, true>>
 type _GetExtraArgsType<T extends GetCommandTypeParamsResultTemplateType> = T[2];
 
 
@@ -42,7 +44,7 @@ export type GroupExtraArgsMismatchError = ErrorBrand<'CommandGroup and supplied 
 
 
 
-export type IsCommandCompatible<CommandType extends CommandTypeTemplate, IOType, BypassType, ExtraArgsType extends unknown[] = []> =
+export type IsCommandCompatible<CommandType extends CommandTypeTemplate, IOType, BypassType, ExtraArgsType extends ReadonlyArray<unknown> = []> =
     Conditional<
         TypeEqualsType<[IOType, IOType], [unknown, unknown]>,
         NoCommandTypeParamError,
@@ -71,7 +73,7 @@ export type IsCommandCompatible<CommandType extends CommandTypeTemplate, IOType,
 
 
 export type CommandGroupTypeTemplate = CommandGroup<CommandTypeTemplate>;
-export type GetCommandGroupTypeParamsResult<CommandType extends CommandTypeTemplate, I, O, ExtraArgs extends unknown[] = unknown[]> = [CommandType, I, O, ExtraArgs];
+export type GetCommandGroupTypeParamsResult<CommandType extends CommandTypeTemplate, I, O, ExtraArgs extends ReadonlyArray<unknown> = readonly unknown[]> = [CommandType, I, O, ExtraArgs];
 export type GetCommandGroupTypeParamsResultTypeTemplate = GetCommandGroupTypeParamsResult<CommandTypeTemplate, unknown, unknown>
 
 export type GetCommandGroupTypeParams<GroupType extends CommandGroupTypeTemplate> =
@@ -96,7 +98,7 @@ export class CommandGroup<
     CommandType extends CommandTypeTemplate,
     IOType = GetIOType<CommandType>,
     BypassType = GetBypassType<CommandType>,
-    ExtraArgsType extends unknown[] = GetExtraArgsType<CommandType>
+    ExtraArgsType extends ReadonlyArray<unknown> = GetExtraArgsType<CommandType>
 > {
 
     private _commands: Command<IOType, IOType | BypassType, ExtraArgsType>[] = [];

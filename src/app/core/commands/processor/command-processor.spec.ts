@@ -2,31 +2,33 @@ import {CommandProcessor, CommandProcessorBypassCondition} from "./command-proce
 import {Command, ObservableCommand} from "../command";
 import {
     AsyncTestCommand,
-    BypassTriggerCommandType, MixedTypeCommand,
+    BypassTriggerCommandType, ExtraArgsCommand, MixedTypeCommand,
     TypeA,
-    TypeACommand,
+    TypeACommand, TypeAInABOutCommand,
     TypeB
 } from "../command.mocks";
 
 import Spy = jasmine.Spy;
+import {CommandGroup} from "../group/command-group";
+import createSpy = jasmine.createSpy;
 
 
-fdescribe('CommandProcessor', () => {
+describe('CommandProcessor', () => {
 
     let processor: CommandProcessor,
-        commands: (Command<TypeA> | ObservableCommand<TypeA>)[],
+        commandGroup: CommandGroup<TypeACommand>,
         input: TypeA;
 
     beforeEach(() => {
 
         processor = new CommandProcessor();
 
-        commands = [
-            new TypeACommand(),
-            new TypeACommand(),
-            new TypeACommand(),
-            new TypeACommand()
-        ];
+        commandGroup = new CommandGroup<TypeACommand>();
+        commandGroup.addCommand(new TypeACommand());
+        commandGroup.addCommand(new TypeACommand());
+        commandGroup.addCommand(new TypeACommand());
+        commandGroup.addCommand(new TypeACommand());
+
 
         input = new TypeA();
     });
@@ -35,7 +37,7 @@ fdescribe('CommandProcessor', () => {
 
         it('should sequentially process the supplied commands and return the updated input', (done: Function) => {
 
-            processor.execute<TypeA>(input, commands)
+            processor.execute(commandGroup, input)
                 .subscribe((output: TypeA) => {
                     expect(output.value).toEqual(40);
                     done();
@@ -44,9 +46,14 @@ fdescribe('CommandProcessor', () => {
 
         it('should sequentially process the supplied commands and handle async commands', (done: Function) => {
 
-            commands.splice(2, 0, new AsyncTestCommand());
+            commandGroup = new CommandGroup<TypeACommand>();
+            commandGroup.addCommand(new TypeACommand());
+            commandGroup.addCommand(new TypeACommand());
+            commandGroup.addCommand(new AsyncTestCommand());
+            commandGroup.addCommand(new TypeACommand());
+            commandGroup.addCommand(new TypeACommand());
 
-            processor.execute<TypeA>(input, commands)
+            processor.execute(commandGroup, input)
                 .subscribe((output: TypeA) => {
                     expect(output.value).toEqual(1040);
                     done();
@@ -59,13 +66,17 @@ fdescribe('CommandProcessor', () => {
                 return inpt instanceof TypeB;
             };
 
-            const bypassTestCommands: (Command<TypeA> | ObservableCommand<TypeA> | Command<TypeA, TypeB>)[] = [...commands];
+            const command = new TypeACommand(),
+                spy: Spy = spyOn(command, 'execute').and.callThrough();
 
-            bypassTestCommands.splice(3, 0, new BypassTriggerCommandType());
+            const bypassGroup = new CommandGroup<TypeAInABOutCommand>();
+            bypassGroup.addCommand(new TypeACommand());
+            bypassGroup.addCommand(new TypeACommand());
+            bypassGroup.addCommand(new TypeACommand());
+            bypassGroup.addCommand(new TypeAInABOutCommand());
+            bypassGroup.addCommand(command);
 
-            const spy: Spy = spyOn(bypassTestCommands[4], 'execute').and.callThrough();
-
-            processor.execute<TypeA, TypeB>(input, bypassTestCommands, bypassCondition)
+            processor.execute(bypassGroup, input, bypassCondition)
                 .subscribe((output: TypeA | TypeB) => {
                     expect(output).toEqual(jasmine.any(TypeB));
                     expect(input.value).toBe(30);
@@ -73,5 +84,24 @@ fdescribe('CommandProcessor', () => {
                     done();
                 });
         });
+
+        it('should forward extra parameters to every command', (done: Function) => {
+
+            const extraParamsGroup = new CommandGroup<ExtraArgsCommand>()
+            extraParamsGroup.addCommand(new ExtraArgsCommand());
+            extraParamsGroup.addCommand(new ExtraArgsCommand());
+            extraParamsGroup.addCommand(new ExtraArgsCommand());
+            extraParamsGroup.addCommand(new ExtraArgsCommand());
+
+            const spy = createSpy('extraArgs');
+
+            processor.execute(extraParamsGroup, new TypeA(), ['test', spy])
+                .subscribe((output: TypeA) => {
+                    expect(spy).toHaveBeenCalledTimes(4);
+                    done();
+                });
+
+        })
+
     });
 });

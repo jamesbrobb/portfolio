@@ -1,4 +1,4 @@
-import {Conditional, EqualsNever} from "../../../../types";
+import {AddParameterToTuple} from "../../../../types";
 import {Observable, of} from "rxjs";
 import {mergeMap} from "rxjs/operators";
 import {Command, ObservableCommand} from "../command";
@@ -11,19 +11,21 @@ import {
 
 
 
-export type CommandProcessorBypassCondition<A, B> = (input: A | B) => input is B;
+type CommandsType<IO, BY, Xtra extends ReadonlyArray<unknown>> = (Command<IO, IO | BY, Xtra> | ObservableCommand<IO, IO | BY, Xtra>)
 
-export type CommandProcessorBypassConditionArgType<A, B> =
-    Conditional<
-        EqualsNever<B>,
-        [],
-        [bypassCondition: CommandProcessorBypassCondition<A, B>]
+type GetExtraArgsArg<T extends ReadonlyArray<unknown>> = [extraArgs: T extends [] ? never : T]
+type GetBypassConditionArg<T, U> = [bypassCondition : [U] extends [never] ? never : CommandProcessorBypassCondition<T, U>]
+
+type GetAdditionalArgs<IOType, BypassType, ExtraArgsType extends ReadonlyArray<unknown>> =
+    AddParameterToTuple<
+        GetBypassConditionArg<IOType, BypassType>,
+        AddParameterToTuple<
+            GetExtraArgsArg<ExtraArgsType>
+        >
     >
 
-type CommandsType<IO, BY, Xtra extends unknown[]> = (Command<IO, IO | BY, Xtra> | ObservableCommand<IO, IO | BY, Xtra>)
 
-
-
+export type CommandProcessorBypassCondition<A, B> = (input: A | B) => input is B;
 
 
 export class CommandProcessor {
@@ -32,18 +34,18 @@ export class CommandProcessor {
         GroupType extends CommandGroupTypeTemplate,
         IOType = GetCommandGroupIOType<GroupType>,
         BypassType = GetCommandGroupBypassType<GroupType>,
-        ExtraArgsType extends unknown[] = GetCommandGroupExtraArgsType<GroupType>
+        ExtraArgsType extends ReadonlyArray<unknown> = GetCommandGroupExtraArgsType<GroupType>
     >(
         commandGroup: GroupType,
-        input: IOType,
-        extraArgs: ExtraArgsType,
-        ...args: CommandProcessorBypassConditionArgType<IOType, BypassType>
+        input: GetCommandGroupIOType<GroupType>,
+        ...args: GetAdditionalArgs<IOType, GetCommandGroupBypassType<GroupType>, GetCommandGroupExtraArgsType<GroupType>>
 
     ): Observable<IOType | BypassType> {
 
         const initialValue: Observable<IOType> = input instanceof Observable ? input : of(input),
             commands: ReadonlyArray<CommandsType<IOType, IOType | BypassType, ExtraArgsType>> = commandGroup.getCommands() as ReadonlyArray<CommandsType<IOType, IOType | BypassType, ExtraArgsType>>,
-            bypassCondition = args[0];
+            extraArgs: ReadonlyArray<unknown> = (Array.isArray(args[0]) ? args[0] : []),
+            bypassCondition: CommandProcessorBypassCondition<IOType, BypassType> | undefined = this._getBypassCondition<IOType, BypassType>(args);
 
         return commands.reduce(
 
@@ -57,7 +59,7 @@ export class CommandProcessor {
                                 return of(inpt);
                             }
 
-                            const result = command.execute(inpt as IOType, ...extraArgs);
+                            const result = command.execute(inpt as IOType, ...extraArgs as ExtraArgsType);
 
                             return result instanceof Observable ? result : of(result);
                         })
@@ -65,5 +67,19 @@ export class CommandProcessor {
             },
             initialValue
         );
+    }
+
+    private _getBypassCondition<IOType, BypassType>(args: unknown[]): CommandProcessorBypassCondition<IOType, BypassType> | undefined {
+
+        if(args.length === 1) {
+
+            return Array.isArray(args[0]) ? undefined : args[0] as CommandProcessorBypassCondition<IOType, BypassType>;
+
+        }else if(args.length === 2) {
+
+            return args[1] as CommandProcessorBypassCondition<IOType, BypassType>;
+        }
+
+        return undefined;
     }
 }
