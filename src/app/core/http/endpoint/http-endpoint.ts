@@ -1,7 +1,7 @@
 import {Observable, of, throwError} from 'rxjs';
 import {catchError, mergeMap} from 'rxjs/operators';
 
-import {CommandProcessor} from "../../commands/processor/command-processor";
+import {Command, CommandGroup, CommandProcessor, CommandTypeTemplate} from "../../commands";
 
 import { HttpAdaptor } from '../adaptor/http-adaptor';
 import { HttpEndpointMethod } from './method/http-endpoint-method';
@@ -15,7 +15,7 @@ import { HttpResponseHook } from '../response/hook/http-response-hook';
 import { UrlInterpolator } from '../utils/url/url-interpolator';
 import { UrlInterpolatorHook } from './hooks/url-interpolator-hook';
 import {isHttpError, isHttpRequest, isHttpResponse} from '../utils/http-type-guards';
-import {CommandGroup} from "../../commands/group/command-group";
+
 
 
 
@@ -53,9 +53,9 @@ export class HttpEndpoint {
 
         const method: HttpEndpointMethod = this._getMethodById(methodId),
             request: HttpRequest = method.toRequest(params, options),
-            requestHooks: HttpRequestHook[] = this._getHooks<HttpRequestHook>(method.requestHooks),
-            responseHooks: HttpResponseHook[] = this._getHooks<HttpResponseHook>(method.responseHooks),
-            errorHooks: HttpErrorHook[] = this._getHooks<HttpErrorHook>(method.errorHooks);
+            requestHooks: CommandGroup<HttpRequestHook> = this._getHooks<HttpRequestHook>(method.requestHooks),
+            responseHooks: CommandGroup<HttpResponseHook> = this._getHooks<HttpResponseHook>(method.responseHooks),
+            errorHooks: CommandGroup<HttpErrorHook> = this._getHooks<HttpErrorHook>(method.errorHooks);
 
         return this._processRequest(request, requestHooks)
             .pipe(mergeMap((response: HttpResponse) => this._processResponse(response, responseHooks)))
@@ -73,21 +73,22 @@ export class HttpEndpoint {
         return method;
     }
 
-    private _getHooks<HookType>(hookKeys: string[]): HookType[] {
+    private _getHooks<HookType extends HttpRequestHook | HttpResponseHook | HttpErrorHook>(hookKeys: string[]): HookType[] {
 
-        if(!hookKeys?.length) {
+        if(!this._hooks || !hookKeys?.length) {
             return [];
         }
 
-        const hooks: HookType[] = hookKeys.map((hookKey: string) => {
-            return this._hooks?.get(hookKey);
-        }) as unknown as HookType[];
+        const hooks = this._hooks,
+            hks: HookType[] = hookKeys.map((hookKey: string): HookType => {
+                return hooks.get(hookKey) as HookType;
+            })
 
-        if(hookKeys.length !== hooks?.length) {
-            throw new Error(`${hookKeys.length} Hook keys specified for endpoint but only ${hooks?.length} found`);
+        if(hookKeys.length !== hks.length) {
+            throw new Error(`${hookKeys.length} Hook keys specified for endpoint but only ${hks.length} found`);
         }
 
-        return hooks;
+        return hks;
     }
 
     private _processRequest(request: HttpRequest, hooks: CommandGroup<HttpRequestHook>): Observable<HttpResponse | HttpError> {
