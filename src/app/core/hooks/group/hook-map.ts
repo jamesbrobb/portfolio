@@ -1,5 +1,5 @@
 import {GetHookParams, Hook} from "../hook";
-import {Conditional, TypeEqualsType} from "../../../../types";
+import {IfElse, Equals} from "../../../../types";
 
 
 /*
@@ -7,11 +7,11 @@ import {Conditional, TypeEqualsType} from "../../../../types";
   and returns:
  */
 export type CalculateValidAdditionalType<ADT, HKADT> =
-  Conditional<
-    TypeEqualsType<ADT, void>,
+  IfElse<
+    Equals<ADT, void>,
     HKADT,
-    Conditional<
-      TypeEqualsType<HKADT, void>,
+    IfElse<
+      Equals<HKADT, void>,
       ADT,
       HKADT
     >
@@ -27,8 +27,8 @@ export type ReplaceAdditionalType<T extends unknown[], ADT> =
 
 
 export type IsValidHook<HKT extends Hook<unknown, unknown>, IOType, AdditionalOutputType = void> =
-  Conditional<
-    TypeEqualsType<
+  IfElse<
+    Equals<
       [IOType, AdditionalOutputType],
       ValidateHookParams<HKT, AdditionalOutputType>
     >,

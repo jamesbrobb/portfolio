@@ -5,7 +5,7 @@ import {CommandGroup} from "../commands/group/command-group";
 import {CommandProcessor} from "../commands/processor/command-processor";
 import {Observable, of} from "rxjs";
 import {take} from "rxjs/operators";
-import {Conditional, DoesExtend, EqualsNever, TypeEqualsType} from "../../../types";
+import {IfElse, DoesExtend, EqualsNever, Equals} from "../../../types";
 
 
 type PropertyValueMapType = {[propertyKey: string]: unknown};
@@ -42,8 +42,8 @@ export type AnalyticsEvent = {
 }
 
 export type CommandProcessorArgType<T> =
-    Conditional<
-        TypeEqualsType<T, undefined>,
+    IfElse<
+        Equals<T, undefined>,
         [],
         [processor: CommandProcessor]
     >
