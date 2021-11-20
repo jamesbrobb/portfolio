@@ -1,6 +1,7 @@
 import {Observable} from "rxjs";
 
 
+
 export type StrictExtract<T, U> = T extends unknown ? U extends T ? T extends U ? T : never : never : never;
 
 type _StrictExcludeInner<T, U> = 0 extends (
@@ -10,36 +11,44 @@ type _StrictExcludeInner<T, U> = 0 extends (
 export type StrictExclude<T, U> = T extends unknown ? _StrictExcludeInner<T, U> : never;
 
 
-export type Conditional<T extends boolean, TrueType, FalseType> = T extends true ? TrueType : FalseType;
+export type IfElse<Condition extends boolean, TrueType, FalseType> = Condition extends true ? TrueType : FalseType;
 
 export type DoesExtend<T1, T2, Distributive extends boolean = true> =
-    Conditional<
+    IfElse<
         Distributive,
         (boolean extends T1 ? boolean : T1) extends T2 ? true : false,
         [T1] extends [T2] ? true : false
     >
 
-// https://github.com/microsoft/TypeScript/issues/27024#issuecomment-421529650
-export type Equals<X, Y> =
-    (<T>() => T extends X ? 1 : 2) extends
-        (<T>() => T extends Y ? 1 : 2) ? true : false;
+// @link https://github.com/microsoft/TypeScript/issues/27024#issuecomment-931205995
+/*type EqualsWrapped<T> = T extends infer R & {} ?
+    { [P in keyof R]: R[P] }
+    : never
 
-export type TypeEqualsType<T1, T2, AllowSubtypeMatch extends boolean = false> =
-    Conditional<
+export type Equals<A, B> =
+    (<T>() => T extends EqualsWrapped<A> ? 1 : 2) extends
+        (<T>() => T extends EqualsWrapped<B> ? 1 : 2)
+        ? true
+        : false*/
+
+export type Equals<T1, T2, AllowSubtypeMatch extends boolean = false> =
+    IfElse<
         AllowSubtypeMatch,
         DoesExtend<T1, T2>,
-        Conditional<DoesExtend<T1, T2, false>, DoesExtend<T2, T1, false>, false>
+        IfElse<DoesExtend<T1, T2, false>, DoesExtend<T2, T1, false>, false>
   >;
 
 export type EqualsNever<T> = [T] extends [never] ? true : false;
 
-export type ReplaceNeverWith<T, U> = Conditional<EqualsNever<T>, U, T>;
+export type ReplaceNeverWith<T, U> = IfElse<EqualsNever<T>, U, T>;
 
 export type ReplaceTypeWith<T, U, V> = T extends U ? V : T;
 
 export type ReplaceTypeInTupleWith<T extends unknown[], U, V> = {[P in keyof T] : ReplaceTypeWith<T[P], U, V>}
 
 export type UnwrapObservables<T> = T extends Observable<infer U> ? U : T;
+
+export type UnionToTuple<T extends any[]> = T[number];
 
 export type AddParameterToTuple<T extends [unknown], U extends unknown[] = []> =
     T extends [] ?
@@ -49,6 +58,9 @@ export type AddParameterToTuple<T extends [unknown], U extends unknown[] = []> =
                 U :
                 Append<T, U> :
             U
+
+export type TupleElementComparison<T1 extends readonly unknown[], T2 extends readonly unknown[]> =
+    {[K in keyof T2]: IfElse<Equals<T2[K], T1[K]>, 1, 0>}
 
 
 // @link https://stackoverflow.com/a/64194372/1798234

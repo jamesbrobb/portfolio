@@ -1,13 +1,13 @@
 import {expectError, expectType} from 'tsd';
 
 import {
-    Conditional,
+    IfElse,
     DoesExtend,
     EqualsNever,
     ReplaceNeverWith,
-    TypeEqualsType,
+    Equals,
     ReplaceTypeWith, UnwrapObservables, FilterType, SetIndexToType, SpliceTuple, ReplaceTypeInTupleWith
-} from './types';
+} from '../types';
 
 import {Observable} from "rxjs";
 
@@ -64,11 +64,11 @@ declare const strOrNum: string | number;
 
 
 
-// Conditional
+// IfElse
 
-expectType<Conditional<true, TypeA, TypeB>>(new TypeA);
+expectType<IfElse<true, TypeA, TypeB>>(new TypeA);
 
-expectType<Conditional<false, TypeA, TypeB>>(new TypeB);
+expectType<IfElse<false, TypeA, TypeB>>(new TypeB);
 
 
 // DoesExtend
@@ -79,8 +79,15 @@ expectType<DoesExtend<Function, Object>>(true);
 
 expectType<DoesExtend<Function, Function>>(true);
 
-type a = DoesExtend<number | string, number>
-type b = DoesExtend<number, number | string>
+expectType<DoesExtend<boolean, true>>(false);
+
+expectType<DoesExtend<boolean, false>>(false);
+
+expectType<DoesExtend<false, boolean>>(true);
+
+expectType<DoesExtend<true, boolean>>(true);
+
+expectType<DoesExtend<boolean, boolean>>(true);
 
 expectType<DoesExtend<number | string, number>>(false); // distributive
 
@@ -128,30 +135,30 @@ expectType<DoesExtend<TestClass2, TestClass, false>>(true);
 expectError<DoesExtend<TestClass2, TestClass, false>>(bool);
 
 
-// TypeEqualsType
+// Equals
 
-expectType<TypeEqualsType<TypeA, TypeB>>(false);
+expectType<Equals<TypeA, TypeB>>(false);
 
-expectType<TypeEqualsType<TypeB, TypeA>>(false);
+expectType<Equals<TypeB, TypeA>>(false);
 
-expectType<TypeEqualsType<TypeB, TypeC>>(false);
+expectType<Equals<TypeB, TypeC>>(false);
 
-expectType<TypeEqualsType<TypeB, TypeC, true>>(false);
+expectType<Equals<TypeB, TypeC, true>>(false);
 
-expectType<TypeEqualsType<TypeC, TypeB, true>>(true);
+expectType<Equals<TypeC, TypeB, true>>(true);
 
-expectType<TypeEqualsType<TypeA, TypeB, true>>(false);
+expectType<Equals<TypeA, TypeB, true>>(false);
 
-expectType<TypeEqualsType<TypeB, TypeA, true>>(false);
+expectType<Equals<TypeB, TypeA, true>>(false);
 
-expectType<TypeEqualsType<TypeB | TypeA, TypeA>>(false);
-expectError<TypeEqualsType<TypeB | TypeA, TypeA>>(bool);
+expectType<Equals<TypeB | TypeA, TypeA>>(false);
+expectError<Equals<TypeB | TypeA, TypeA>>(bool);
 
-expectType<TypeEqualsType<TypeA, TypeA | TypeB>>(false);
-expectError<TypeEqualsType<TypeA, TypeA | TypeB>>(bool);
+expectType<Equals<TypeA, TypeA | TypeB>>(false);
+expectError<Equals<TypeA, TypeA | TypeB>>(bool);
 
-expectType<TypeEqualsType<TypeB | TypeA, TypeA | TypeB>>(true);
-expectError<TypeEqualsType<TypeB | TypeA, TypeA | TypeB>>(bool);
+expectType<Equals<TypeB | TypeA, TypeA | TypeB>>(true);
+expectError<Equals<TypeB | TypeA, TypeA | TypeB>>(bool);
 
 // EqualsNever
 
@@ -232,3 +239,4 @@ expectType<ReplaceTypeInTupleWith<rtitwTuple, undefined, boolean>>(rtitw1)
 
 declare const rtitw2: rtitwTuple;
 expectType<ReplaceTypeInTupleWith<rtitwTuple, boolean, number>>(rtitw2)
+
