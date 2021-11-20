@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs';
-import {Conditional, UnwrapObservables} from "../../../types";
+import {IfElse, UnwrapObservables} from "../../../types";
 
 
 export type CommandTypeTemplate = Command<unknown, unknown, ReadonlyArray<unknown>>;
@@ -10,7 +10,7 @@ export type GetCommandTypeParamsResultTemplateType = GetCommandTypeParamsResult<
 
 export type GetCommandTypeParams<T extends CommandTypeTemplate, UnwrapObs extends boolean = false> =
     T extends Command<infer I, infer O, infer ExtraArgs> ?
-        Conditional<
+        IfElse<
             UnwrapObs,
             GetCommandTypeParamsResult<I, UnwrapObservables<O>, ExtraArgs>,
             GetCommandTypeParamsResult<I, O, ExtraArgs>

@@ -1,10 +1,10 @@
 import {
-    Conditional,
+    IfElse,
     EqualsNever,
     ErrorBrand,
     StrictExclude,
     StrictExtract,
-    TypeEqualsType
+    Equals, UnionToTuple, TupleElementComparison,
 } from "../../../../types";
 
 import {
@@ -16,6 +16,10 @@ import {
 
 
 
+export type GetInputType<CommandType extends CommandTypeTemplate> = _GetInputType<GetCommandTypeParams<CommandType, true>>;
+type _GetInputType<T extends GetCommandTypeParamsResultTemplateType> = T[0];
+export type GetOutputType<CommandType extends CommandTypeTemplate> = _GetOutputType<GetCommandTypeParams<CommandType, true>>;
+type _GetOutputType<T extends GetCommandTypeParamsResultTemplateType> = T[1];
 export type GetIOType<CommandType extends CommandTypeTemplate> = _GetIOType<GetCommandTypeParams<CommandType, true>>;
 type _GetIOType<T extends GetCommandTypeParamsResultTemplateType> = StrictExtract<T[0], T[1]>
 export type GetBypassType<CommandType extends CommandTypeTemplate> = _GetBypassType<GetCommandTypeParams<CommandType, true>>;
@@ -24,14 +28,49 @@ export type GetExtraArgsType<CommandType extends CommandTypeTemplate> = _GetExtr
 type _GetExtraArgsType<T extends GetCommandTypeParamsResultTemplateType> = T[2];
 
 
+export type AreExtraArgsCompatible<T1 extends readonly unknown[], T2 extends readonly unknown[]> =
+    0 extends (UnionToTuple<TupleElementComparison<T1, T2> & unknown[]>) ? false : true;
+
+
+export type CalculateValidIOType<IOT, BYT, CMIOT, CMIT = undefined> =
+    IfElse<
+        Equals<CMIOT, never>,
+        CMIOT,
+        IfElse<
+            Equals<IOT, CMIOT>,
+            CMIOT,
+            IfElse<
+                Equals<IOT, StrictExclude<CMIOT, BYT>>,
+                IOT,
+                IfElse<
+                    Equals<IOT, CMIT>,
+                    IOT,
+                    CMIOT
+                >
+            >
+        >
+    >
+
+
 export type CalculateValidBypassType<BT, CMDBT> =
-    Conditional<
-        TypeEqualsType<BT, never>,
+    IfElse<
+        Equals<BT, never>,
         CMDBT,
-        Conditional<
-            TypeEqualsType<CMDBT, never>,
+        IfElse<
+            Equals<CMDBT, never>,
             BT,
             CMDBT
+        >
+    >
+
+export type CalculateValidExtrasArgType<EXT extends ReadonlyArray<unknown>, CMDEXT extends ReadonlyArray<unknown>> =
+    IfElse<
+        Equals<EXT, CMDEXT>,
+        CMDEXT,
+        IfElse<
+            AreExtraArgsCompatible<EXT, CMDEXT>,
+            EXT,
+            CMDEXT
         >
     >
 
@@ -45,22 +84,22 @@ export type GroupExtraArgsMismatchError = ErrorBrand<'CommandGroup and supplied 
 
 
 export type IsCommandCompatible<CommandType extends CommandTypeTemplate, IOType, BypassType, ExtraArgsType extends ReadonlyArray<unknown> = []> =
-    Conditional<
-        TypeEqualsType<[IOType, IOType], [unknown, unknown]>,
+    IfElse<
+        Equals<[IOType, IOType], [unknown, unknown]>,
         NoCommandTypeParamError,
-        Conditional<
+        IfElse<
             EqualsNever<IOType>,
             GroupIOMismatchError,
-            Conditional<
-                TypeEqualsType<IOType, GetIOType<CommandType>>,
-                Conditional<
-                    TypeEqualsType<BypassType, CalculateValidBypassType<BypassType, GetBypassType<CommandType>>>,
-                    Conditional<
-                        TypeEqualsType<ExtraArgsType, GetExtraArgsType<CommandType>>, // @todo Be more permissive i.e if group is [string, Function] command can also be [string] or []
+            IfElse<
+                Equals<IOType, CalculateValidIOType<IOType, BypassType, GetIOType<CommandType>, GetInputType<CommandType>>>,
+                IfElse<
+                    Equals<BypassType, CalculateValidBypassType<BypassType, GetBypassType<CommandType>>>,
+                    IfElse<
+                        Equals<ExtraArgsType, CalculateValidExtrasArgType<ExtraArgsType, GetExtraArgsType<CommandType>>>,
                         CommandType,
                         GroupExtraArgsMismatchError
                     >,
-                    Conditional<
+                    IfElse<
                         EqualsNever<BypassType>,
                         GroupBypassTypeNeverError,
                         GroupAndCommandBypassTypeMismatchError
@@ -105,6 +144,10 @@ export class CommandGroup<
 
     addCommand<T extends CommandTypeTemplate>(command: IsCommandCompatible<T, IOType, BypassType, ExtraArgsType> & T): void {
         this._commands.push(command as Command<IOType, IOType | BypassType, ExtraArgsType>);
+    }
+
+    addCommands<T extends CommandTypeTemplate[]>(commands: T extends CommandTypeTemplate[] ? IsCommandCompatible<T[number], IOType, BypassType, ExtraArgsType>[] & T : never): void {
+
     }
 
     getCommands(): ReadonlyArray<Command<IOType, IOType | BypassType, ExtraArgsType>> {
