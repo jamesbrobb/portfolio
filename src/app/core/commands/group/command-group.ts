@@ -3,33 +3,31 @@ import {
     EqualsNever,
     ErrorBrand,
     StrictExclude,
-    StrictExtract,
-    Equals, UnionToTuple, TupleElementComparison,
+    Equals,
+    UnionToTuple,
+    TupleElementComparison, Not,
 } from "../../../../types";
 
 import {
     Command,
     CommandTypeTemplate,
     GetCommandTypeParams,
-    GetCommandTypeParamsResultTemplateType
-} from "../command";
+    GetCommandTypeParamsResultTemplateType,
+    GetExtraArgsType,
+    GetInputType,
+    GetIOType
+} from "../command/command";
 
 
+export type GetAdditionalOutputType<CommandType extends CommandTypeTemplate> =
+    _GetAdditionalOutputType<GetCommandTypeParams<CommandType, true>>;
 
-export type GetInputType<CommandType extends CommandTypeTemplate> = _GetInputType<GetCommandTypeParams<CommandType, true>>;
-type _GetInputType<T extends GetCommandTypeParamsResultTemplateType> = T[0];
-export type GetOutputType<CommandType extends CommandTypeTemplate> = _GetOutputType<GetCommandTypeParams<CommandType, true>>;
-type _GetOutputType<T extends GetCommandTypeParamsResultTemplateType> = T[1];
-export type GetIOType<CommandType extends CommandTypeTemplate> = _GetIOType<GetCommandTypeParams<CommandType, true>>;
-type _GetIOType<T extends GetCommandTypeParamsResultTemplateType> = StrictExtract<T[0], T[1]>
-export type GetBypassType<CommandType extends CommandTypeTemplate> = _GetBypassType<GetCommandTypeParams<CommandType, true>>;
-type _GetBypassType<T extends GetCommandTypeParamsResultTemplateType> = StrictExclude<T[1], T[0]>;
-export type GetExtraArgsType<CommandType extends CommandTypeTemplate> = _GetExtraArgsType<GetCommandTypeParams<CommandType, true>>
-type _GetExtraArgsType<T extends GetCommandTypeParamsResultTemplateType> = T[2];
-
+type _GetAdditionalOutputType<T extends GetCommandTypeParamsResultTemplateType> =
+    StrictExclude<T[1], T[0]>;
 
 export type AreExtraArgsCompatible<T1 extends readonly unknown[], T2 extends readonly unknown[]> =
     0 extends (UnionToTuple<TupleElementComparison<T1, T2> & unknown[]>) ? false : true;
+
 
 
 export type CalculateValidIOType<IOT, BYT, CMIOT, CMIT = undefined> =
@@ -51,8 +49,7 @@ export type CalculateValidIOType<IOT, BYT, CMIOT, CMIT = undefined> =
         >
     >
 
-
-export type CalculateValidBypassType<BT, CMDBT> =
+export type CalculateValidAdditionalOutputType<BT, CMDBT> =
     IfElse<
         Equals<BT, never>,
         CMDBT,
@@ -74,16 +71,31 @@ export type CalculateValidExtrasArgType<EXT extends ReadonlyArray<unknown>, CMDE
         >
     >
 
+export type HasNonMatchingOutputTypeWhenNotAllowed<AllowNonMatchingOutputType extends boolean, AdditionalOutputType> =
+    IfElse<
+        Not<AllowNonMatchingOutputType>,
+        Not<EqualsNever<AdditionalOutputType>>,
+        false
+    >
+
+
 export type NoCommandTypeParamError = ErrorBrand<'A type is required for the CommandGroup CommandType type variable'>
 export type GroupIOMismatchError = ErrorBrand<'The CommandGroup CommandType type variable has an Input and Output type mismatch'>
+export type GroupAdditionalOutputTypeError = ErrorBrand<'The CommandGroup CommandType has an additional output type, but the AllowNonMatchingOutputType type parameter was not explicitly set to true'>
 export type GroupAndSuppliedCommandIOMismatchError = ErrorBrand<`IOType of CommandGroup and supplied command do not match`>
-export type GroupBypassTypeNeverError = ErrorBrand<'CommandGroup BypassType is never but the supplied command BypassType has a type set'>
-export type GroupAndCommandBypassTypeMismatchError = ErrorBrand<'CommandGroup and supplied command BypassType do not match'>
+export type GroupAdditionalOutputTypeNeverError = ErrorBrand<'CommandGroup AdditionalOutputType is never but the supplied command AdditionalOutputType has a type set'>
+export type GroupAndCommandAdditionalOutputTypeMismatchError = ErrorBrand<'CommandGroup and supplied command AdditionalOutputType do not match'>
 export type GroupExtraArgsMismatchError = ErrorBrand<'CommandGroup and supplied command ExtraArgs do not match'>;
 
 
 
-export type IsCommandCompatible<CommandType extends CommandTypeTemplate, IOType, BypassType, ExtraArgsType extends ReadonlyArray<unknown> = []> =
+export type IsCommandCompatible<
+    CommandType extends CommandTypeTemplate,
+    IOType,
+    AdditionalOutputType,
+    AllowNonMatchingOutputType extends boolean = false,
+    ExtraArgsType extends ReadonlyArray<unknown> = [],
+> =
     IfElse<
         Equals<[IOType, IOType], [unknown, unknown]>,
         NoCommandTypeParamError,
@@ -91,66 +103,86 @@ export type IsCommandCompatible<CommandType extends CommandTypeTemplate, IOType,
             EqualsNever<IOType>,
             GroupIOMismatchError,
             IfElse<
-                Equals<IOType, CalculateValidIOType<IOType, BypassType, GetIOType<CommandType>, GetInputType<CommandType>>>,
+                HasNonMatchingOutputTypeWhenNotAllowed<AllowNonMatchingOutputType, AdditionalOutputType>,
+                GroupAdditionalOutputTypeError,
                 IfElse<
-                    Equals<BypassType, CalculateValidBypassType<BypassType, GetBypassType<CommandType>>>,
+                    Equals<IOType, CalculateValidIOType<IOType, AdditionalOutputType, GetIOType<CommandType, true>, GetInputType<CommandType, true>>>,
                     IfElse<
-                        Equals<ExtraArgsType, CalculateValidExtrasArgType<ExtraArgsType, GetExtraArgsType<CommandType>>>,
-                        CommandType,
-                        GroupExtraArgsMismatchError
+                        Equals<AdditionalOutputType, CalculateValidAdditionalOutputType<AdditionalOutputType, GetAdditionalOutputType<CommandType>>>,
+                        IfElse<
+                            Equals<ExtraArgsType, CalculateValidExtrasArgType<ExtraArgsType, GetExtraArgsType<CommandType>>>,
+                            CommandType,
+                            GroupExtraArgsMismatchError
+                        >,
+                        IfElse<
+                            EqualsNever<AdditionalOutputType>,
+                            GroupAdditionalOutputTypeNeverError,
+                            GroupAndCommandAdditionalOutputTypeMismatchError
+                        >
                     >,
-                    IfElse<
-                        EqualsNever<BypassType>,
-                        GroupBypassTypeNeverError,
-                        GroupAndCommandBypassTypeMismatchError
-                    >
-                >,
-                GroupAndSuppliedCommandIOMismatchError
+                    GroupAndSuppliedCommandIOMismatchError
+                >
             >
         >
     >
 
 
 export type CommandGroupTypeTemplate = CommandGroup<CommandTypeTemplate>;
-export type GetCommandGroupTypeParamsResult<CommandType extends CommandTypeTemplate, I, O, ExtraArgs extends ReadonlyArray<unknown> = readonly unknown[]> = [CommandType, I, O, ExtraArgs];
-export type GetCommandGroupTypeParamsResultTypeTemplate = GetCommandGroupTypeParamsResult<CommandTypeTemplate, unknown, unknown>
+
+export type GetCommandGroupTypeParamsResult<
+    CommandType extends CommandTypeTemplate,
+    AOOK extends boolean,
+    IO,
+    AO,
+    ExtraArgs extends ReadonlyArray<unknown> = readonly unknown[]
+> = [CommandType, AOOK, IO, AO, ExtraArgs];
+
+export type GetCommandGroupTypeParamsResultTypeTemplate = GetCommandGroupTypeParamsResult<CommandTypeTemplate, false, unknown, unknown>
 
 export type GetCommandGroupTypeParams<GroupType extends CommandGroupTypeTemplate> =
-    GroupType extends CommandGroup<infer CT, infer IOT, infer BypassT, infer ExtraArgsT> ?
-        [CT, IOT, BypassT, ExtraArgsT] :
+    GroupType extends CommandGroup<infer CT, infer AddOutTOK, infer IOT, infer AddOutT, infer ExtraArgsT> ?
+        [CT, AddOutTOK, IOT, AddOutT, ExtraArgsT] :
         never;
 
-export type GetCommandGroupIOType<GroupType extends CommandGroupTypeTemplate> = _GetCommandGroupIOType<GetCommandGroupTypeParams<GroupType>>
-type _GetCommandGroupIOType<T extends GetCommandGroupTypeParamsResultTypeTemplate> = T[1];
+export type GetCommandGroupIOType<GroupType extends CommandGroupTypeTemplate> =
+    _GetCommandGroupIOType<GetCommandGroupTypeParams<GroupType>>
+type _GetCommandGroupIOType<T extends GetCommandGroupTypeParamsResultTypeTemplate> = T[2];
 
-export type GetCommandGroupBypassType<GroupType extends CommandGroupTypeTemplate> = _GetCommandGroupBypassType<GetCommandGroupTypeParams<GroupType>>
-type _GetCommandGroupBypassType<T extends GetCommandGroupTypeParamsResultTypeTemplate> = T[2];
+export type GetCommandGroupAdditionalOutputType<GroupType extends CommandGroupTypeTemplate> =
+    _GetCommandGroupAdditionalOutputType<GetCommandGroupTypeParams<GroupType>>
+type _GetCommandGroupAdditionalOutputType<T extends GetCommandGroupTypeParamsResultTypeTemplate> = T[3];
 
-export type GetCommandGroupExtraArgsType<GroupType extends CommandGroupTypeTemplate> = _GetCommandGroupExtraArgsType<GetCommandGroupTypeParams<GroupType>>
-type _GetCommandGroupExtraArgsType<T extends GetCommandGroupTypeParamsResultTypeTemplate> = T[3];
-
-
+export type GetCommandGroupExtraArgsType<GroupType extends CommandGroupTypeTemplate> =
+    _GetCommandGroupExtraArgsType<GetCommandGroupTypeParams<GroupType>>
+type _GetCommandGroupExtraArgsType<T extends GetCommandGroupTypeParamsResultTypeTemplate> = T[4];
 
 
 
 export class CommandGroup<
     CommandType extends CommandTypeTemplate,
-    IOType = GetIOType<CommandType>,
-    BypassType = GetBypassType<CommandType>,
+    AllowNonMatchingOutputType extends boolean = false,
+    IOType = GetIOType<CommandType, true>,
+    AdditionalOutputType = GetAdditionalOutputType<CommandType>,
     ExtraArgsType extends ReadonlyArray<unknown> = GetExtraArgsType<CommandType>
 > {
 
-    private _commands: Command<IOType, IOType | BypassType, ExtraArgsType>[] = [];
+    private _commands: Command<IOType, IOType | AdditionalOutputType, ExtraArgsType>[] = [];
 
-    addCommand<T extends CommandTypeTemplate>(command: IsCommandCompatible<T, IOType, BypassType, ExtraArgsType> & T): void {
-        this._commands.push(command as Command<IOType, IOType | BypassType, ExtraArgsType>);
+    addCommand<T extends CommandTypeTemplate>(
+        command: IsCommandCompatible<T, IOType, AdditionalOutputType, AllowNonMatchingOutputType, ExtraArgsType> & T
+    ): void {
+        this._commands.push(command as Command<IOType, IOType | AdditionalOutputType, ExtraArgsType>);
     }
 
-    addCommands<T extends CommandTypeTemplate[]>(commands: T extends CommandTypeTemplate[] ? IsCommandCompatible<T[number], IOType, BypassType, ExtraArgsType>[] & T : never): void {
-
+    addCommands<T extends CommandTypeTemplate[]>(
+        commands: IsCommandCompatible<T[number], IOType, AdditionalOutputType, AllowNonMatchingOutputType, ExtraArgsType>[] & T
+    ): void {
+        commands.forEach((command: CommandTypeTemplate) => {
+            this._commands.push(command as Command<IOType, IOType | AdditionalOutputType, ExtraArgsType>);
+        });
     }
 
-    getCommands(): ReadonlyArray<Command<IOType, IOType | BypassType, ExtraArgsType>> {
+    getCommands(): ReadonlyArray<Command<IOType, IOType | AdditionalOutputType, ExtraArgsType>> {
         return this._commands.concat();
     }
 }

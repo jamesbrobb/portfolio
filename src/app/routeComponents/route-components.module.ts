@@ -7,9 +7,6 @@ import {GridLayoutRouteComponent} from "./components/grid-layout/grid-layout-rou
 import {FlexGridRouteComponent} from "./components/flex-grid/flex-grid-route.component";
 import {ResponsiveContainerRouteComponent} from "./components/responsive-container/responsive-container-route.component";
 import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
-import {AnalyticsRouteComponent} from "./core/analytics/analytics-route.component";
-import {HooksRouteComponent} from "./core/hooks/hooks-route.component";
-import {HttpRouteComponent} from "./core/http/http-route.component";
 import {FallbackImageRouteComponent} from "./components/fallback-image/fallback-image.route.component";
 import {ImageComponentRouteComponent} from "./components/image-component/image-component.route.component";
 import {ColorOverlayRouteComponent} from "./components/color-overlay/color-overlay.route.component";
@@ -24,6 +21,8 @@ import {AssetService, AssetServiceConfiguration, TagParser} from "../product";
 import {MyLibraryLessonPlanCardRouteComponent} from "./components/product/my-library/lesson-plan-card/my-library-lesson-plan-card.route.component";
 import {LessonPlanVocabularyRouteComponent} from "./components/product/lesson-plan/vocabulary/lesson-plan-vocabulary.route.component";
 import {MatMenuModule} from "@angular/material/menu";
+import {CommandRouteComponent} from "./core/command/command-route.component";
+import {AnalyticsRouteComponent} from "./core/analytics/analytics-route.component";
 
 const routes: Routes = [
   {
@@ -88,8 +87,8 @@ const routes: Routes = [
     path: 'core',
     children: [
       {path: 'analytics', component: AnalyticsRouteComponent},
-      {path: 'hooks', component: HooksRouteComponent},
-      {path: 'http', component: HttpRouteComponent}
+      {path: 'command', component: CommandRouteComponent},
+      //{path: 'http', component: HttpRouteComponent}
     ]
   }
 ]
@@ -112,8 +111,7 @@ export const COMPONENTS = [
   FlexGridRouteComponent,
   ResponsiveContainerRouteComponent,
   AnalyticsRouteComponent,
-  HooksRouteComponent,
-  HttpRouteComponent,
+  CommandRouteComponent,
   FallbackImageRouteComponent,
   ImageComponentRouteComponent,
   ColorOverlayRouteComponent,

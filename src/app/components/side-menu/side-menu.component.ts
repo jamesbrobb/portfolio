@@ -96,12 +96,12 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
     name: 'Analytics',
     path: 'core/analytics'
   }, {
-    name: 'Hooks',
-    path: 'core/hooks'
-  }, {
+    name: 'Command',
+    path: 'core/command'
+  }/*, {
     name: 'Http',
     path: 'core/http'
-  }]
+  }*/]
 }];
 
 

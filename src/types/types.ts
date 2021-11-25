@@ -13,6 +13,8 @@ export type StrictExclude<T, U> = T extends unknown ? _StrictExcludeInner<T, U> 
 
 export type IfElse<Condition extends boolean, TrueType, FalseType> = Condition extends true ? TrueType : FalseType;
 
+export type Not<T extends boolean> = T extends true ? false : true;
+
 export type DoesExtend<T1, T2, Distributive extends boolean = true> =
     IfElse<
         Distributive,
@@ -60,7 +62,7 @@ export type AddParameterToTuple<T extends [unknown], U extends unknown[] = []> =
             U
 
 export type TupleElementComparison<T1 extends readonly unknown[], T2 extends readonly unknown[]> =
-    {[K in keyof T2]: IfElse<Equals<T2[K], T1[K]>, 1, 0>}
+    {[K in keyof T2]: IfElse<Equals<T2[K], T1[K & keyof T1]>, 1, 0>}
 
 
 // @link https://stackoverflow.com/a/64194372/1798234

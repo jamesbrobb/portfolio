@@ -1,7 +1,7 @@
 /*
     HttpEndpoint integration tests
  */
-
+/*
 import Spy = jasmine.Spy;
 import {of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
@@ -520,4 +520,4 @@ describe('HttpEndpoint', () => {
                 });
         });
     });
-});
+});*/

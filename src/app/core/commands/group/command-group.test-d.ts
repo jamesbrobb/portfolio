@@ -1,20 +1,20 @@
-import {expectType} from "tsd";
+import {expectError, expectType} from "tsd";
 
 import {
-    CalculateValidBypassType,
+    CalculateValidAdditionalOutputType,
     CalculateValidExtrasArgType,
     CalculateValidIOType,
     CommandGroup,
-    GroupAndCommandBypassTypeMismatchError,
+    GroupAndCommandAdditionalOutputTypeMismatchError,
     GroupAndSuppliedCommandIOMismatchError,
-    GroupBypassTypeNeverError,
+    GroupAdditionalOutputTypeNeverError,
     GroupExtraArgsMismatchError,
     GroupIOMismatchError,
     IsCommandCompatible,
-    NoCommandTypeParamError
+    NoCommandTypeParamError, HasNonMatchingOutputTypeWhenNotAllowed, GroupAdditionalOutputTypeError
 } from "./command-group";
 
-import {Command} from "../command";
+import {Command, CommandTypeTemplate} from "../command/command";
 
 import {
     TypeA,
@@ -35,7 +35,7 @@ import {
     ObservableInAndOutCommand,
     ExtraArgsCommand,
     ExtraArgsCommandWithBypassType
-} from "../command.mocks";
+} from "../command/command.mocks";
 
 
 
@@ -54,7 +54,7 @@ import {
             declare const cviot2a: CalculateValidIOType<TypeA | TypeB, never, TypeA | TypeB>;
             expectType<TypeA | TypeB>(cviot2a);
 
-        // the IOType and supplied command IOType excluding the BypassType are an exact match
+        // the IOType and supplied command IOType excluding the AdditionalOutputType are an exact match
 
             declare const cviot3: CalculateValidIOType<TypeA, TypeB, TypeA | TypeB>;
             expectType<TypeA>(cviot3);
@@ -81,36 +81,36 @@ import {
 
 
 
-// CalculateValidBypassType
+// CalculateValidAdditionalOutputType
 
-    // command group command type BypassType === never
+    // command group command type AdditionalOutputType === never
 
-        // supplied command BypassType === never :ok:
+        // supplied command AdditionalOutputType === never :ok:
 
-            declare const cvat1: CalculateValidBypassType<never, never>;
+            declare const cvat1: CalculateValidAdditionalOutputType<never, never>;
             expectType<never>(cvat1);
 
-        // supplied command BypassType !== never :no:
+        // supplied command AdditionalOutputType !== never :no:
 
-            declare const cvat2: CalculateValidBypassType<never, TypeA>;
+            declare const cvat2: CalculateValidAdditionalOutputType<never, TypeA>;
             expectType<TypeA>(cvat2);
 
 
-    // command group command type BypassType !== never
+    // command group command type AdditionalOutputType !== never
 
-        // supplied command BypassType === void :no:
+        // supplied command AdditionalOutputType === void :no:
 
-            declare const cvat3: CalculateValidBypassType<TypeB, never>;
+            declare const cvat3: CalculateValidAdditionalOutputType<TypeB, never>;
             expectType<TypeB>(cvat3);
 
-        // supplied command BypassType === command group command type value :ok:
+        // supplied command AdditionalOutputType === command group command type value :ok:
 
-            declare const cvat4: CalculateValidBypassType<TypeA, TypeA>;
+            declare const cvat4: CalculateValidAdditionalOutputType<TypeA, TypeA>;
             expectType<TypeA>(cvat4);
 
-        // supplied command BypassType !== command group command type value :no:
+        // supplied command AdditionalOutputType !== command group command type value :no:
 
-            declare const cvat5: CalculateValidBypassType<TypeB, TypeA>;
+            declare const cvat5: CalculateValidAdditionalOutputType<TypeB, TypeA>;
             expectType<TypeA>(cvat5);
 
 
@@ -166,6 +166,24 @@ import {
             expectType<[string, number, boolean]>(cveat8);
 
 
+// HasNonMatchingOutputTypeWhenNotAllowed
+
+    // should only return true if not allowed and type supplied
+
+        declare const anmot1: HasNonMatchingOutputTypeWhenNotAllowed<false, string>
+        expectType<true>(anmot1);
+
+    // should return false in all other cases
+
+        declare const anmot2: HasNonMatchingOutputTypeWhenNotAllowed<false, never>
+        expectType<false>(anmot2);
+
+        declare const anmot3: HasNonMatchingOutputTypeWhenNotAllowed<true, never>
+        expectType<false>(anmot3);
+
+        declare const anmot4: HasNonMatchingOutputTypeWhenNotAllowed<true, string>
+        expectType<false>(anmot4);
+
 
 // IsCommandCompatible
 
@@ -176,12 +194,17 @@ import {
         declare const icc1: IsCommandCompatible<Command<unknown, unknown>, unknown, never>
         expectType<NoCommandTypeParamError>(icc1);
 
-    // Once any calculated bypass type has been removed from O
+    // Once any calculated AdditionalOutput type has been removed from O, Error if
 
-        // Error if the group CommandType I and O types are a mismatch
+        // The Group CommandType I and O types are a mismatch
 
             declare const icc2: IsCommandCompatible<TypeAInBOutCommand, never, TypeB>
             expectType<GroupIOMismatchError>(icc2);
+
+        // The group has an additional output type but the type parameter wasn't set to allow it
+
+            declare const icc2a: IsCommandCompatible<TypeAInABOutCommand, TypeA, TypeB>
+            expectType<GroupAdditionalOutputTypeError>(icc2a);
 
         // IO of supplied command does not match IOType of group
 
@@ -196,23 +219,23 @@ import {
             declare const icc4z: IsCommandCompatible<TypeABInABOutCommand, TypeA | string, never>;
             expectType<GroupAndSuppliedCommandIOMismatchError>(icc4z);
 
-        // Group BypassType is never and supplied command BypassType is not
+        // Group AdditionalOutputType is never and supplied command AdditionalOutputType is not
 
             declare const icc4a: IsCommandCompatible<TypeAInABOutCommand, TypeA, never>
-            expectType<GroupBypassTypeNeverError>(icc4a);
+            expectType<GroupAdditionalOutputTypeNeverError>(icc4a);
 
-        // Group BypassType and supplied command BypassType are both set and do not match
+        // Group AdditionalOutputType and supplied command AdditionalOutputType are both set and do not match
 
-            declare const icc4b: IsCommandCompatible<TypeAInABOutCommand, TypeA, string>
-            expectType<GroupAndCommandBypassTypeMismatchError>(icc4b);
+            declare const icc4b: IsCommandCompatible<TypeAInABOutCommand, TypeA, string, true>
+            expectType<GroupAndCommandAdditionalOutputTypeMismatchError>(icc4b);
 
     // The Group and supplied command ExtraArgs type does not match
 
-        declare const icc4c: IsCommandCompatible<ExtraArgsCommand, TypeA, never, [number, string]>
+        declare const icc4c: IsCommandCompatible<ExtraArgsCommand, TypeA, never, true, [number, string]>
         expectType<GroupExtraArgsMismatchError>(icc4c);
 
         type TestCommand3 = Command<TypeA, TypeA, [string, Function, TypeB, number]>
-        declare const icc4d: IsCommandCompatible<TestCommand3, TypeA, never, [string, Function]>
+        declare const icc4d: IsCommandCompatible<TestCommand3, TypeA, never, true, [string, Function]>
         expectType<GroupExtraArgsMismatchError>(icc4d);
 
 
@@ -221,12 +244,12 @@ import {
 
     // The group and supplied command IOType are an exact match
 
-        // And the BypassTypes are an exact match
+        // And the AdditionalOutputTypes are an exact match
 
             declare const icc5: IsCommandCompatible<TypeACommand, TypeA, never>
             expectType<TypeACommand>(icc5);
 
-            declare const icc6: IsCommandCompatible<TypeAInABOutCommand, TypeA, TypeB>
+            declare const icc6: IsCommandCompatible<TypeAInABOutCommand, TypeA, TypeB, true>
             expectType<TypeAInABOutCommand>(icc6);
 
             declare const icc8: IsCommandCompatible<TypeABInABOutCommand, TypeA | TypeB, never>
@@ -236,96 +259,192 @@ import {
             expectType<TypeABInAOutCommand>(icc9);
 
             type TestCommand = Command<TypeA | TypeB, TypeA | string>
-            declare const icc11: IsCommandCompatible<TestCommand, TypeA, string>
+            declare const icc11: IsCommandCompatible<TestCommand, TypeA, string, true>
             expectType<TestCommand>(icc11);
 
-        // And the group BypassType has a type and the supplied command BypassType is never
+        // And the group AdditionalOutputType has a type and the supplied command AdditionalOutputType is never
 
-            declare const icc7: IsCommandCompatible<TypeACommand, TypeA, TypeB>
+            declare const icc7: IsCommandCompatible<TypeACommand, TypeA, TypeB, true>
             expectType<TypeACommand>(icc7);
 
-            declare const icc10: IsCommandCompatible<TypeABInAOutCommand, TypeA, TypeB>
+            declare const icc10: IsCommandCompatible<TypeABInAOutCommand, TypeA, TypeB, true>
             expectType<TypeABInAOutCommand>(icc10);
 
-    // The supplied command IOType with the group BypassType excluded is an exact match with group IOType
+    // The supplied command IOType with the group AdditionalOutputType excluded is an exact match with group IOType
 
-        declare const icc10a: IsCommandCompatible<TypeABInABOutCommand, TypeA, TypeB>
+        declare const icc10a: IsCommandCompatible<TypeABInABOutCommand, TypeA, TypeB, true>
         expectType<TypeABInABOutCommand>(icc10a);
 
     // The supplied command InputType is an exact match with the group IOType
 
-        // And the BypassType types are an exact match
+        // And the AdditionalOutputType types are an exact match
 
             declare const icc10b: IsCommandCompatible<TypeABInAOutCommand, TypeA | TypeB, never>
             expectType<TypeABInAOutCommand>(icc10b);
 
             type TestCommand2 = Command<TypeA | TypeB, TypeA | string>
-            declare const icc10d: IsCommandCompatible<TestCommand2, TypeA | TypeB, string>
+            declare const icc10d: IsCommandCompatible<TestCommand2, TypeA | TypeB, string, true>
             expectType<TestCommand2>(icc10d);
 
-        // And the BypassType of the group has a type but the supplied command BypassType is never
+        // And the AdditionalOutputType of the group has a type but the supplied command AdditionalOutputType is never
 
-            declare const icc10c: IsCommandCompatible<TypeABInAOutCommand, TypeA | TypeB, TypeB>
+            declare const icc10c: IsCommandCompatible<TypeABInAOutCommand, TypeA | TypeB, TypeB, true>
             expectType<TypeABInAOutCommand>(icc10c);
 
     // The Group and supplied command ExtraArgs
 
         // Are an exact match
 
-            // And its BypassType is never
-            declare const icc12: IsCommandCompatible<ExtraArgsCommand, TypeA, never, [string, Function]>
+            // And its AdditionalOutputType is never
+            declare const icc12: IsCommandCompatible<ExtraArgsCommand, TypeA, never, false, [string, Function]>
             expectType<ExtraArgsCommand>(icc12);
 
-            // And its BypassType matches
-            declare const icc13: IsCommandCompatible<ExtraArgsCommandWithBypassType, TypeA, TypeB, [string, Function]>
+            // And its AdditionalOutputType matches
+            declare const icc13: IsCommandCompatible<ExtraArgsCommandWithBypassType, TypeA, TypeB, true, [string, Function]>
             expectType<ExtraArgsCommandWithBypassType>(icc13);
 
         // Are a partial match
 
-            // And its BypassType is never
-            declare const icc14: IsCommandCompatible<ExtraArgsCommand, TypeA, never, [string, Function, number, boolean]>
+            // And its AdditionalOutputType is never
+            declare const icc14: IsCommandCompatible<ExtraArgsCommand, TypeA, never, false, [string, Function, number, boolean]>
             expectType<ExtraArgsCommand>(icc14);
 
-            // And its BypassType matches
-            declare const icc15: IsCommandCompatible<ExtraArgsCommandWithBypassType, TypeA, TypeB, [string, Function, number, boolean]>
+            // And its AdditionalOutputType matches
+            declare const icc15: IsCommandCompatible<ExtraArgsCommandWithBypassType, TypeA, TypeB, true, [string, Function, number, boolean]>
             expectType<ExtraArgsCommandWithBypassType>(icc15);
 
 
 
 // CommandGroup
 
-expectType<CommandGroup<TypeACommand, TypeA, never, []>>(new CommandGroup<TypeACommand>());
+const group1 = new CommandGroup();
+expectType<CommandGroup<CommandTypeTemplate, false, unknown, never, readonly unknown[]>>(group1);
+expectError(group1.addCommand(new TypeACommand())); // NoCommandTypeParamError
 
-expectType<CommandGroup<TypeBCommand, TypeB, never, []>>(new CommandGroup<TypeBCommand>());
+const group2 = new CommandGroup<TypeACommand>()
+expectType<CommandGroup<TypeACommand, false, TypeA, never, []>>(group2);
+expectType(group2.addCommand(new TypeACommand()));
+expectError(group2.addCommand(new TypeBCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectError(group2.addCommand(new TypeAInBOutCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectError(group2.addCommand(new TypeAInABOutCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectError(group2.addCommand(new TypeABInABOutCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectType(group2.addCommand(new TypeABInAOutCommand()));
 
-expectType<CommandGroup<TypeAInBOutCommand, never, TypeB, []>>(new CommandGroup<TypeAInBOutCommand>());
+expectType(group2.addCommands([new TypeACommand()]));
+expectError(group2.addCommands([new TypeBCommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectError(group2.addCommands([new TypeAInBOutCommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectError(group2.addCommands([new TypeAInABOutCommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectError(group2.addCommands([new TypeABInABOutCommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectType(group2.addCommands([new TypeABInAOutCommand()]));
 
-expectType<CommandGroup<TypeAInABOutCommand, TypeA, TypeB, []>>(new CommandGroup<TypeAInABOutCommand>());
+expectType(group2.addCommands([new TypeACommand(), new TypeABInAOutCommand()]));
 
-expectType<CommandGroup<TypeABInABOutCommand, TypeA | TypeB, never, []>>(new CommandGroup<TypeABInABOutCommand>());
+const group3 = new CommandGroup<TypeBCommand>()
+expectType<CommandGroup<TypeBCommand, false, TypeB, never, []>>(group3);
+expectError(group3.addCommand(new TypeACommand())); // GroupAndSuppliedCommandIOMismatchError
+expectType(group3.addCommand(new TypeBCommand()));
+expectError(group3.addCommand(new TypeAInBOutCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectError(group3.addCommand(new TypeAInABOutCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectError(group3.addCommand(new TypeABInABOutCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectError(group3.addCommand(new TypeABInAOutCommand())); // GroupAndSuppliedCommandIOMismatchError
 
-expectType<CommandGroup<TypeABInAOutCommand, TypeA, never, []>>(new CommandGroup<TypeABInAOutCommand>());
+expectError(group3.addCommands([new TypeACommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectType(group3.addCommands([new TypeBCommand()]));
+expectError(group3.addCommands([new TypeAInBOutCommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectError(group3.addCommands([new TypeAInABOutCommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectError(group3.addCommands([new TypeABInABOutCommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectError(group3.addCommands([new TypeABInAOutCommand()])); // GroupAndSuppliedCommandIOMismatchError
 
-expectType<CommandGroup<TypeCCommand, string, number | Function, []>>(new CommandGroup<TypeCCommand>());
+expectType(group3.addCommands([new TypeBCommand()]));
 
-expectType<CommandGroup<TypeDCommand, string, never, []>>(new CommandGroup<TypeDCommand>());
+const group4 = new CommandGroup<TypeAInBOutCommand>()
+expectType<CommandGroup<TypeAInBOutCommand, false, never, TypeB, []>>(group4);
+expectError(group4.addCommand(new TypeACommand())); // GroupIOMismatchError
+expectError(group4.addCommand(new TypeBCommand())); // GroupIOMismatchError
+expectError(group4.addCommand(new TypeAInBOutCommand())); // GroupIOMismatchError
+expectError(group4.addCommand(new TypeAInABOutCommand())); // GroupIOMismatchError
+expectError(group4.addCommand(new TypeABInABOutCommand())); // GroupIOMismatchError
+expectError(group4.addCommand(new TypeABInAOutCommand())); // GroupIOMismatchError
 
-expectType<CommandGroup<TypeECommand, string, never, []>>(new CommandGroup<TypeECommand>());
+expectError(group4.addCommands([new TypeACommand()])); // GroupIOMismatchError
+expectError(group4.addCommands([new TypeBCommand()])); // GroupIOMismatchError
+expectError(group4.addCommands([new TypeAInBOutCommand()])); // GroupIOMismatchError
+expectError(group4.addCommands([new TypeAInABOutCommand()])); // GroupIOMismatchError
+expectError(group4.addCommands([new TypeABInABOutCommand()])); // GroupIOMismatchError
+expectError(group4.addCommands([new TypeABInAOutCommand()])); // GroupIOMismatchError
 
-expectType<CommandGroup<MixedTypeObservableCommand, never, boolean | Function, []>>(new CommandGroup<MixedTypeObservableCommand>());
+const group5a = new CommandGroup<TypeAInABOutCommand>()
+expectType<CommandGroup<TypeAInABOutCommand, false, TypeA, TypeB, []>>(group5a);
+expectError(group5a.addCommand(new TypeACommand())); // GroupAdditionalOutputTypeError
+expectError(group5a.addCommand(new TypeBCommand())); // GroupAdditionalOutputTypeError
+expectError(group5a.addCommand(new TypeAInBOutCommand())); // GroupAdditionalOutputTypeError
+expectError(group5a.addCommand(new TypeAInABOutCommand())); // GroupAdditionalOutputTypeError
+expectError(group5a.addCommand(new TypeABInABOutCommand())); // GroupAdditionalOutputTypeError
+expectError(group5a.addCommand(new TypeABInAOutCommand())); // GroupAdditionalOutputTypeError
 
-expectType<CommandGroup<MixedTypeObservableCommandV2, string | number, boolean | Function, []>>(new CommandGroup<MixedTypeObservableCommandV2>());
+expectError(group5a.addCommands([new TypeACommand()])); // GroupAdditionalOutputTypeError
+expectError(group5a.addCommands([new TypeBCommand()])); // GroupAdditionalOutputTypeError
+expectError(group5a.addCommands([new TypeAInBOutCommand()])); // GroupAdditionalOutputTypeError
+expectError(group5a.addCommands([new TypeAInABOutCommand()])); // GroupAdditionalOutputTypeError
+expectError(group5a.addCommands([new TypeABInABOutCommand()])); // GroupAdditionalOutputTypeError
+expectError(group5a.addCommands([new TypeABInAOutCommand()])); // GroupAdditionalOutputTypeError
 
-expectType<CommandGroup<MixedDuplicateTypeCommand, string, Function, []>>(new CommandGroup<MixedDuplicateTypeCommand>());
+const group5 = new CommandGroup<TypeAInABOutCommand, true>()
+expectType<CommandGroup<TypeAInABOutCommand, true, TypeA, TypeB, []>>(group5);
+expectType(group5.addCommand(new TypeACommand()));
+expectError(group5.addCommand(new TypeBCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectError(group5.addCommand(new TypeAInBOutCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectType(group5.addCommand(new TypeAInABOutCommand()));
+expectType(group5.addCommand(new TypeABInABOutCommand()));
+expectType(group5.addCommand(new TypeABInAOutCommand()));
 
-expectType<CommandGroup<AsyncTestCommand, TypeA, never, []>>(new CommandGroup<AsyncTestCommand>());
+expectType(group5.addCommands([new TypeACommand()]));
+expectError(group5.addCommands([new TypeBCommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectError(group5.addCommands([new TypeAInBOutCommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectType(group5.addCommands([new TypeAInABOutCommand()]));
+expectType(group5.addCommands([new TypeABInABOutCommand()]));
+expectType(group5.addCommands([new TypeABInAOutCommand()]));
 
-expectType<CommandGroup<ObservableInAndOutCommand, never, TypeA, []>>(new CommandGroup<ObservableInAndOutCommand>());
+expectType(group5.addCommands([new TypeACommand(), new TypeAInABOutCommand(), new TypeABInABOutCommand(), new TypeABInAOutCommand()]));
 
-expectType<CommandGroup<TypeAInBOutCommand | TypeACommand | TypeABInABOutCommand, TypeA | TypeB, never, []>>(new CommandGroup<TypeACommand | TypeAInBOutCommand | TypeABInABOutCommand>());
+const group6 = new CommandGroup<TypeABInABOutCommand>()
+expectType<CommandGroup<TypeABInABOutCommand, false, TypeA | TypeB, never, []>>(group6);
+expectError(group6.addCommand(new TypeACommand())); // GroupAndSuppliedCommandIOMismatchError
+expectError(group6.addCommand(new TypeBCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectError(group6.addCommand(new TypeAInBOutCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectError(group6.addCommand(new TypeAInABOutCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectType(group6.addCommand(new TypeABInABOutCommand()));
+expectType(group6.addCommand(new TypeABInAOutCommand()));
 
-expectType<CommandGroup<TypeACommand & TypeAInBOutCommand & TypeABInABOutCommand, TypeA | TypeB, never, []>>(new CommandGroup<TypeACommand & TypeAInBOutCommand & TypeABInABOutCommand>());
+expectError(group6.addCommands([new TypeACommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectError(group6.addCommands([new TypeBCommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectError(group6.addCommands([new TypeAInBOutCommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectError(group6.addCommands([new TypeAInABOutCommand()])); // GroupAndSuppliedCommandIOMismatchError
+expectType(group6.addCommands([new TypeABInABOutCommand()]));
+expectType(group6.addCommands([new TypeABInAOutCommand()]));
 
-expectType<CommandGroup<ExtraArgsCommand, TypeA, never, []>>(new CommandGroup<TypeACommand>());
+expectType(group6.addCommands([new TypeACommand(), new TypeAInABOutCommand(), new TypeABInABOutCommand(), new TypeABInAOutCommand()]));
 
-expectType<CommandGroup<ExtraArgsCommandWithBypassType, TypeA, never, []>>(new CommandGroup<TypeACommand>());
+const group7 = new CommandGroup<TypeABInAOutCommand>()
+expectType<CommandGroup<TypeABInAOutCommand, false, TypeA, never, []>>(group7);
+expectType(group7.addCommand(new TypeACommand()));
+expectError(group7.addCommand(new TypeBCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectError(group7.addCommand(new TypeAInBOutCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectError(group7.addCommand(new TypeAInABOutCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectError(group7.addCommand(new TypeABInABOutCommand())); // GroupAndSuppliedCommandIOMismatchError
+expectType(group7.addCommand(new TypeABInAOutCommand()));
+
+expectType(group7.addCommands([new TypeACommand(), new TypeABInAOutCommand()]));
+
+expectType<CommandGroup<TypeCCommand, true, string, number | Function, []>>(new CommandGroup<TypeCCommand, true>());
+expectType<CommandGroup<TypeDCommand, false, string, never, []>>(new CommandGroup<TypeDCommand>());
+expectType<CommandGroup<TypeECommand, false, string, never, []>>(new CommandGroup<TypeECommand>());
+expectType<CommandGroup<MixedTypeObservableCommand, false, never, boolean | Function, []>>(new CommandGroup<MixedTypeObservableCommand>());
+expectType<CommandGroup<MixedTypeObservableCommandV2, true, string | number, boolean | Function, []>>(new CommandGroup<MixedTypeObservableCommandV2, true>());
+expectType<CommandGroup<MixedDuplicateTypeCommand, true, string, Function, []>>(new CommandGroup<MixedDuplicateTypeCommand, true>());
+expectType<CommandGroup<AsyncTestCommand, false, TypeA, never, []>>(new CommandGroup<AsyncTestCommand>());
+expectType<CommandGroup<ObservableInAndOutCommand, false, never, TypeA, []>>(new CommandGroup<ObservableInAndOutCommand>());
+expectType<CommandGroup<TypeAInBOutCommand | TypeACommand | TypeABInABOutCommand, false, TypeA | TypeB, never, []>>(new CommandGroup<TypeACommand | TypeAInBOutCommand | TypeABInABOutCommand>());
+expectType<CommandGroup<TypeACommand & TypeAInBOutCommand & TypeABInABOutCommand, false, TypeA | TypeB, never, []>>(new CommandGroup<TypeACommand & TypeAInBOutCommand & TypeABInABOutCommand>());
+expectType<CommandGroup<ExtraArgsCommand, false, TypeA, never, [string, Function]>>(new CommandGroup<ExtraArgsCommand>());
+expectType<CommandGroup<ExtraArgsCommandWithBypassType, true, TypeA, TypeB, [string, Function]>>(new CommandGroup<ExtraArgsCommandWithBypassType, true>());

@@ -1,10 +1,10 @@
 import {AddParameterToTuple} from "../../../../types";
 import {Observable, of} from "rxjs";
 import {mergeMap} from "rxjs/operators";
-import {Command, ObservableCommand} from "../command";
+import {Command, ObservableCommand} from "../command/command";
 import {
     CommandGroupTypeTemplate,
-    GetCommandGroupBypassType,
+    GetCommandGroupAdditionalOutputType,
     GetCommandGroupExtraArgsType,
     GetCommandGroupIOType
 } from "../group/command-group";
@@ -33,12 +33,12 @@ export class CommandProcessor {
     execute<
         GroupType extends CommandGroupTypeTemplate,
         IOType = GetCommandGroupIOType<GroupType>,
-        BypassType = GetCommandGroupBypassType<GroupType>,
+        BypassType = GetCommandGroupAdditionalOutputType<GroupType>,
         ExtraArgsType extends ReadonlyArray<unknown> = GetCommandGroupExtraArgsType<GroupType>
     >(
         commandGroup: GroupType,
         input: GetCommandGroupIOType<GroupType>,
-        ...args: GetAdditionalArgs<IOType, GetCommandGroupBypassType<GroupType>, GetCommandGroupExtraArgsType<GroupType>>
+        ...args: GetAdditionalArgs<IOType, GetCommandGroupAdditionalOutputType<GroupType>, GetCommandGroupExtraArgsType<GroupType>>
 
     ): Observable<IOType | BypassType> {
 

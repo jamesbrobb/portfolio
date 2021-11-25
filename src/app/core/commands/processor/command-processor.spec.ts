@@ -1,12 +1,12 @@
 import {CommandProcessor, CommandProcessorBypassCondition} from "./command-processor";
-import {Command, ObservableCommand} from "../command";
+import {Command, ObservableCommand} from "../command/command";
 import {
     AsyncTestCommand,
     BypassTriggerCommandType, ExtraArgsCommand, MixedTypeCommand,
     TypeA,
     TypeACommand, TypeAInABOutCommand,
     TypeB
-} from "../command.mocks";
+} from "../command/command.mocks";
 
 import Spy = jasmine.Spy;
 import {CommandGroup} from "../group/command-group";
@@ -69,7 +69,7 @@ describe('CommandProcessor', () => {
             const command = new TypeACommand(),
                 spy: Spy = spyOn(command, 'execute').and.callThrough();
 
-            const bypassGroup = new CommandGroup<TypeAInABOutCommand>();
+            const bypassGroup = new CommandGroup<TypeAInABOutCommand, true>();
             bypassGroup.addCommand(new TypeACommand());
             bypassGroup.addCommand(new TypeACommand());
             bypassGroup.addCommand(new TypeACommand());
