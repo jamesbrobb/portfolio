@@ -21,8 +21,11 @@ import {AssetService, AssetServiceConfiguration, TagParser} from "../product";
 import {MyLibraryLessonPlanCardRouteComponent} from "./components/product/my-library/lesson-plan-card/my-library-lesson-plan-card.route.component";
 import {LessonPlanVocabularyRouteComponent} from "./components/product/lesson-plan/vocabulary/lesson-plan-vocabulary.route.component";
 import {MatMenuModule} from "@angular/material/menu";
-import {CommandRouteComponent} from "./core/command/command-route.component";
+import {CommandsRouteComponent} from "./core/commands/commands-route.component";
 import {AnalyticsRouteComponent} from "./core/analytics/analytics-route.component";
+import {CommandRouteComponent} from "./core/commands/command/command-route.component";
+import {CommandGroupRouteComponent} from "./core/commands/group/command-group-route.component";
+import {CommandProcessorRouteComponent} from "./core/commands/processor/command-processor-route.component";
 
 const routes: Routes = [
   {
@@ -87,7 +90,15 @@ const routes: Routes = [
     path: 'core',
     children: [
       {path: 'analytics', component: AnalyticsRouteComponent},
-      {path: 'command', component: CommandRouteComponent},
+      {
+          path: 'commands',
+          component: CommandsRouteComponent,
+          children: [
+              {path: 'command', component: CommandRouteComponent},
+              {path: 'group', component: CommandGroupRouteComponent},
+              {path: 'processor', component: CommandProcessorRouteComponent}
+          ]
+      },
       //{path: 'http', component: HttpRouteComponent}
     ]
   }
@@ -111,7 +122,10 @@ export const COMPONENTS = [
   FlexGridRouteComponent,
   ResponsiveContainerRouteComponent,
   AnalyticsRouteComponent,
+  CommandsRouteComponent,
   CommandRouteComponent,
+  CommandGroupRouteComponent,
+  CommandProcessorRouteComponent,
   FallbackImageRouteComponent,
   ImageComponentRouteComponent,
   ColorOverlayRouteComponent,
