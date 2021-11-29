@@ -43,7 +43,7 @@ import {
 
     // should return a match to the supplied IOType when
 
-        // the IOType and supplied command IOType are an exact match
+        // the IOType and supplied commands IOType are an exact match
 
             declare const cviot1: CalculateValidIOType<TypeA, never, TypeA>;
             expectType<TypeA>(cviot1);
@@ -54,19 +54,19 @@ import {
             declare const cviot2a: CalculateValidIOType<TypeA | TypeB, never, TypeA | TypeB>;
             expectType<TypeA | TypeB>(cviot2a);
 
-        // the IOType and supplied command IOType excluding the AdditionalOutputType are an exact match
+        // the IOType and supplied commands IOType excluding the AdditionalOutputType are an exact match
 
             declare const cviot3: CalculateValidIOType<TypeA, TypeB, TypeA | TypeB>;
             expectType<TypeA>(cviot3);
 
-        // the Input type of the supplied command and IOType of the group command are an exact match
+        // the Input type of the supplied commands and IOType of the group commands are an exact match
 
             declare const cviot3a: CalculateValidIOType<TypeA | TypeB, never, TypeA, TypeA | TypeB>;
             expectType<TypeA | TypeB>(cviot3a);
 
     // should not return a match to the supplied IOType when
 
-        // the IOType and supplied command IOType aren't an exact match
+        // the IOType and supplied commands IOType aren't an exact match
 
             declare const cviot4: CalculateValidIOType<TypeA, never, TypeB>;
             expectType<TypeB>(cviot4);
@@ -74,7 +74,7 @@ import {
             declare const cviot5: CalculateValidIOType<TypeA, TypeB, TypeB>;
             expectType<TypeB>(cviot5);
 
-        // the IOType of the supplied command is never
+        // the IOType of the supplied commands is never
 
             declare const cviot6: CalculateValidIOType<TypeA, TypeB, never>;
             expectType<never>(cviot6);
@@ -83,32 +83,32 @@ import {
 
 // CalculateValidAdditionalOutputType
 
-    // command group command type AdditionalOutputType === never
+    // commands group commands type AdditionalOutputType === never
 
-        // supplied command AdditionalOutputType === never :ok:
+        // supplied commands AdditionalOutputType === never :ok:
 
             declare const cvat1: CalculateValidAdditionalOutputType<never, never>;
             expectType<never>(cvat1);
 
-        // supplied command AdditionalOutputType !== never :no:
+        // supplied commands AdditionalOutputType !== never :no:
 
             declare const cvat2: CalculateValidAdditionalOutputType<never, TypeA>;
             expectType<TypeA>(cvat2);
 
 
-    // command group command type AdditionalOutputType !== never
+    // commands group commands type AdditionalOutputType !== never
 
-        // supplied command AdditionalOutputType === void :no:
+        // supplied commands AdditionalOutputType === void :no:
 
             declare const cvat3: CalculateValidAdditionalOutputType<TypeB, never>;
             expectType<TypeB>(cvat3);
 
-        // supplied command AdditionalOutputType === command group command type value :ok:
+        // supplied commands AdditionalOutputType === commands group commands type value :ok:
 
             declare const cvat4: CalculateValidAdditionalOutputType<TypeA, TypeA>;
             expectType<TypeA>(cvat4);
 
-        // supplied command AdditionalOutputType !== command group command type value :no:
+        // supplied commands AdditionalOutputType !== commands group commands type value :no:
 
             declare const cvat5: CalculateValidAdditionalOutputType<TypeB, TypeA>;
             expectType<TypeA>(cvat5);
@@ -119,9 +119,9 @@ import {
     type CommandExtraArgs1 = [string, number]
     type CommandExtraArgs2 = [string, number, Function, TypeA, TypeB, TypeA]
 
-    // should return the supplied command group extra args: OK
+    // should return the supplied commands group extra args: OK
 
-        // supplied command extra args === command group extra args
+        // supplied commands extra args === commands group extra args
 
             declare const cveat1: CalculateValidExtrasArgType<CommandExtraArgs1, CommandExtraArgs1>
             expectType<CommandExtraArgs1>(cveat1);
@@ -129,7 +129,7 @@ import {
             declare const cveat2: CalculateValidExtrasArgType<CommandExtraArgs2, CommandExtraArgs2>
             expectType<CommandExtraArgs2>(cveat2);
 
-        // supplied command extra args length is less than the command group extra args length but all arg types match
+        // supplied commands extra args length is less than the commands group extra args length but all arg types match
 
             declare const cveat3: CalculateValidExtrasArgType<CommandExtraArgs1, [string]>
             expectType<CommandExtraArgs1>(cveat3);
@@ -140,14 +140,14 @@ import {
             declare const cveat5: CalculateValidExtrasArgType<CommandExtraArgs2, [string, number, Function, TypeA]>
             expectType<CommandExtraArgs2>(cveat5)
 
-    // should return the supplied command extra args : FAIL
+    // should return the supplied commands extra args : FAIL
 
-        // supplied command extra args !== group command extra args
+        // supplied commands extra args !== group commands extra args
 
             declare const cveat6: CalculateValidExtrasArgType<CommandExtraArgs1, [string, Function]>
             expectType<[string, Function]>(cveat6);
 
-        // supplied command extra args !== group command extra args at all
+        // supplied commands extra args !== group commands extra args at all
 
             declare const cveat6a: CalculateValidExtrasArgType<CommandExtraArgs1, [number, Function]>
             expectType<[number, Function]>(cveat6a);
@@ -155,12 +155,12 @@ import {
             declare const cveat6c: CalculateValidExtrasArgType<[string], [number]>
             expectType<[number]>(cveat6c);
 
-        // supplied command extra args are longer than group command extra args
+        // supplied commands extra args are longer than group commands extra args
 
             declare const cveat7: CalculateValidExtrasArgType<CommandExtraArgs1, [string, number, Function]>
             expectType<[string, number, Function]>(cveat7);
 
-        // supplied command extra args are shorter than group command extra args
+        // supplied commands extra args are shorter than group commands extra args
 
             declare const cveat8: CalculateValidExtrasArgType<CommandExtraArgs2, [string, number, boolean]>
             expectType<[string, number, boolean]>(cveat8);
@@ -206,12 +206,12 @@ import {
             declare const icc2a: IsCommandCompatible<TypeAInABOutCommand, TypeA, TypeB>
             expectType<GroupAdditionalOutputTypeError>(icc2a);
 
-        // IO of supplied command does not match IOType of group
+        // IO of supplied commands does not match IOType of group
 
             declare const icc3: IsCommandCompatible<TypeACommand, TypeB, never>
             expectType<GroupAndSuppliedCommandIOMismatchError>(icc3);
 
-        // IO of supplied command is a union and IOType of group isn't an exact match
+        // IO of supplied commands is a union and IOType of group isn't an exact match
 
             declare const icc4: IsCommandCompatible<TypeABInABOutCommand, TypeA, never>;
             expectType<GroupAndSuppliedCommandIOMismatchError>(icc4);
@@ -219,17 +219,17 @@ import {
             declare const icc4z: IsCommandCompatible<TypeABInABOutCommand, TypeA | string, never>;
             expectType<GroupAndSuppliedCommandIOMismatchError>(icc4z);
 
-        // Group AdditionalOutputType is never and supplied command AdditionalOutputType is not
+        // Group AdditionalOutputType is never and supplied commands AdditionalOutputType is not
 
             declare const icc4a: IsCommandCompatible<TypeAInABOutCommand, TypeA, never>
             expectType<GroupAdditionalOutputTypeNeverError>(icc4a);
 
-        // Group AdditionalOutputType and supplied command AdditionalOutputType are both set and do not match
+        // Group AdditionalOutputType and supplied commands AdditionalOutputType are both set and do not match
 
             declare const icc4b: IsCommandCompatible<TypeAInABOutCommand, TypeA, string, true>
             expectType<GroupAndCommandAdditionalOutputTypeMismatchError>(icc4b);
 
-    // The Group and supplied command ExtraArgs type does not match
+    // The Group and supplied commands ExtraArgs type does not match
 
         declare const icc4c: IsCommandCompatible<ExtraArgsCommand, TypeA, never, true, [number, string]>
         expectType<GroupExtraArgsMismatchError>(icc4c);
@@ -242,7 +242,7 @@ import {
 
 // Should be compatible if
 
-    // The group and supplied command IOType are an exact match
+    // The group and supplied commands IOType are an exact match
 
         // And the AdditionalOutputTypes are an exact match
 
@@ -262,7 +262,7 @@ import {
             declare const icc11: IsCommandCompatible<TestCommand, TypeA, string, true>
             expectType<TestCommand>(icc11);
 
-        // And the group AdditionalOutputType has a type and the supplied command AdditionalOutputType is never
+        // And the group AdditionalOutputType has a type and the supplied commands AdditionalOutputType is never
 
             declare const icc7: IsCommandCompatible<TypeACommand, TypeA, TypeB, true>
             expectType<TypeACommand>(icc7);
@@ -270,12 +270,12 @@ import {
             declare const icc10: IsCommandCompatible<TypeABInAOutCommand, TypeA, TypeB, true>
             expectType<TypeABInAOutCommand>(icc10);
 
-    // The supplied command IOType with the group AdditionalOutputType excluded is an exact match with group IOType
+    // The supplied commands IOType with the group AdditionalOutputType excluded is an exact match with group IOType
 
         declare const icc10a: IsCommandCompatible<TypeABInABOutCommand, TypeA, TypeB, true>
         expectType<TypeABInABOutCommand>(icc10a);
 
-    // The supplied command InputType is an exact match with the group IOType
+    // The supplied commands InputType is an exact match with the group IOType
 
         // And the AdditionalOutputType types are an exact match
 
@@ -286,12 +286,12 @@ import {
             declare const icc10d: IsCommandCompatible<TestCommand2, TypeA | TypeB, string, true>
             expectType<TestCommand2>(icc10d);
 
-        // And the AdditionalOutputType of the group has a type but the supplied command AdditionalOutputType is never
+        // And the AdditionalOutputType of the group has a type but the supplied commands AdditionalOutputType is never
 
             declare const icc10c: IsCommandCompatible<TypeABInAOutCommand, TypeA | TypeB, TypeB, true>
             expectType<TypeABInAOutCommand>(icc10c);
 
-    // The Group and supplied command ExtraArgs
+    // The Group and supplied commands ExtraArgs
 
         // Are an exact match
 

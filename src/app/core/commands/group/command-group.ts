@@ -83,9 +83,9 @@ export type NoCommandTypeParamError = ErrorBrand<'A type is required for the Com
 export type GroupIOMismatchError = ErrorBrand<'The CommandGroup CommandType type variable has an Input and Output type mismatch'>
 export type GroupAdditionalOutputTypeError = ErrorBrand<'The CommandGroup CommandType has an additional output type, but the AllowNonMatchingOutputType type parameter was not explicitly set to true'>
 export type GroupAndSuppliedCommandIOMismatchError = ErrorBrand<`IOType of CommandGroup and supplied command do not match`>
-export type GroupAdditionalOutputTypeNeverError = ErrorBrand<'CommandGroup AdditionalOutputType is never but the supplied command AdditionalOutputType has a type set'>
-export type GroupAndCommandAdditionalOutputTypeMismatchError = ErrorBrand<'CommandGroup and supplied command AdditionalOutputType do not match'>
-export type GroupExtraArgsMismatchError = ErrorBrand<'CommandGroup and supplied command ExtraArgs do not match'>;
+export type GroupAdditionalOutputTypeNeverError = ErrorBrand<'CommandGroup AdditionalOutputType is never but the supplied commands AdditionalOutputType has a type set'>
+export type GroupAndCommandAdditionalOutputTypeMismatchError = ErrorBrand<'CommandGroup and supplied commands AdditionalOutputType do not match'>
+export type GroupExtraArgsMismatchError = ErrorBrand<'CommandGroup and supplied commands ExtraArgs do not match'>;
 
 
 

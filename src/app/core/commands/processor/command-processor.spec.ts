@@ -85,7 +85,7 @@ describe('CommandProcessor', () => {
                 });
         });
 
-        it('should forward extra parameters to every command', (done: Function) => {
+        it('should forward extra parameters to every commands', (done: Function) => {
 
             const extraParamsGroup = new CommandGroup<ExtraArgsCommand>()
             extraParamsGroup.addCommand(new ExtraArgsCommand());
