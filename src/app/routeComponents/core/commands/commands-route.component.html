@@ -1,9 +1,18 @@
-<page-container [docURI]="['core/commands/README.md']"
-                [detailsURI]="'routeComponents/core/commands/README.md'"
-                [githubLink]="'core/commands'">
-
-    <router-outlet section="child"></router-outlet>
+<page-container [detailsURI]="'routeComponents/core/commands/README.md'"
+                [docURI]="'core/commands/README.md'"
+                [githubLink]="'core/commands'"
+                [sections]="[{
+                    label: 'Command',
+                    isOpen: false,
+                    docURI: 'core/commands/command/README.md'
+                }, {
+                    label: 'Group',
+                    isOpen: false,
+                    docURI: 'core/commands/group/README.md'
+                }, {
+                    label: 'Processor',
+                    isOpen: false,
+                    docURI: 'core/commands/processor/README.md'
+                }]">
 
 </page-container>
-
-

@@ -1,3 +1,18 @@
-<page-container [docURI]="['core/analytics/README.md', 'core/analytics/trackers/google-analytics/README.md', 'ng/core/analytics/README.md', 'ng/core/analytics/trackers/google-analytics/README.md']">
+<page-container [detailsURI]="'routeComponents/core/analytics/README.md'"
+                [docURI]="'core/analytics/README.md'"
+                [githubLink]="'core/analytics'"
+                [sections]="[{
+                    label: 'Google adaptor',
+                    isOpen: false,
+                    docURI: 'core/analytics/trackers/google-analytics/README.md'
+                }, {
+                    label: 'ng module',
+                    isOpen: false,
+                    docURI: 'ng/core/analytics/README.md'
+                }, {
+                    label: 'ng google module',
+                    isOpen: false,
+                    docURI: 'ng/core/analytics/trackers/google-analytics/README.md'
+                }]">
 
 </page-container>
