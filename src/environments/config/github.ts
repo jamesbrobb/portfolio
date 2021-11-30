@@ -1,4 +1,5 @@
 
 export const githubConfig = {
-    root: 'https://github.com/jamesbrobb/portfolio/tree/main/src/app/'
+    root: 'https://github.com/jamesbrobb/portfolio/',
+    app: 'tree/main/src/app/'
 }

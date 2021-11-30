@@ -23,9 +23,7 @@ import {LessonPlanVocabularyRouteComponent} from "./components/product/lesson-pl
 import {MatMenuModule} from "@angular/material/menu";
 import {CommandsRouteComponent} from "./core/commands/commands-route.component";
 import {AnalyticsRouteComponent} from "./core/analytics/analytics-route.component";
-import {CommandRouteComponent} from "./core/commands/command/command-route.component";
-import {CommandGroupRouteComponent} from "./core/commands/group/command-group-route.component";
-import {CommandProcessorRouteComponent} from "./core/commands/processor/command-processor-route.component";
+
 
 const routes: Routes = [
   {
@@ -90,15 +88,7 @@ const routes: Routes = [
     path: 'core',
     children: [
       {path: 'analytics', component: AnalyticsRouteComponent},
-      {
-          path: 'commands',
-          component: CommandsRouteComponent,
-          children: [
-              {path: 'command', component: CommandRouteComponent},
-              {path: 'group', component: CommandGroupRouteComponent},
-              {path: 'processor', component: CommandProcessorRouteComponent}
-          ]
-      },
+      {path: 'commands', component: CommandsRouteComponent},
       //{path: 'http', component: HttpRouteComponent}
     ]
   }
@@ -123,9 +113,6 @@ export const COMPONENTS = [
   ResponsiveContainerRouteComponent,
   AnalyticsRouteComponent,
   CommandsRouteComponent,
-  CommandRouteComponent,
-  CommandGroupRouteComponent,
-  CommandProcessorRouteComponent,
   FallbackImageRouteComponent,
   ImageComponentRouteComponent,
   ColorOverlayRouteComponent,

@@ -9,9 +9,13 @@ It has 3 injection tokens, 2 required and one optional
 
 - AnalyticsActionsService: `AnalyticsActions` - for config
 - AnalyticsAdaptorService: `AnalyticsAdaptor` - to supply a tracking library specific adaptor
-- AnalyticsHooksService: `AnalyticsHook[]` - Optional - enables a way to configure hooks
+- AnalyticsHooksService: `AnalyticsHook[]` - Optional - enables a way to configure pre-hooks which run
+
+<br/>
 
 ## Usage
+
+`AppModule`
 
 ```ts
 import { NgModule } from '@angular/core';
@@ -28,7 +32,11 @@ import { AppComponent } from './app.component';
     BrowserModule,
     AppRoutingModule,
     AnalyticsModule,
-    GoogleAnalyticsModule, // importing this module automatically creates and registers the GaAnalyticsAdaptor for the AnalyticsAdaptorService token
+    /*
+      importing the GoogleAnalyticsModule module automatically creates and
+      registers the GaAnalyticsAdaptor for the AnalyticsAdaptorService token
+     */
+    GoogleAnalyticsModule,
     //...
   ],
   providers: [{
@@ -42,7 +50,9 @@ import { AppComponent } from './app.component';
 export class AppModule { }
 ```
 
-Switching to another analytics tracking service is as simple as removing the `GoogleAnalyticsModule` from imports and creating another 3rd party analytics service adaptor. Hooks can be used to create 
+<br/>
+Switching to another analytics tracking service is as simple as removing the `GoogleAnalyticsModule` from imports and creating another 3rd party analytics service adaptor. 
+<br/><br/>
 
 ```ts
 import { NgModule } from '@angular/core';

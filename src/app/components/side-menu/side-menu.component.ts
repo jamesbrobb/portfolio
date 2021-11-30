@@ -97,19 +97,7 @@ const MENU_DATA_PROVIDER: MenuItemNode[] = [{
     path: 'core/analytics'
   }, {
     name: 'Commands',
-    path: 'commands',
-      children: [
-          {
-              name: 'Command',
-              path: 'core/commands/command'
-          }, {
-              name: 'Group',
-              path: 'core/commands/group'
-          },{
-              name: 'Processor',
-              path: 'core/commands/processor'
-          }
-      ]
+    path: 'core/commands'
   }/*, {
     name: 'Http',
     path: 'core/http'
