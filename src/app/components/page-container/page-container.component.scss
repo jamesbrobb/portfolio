@@ -36,6 +36,7 @@
     top: 5px;
     right: 8px;
     transform: scale(1.5);
+    z-index: 1;
     @include button_reset;
   }
 
@@ -162,7 +163,7 @@
     }
   }
 
-    .child {
+    .sections {
         margin-top: 30px;
         padding-top: 30px;
         border-top: rgba(255, 255, 255, 0.2) solid 1px;
@@ -171,8 +172,58 @@
             display: none;
         }
 
-        ::ng-deep page-container {
-            padding: 0;
+        .section {
+            --section-border-color: rgba(255, 255, 255, 0.2);
+            --section-button-color: rgba(255, 255, 255, 0.5);
+            --section-button-transform: rotateX(0);
+            --section-label-opacity: 1;
+            --section-label-top: 0;
+
+            &.is-open {
+                --section-border-color: rgba(255, 255, 255, 0.5);
+                --section-button-color: rgba(255, 255, 255, 0.8);
+                --section-button-transform: rotateX(180deg);
+                --section-label-opacity: 0;
+                --section-label-top: 5px;
+            }
+
+            border: var(--section-border-color) solid 1px;
+            padding: 0 20px;
+            transition: border 500ms ease;
+
+            &:not(:last-child) {
+                margin-bottom: 10px;
+            }
+
+            .bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 50px;
+
+                .label {
+                    position: relative;
+                    font-size: 16px;
+                    opacity: var(--section-label-opacity);
+                    transform: translateY(var(--section-label-top));
+                    transition: all 500ms ease;
+                    transition-property: opacity, transform;
+                }
+
+                button {
+                    @include button_reset;
+
+                    color: var(--section-button-color);
+
+                    transform: var(--section-button-transform);
+                    transition: color 0.5s, transform 0.5s cubic-bezier(0.35, 0, 0.25, 1);
+                }
+            }
+
+            .content {
+                position: relative;
+                overflow: hidden;
+            }
         }
     }
 }

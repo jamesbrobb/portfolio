@@ -1,5 +1,5 @@
 
-<section class="markdown details" [style.display]="hasLoaded && detailsURI ? 'block' : 'none'">
+<section class="details" [style.display]="hasLoaded && detailsURI ? 'block' : 'none'">
 
   <markdown [src]="'/assets/docs/' + detailsURI"></markdown>
 
@@ -7,38 +7,58 @@
 
 <div class="docs" [style.display]="hasLoaded ? 'block' : 'none'">
 
-  <button class="github-link" *ngIf="githubLink" (click)="onGithubLinkSelect()">
-    <icon-component [name]="'github'"></icon-component>
-  </button>
+    <button class="github-link" *ngIf="githubLink" (click)="onGithubLinkSelect()">
+        <icon-component [name]="'github'"></icon-component>
+    </button>
 
-  <section class="markdown">
+    <section class="docs">
 
-    <markdown *ngFor="let docUri of docURIs" [src]="'/assets/docs/' + docUri" (load)="onLoad($event)" (error)="onError($event)"></markdown>
+        <markdown [src]="'/assets/docs/' + docURI" (load)="onLoad($event)" (error)="onError($event)"></markdown>
 
-  </section>
+    </section>
 
-  <section class="error" *ngIf="hasError">
+    <section class="sections">
 
-    <p>An error occurred whilst loading the docs.</p>
+        <div class="section" *ngFor="let section of sections" [ngClass]="{'is-open': section.isOpen}">
 
-  </section>
+            <div class="bar">
 
-  <section class="controls">
+                <div class="label">{{section.label}}</div>
 
-    <ng-content select="[section=controls]"></ng-content>
+                <button (click)="section.isOpen = !section.isOpen">
+                    <icon-component [name]="'down-chevron'"></icon-component>
+                </button>
 
-  </section>
+            </div>
 
-  <section class="example">
+            <div class="content" [@openClose]="section.isOpen">
 
-    <ng-content></ng-content>
+                <markdown [src]="'/assets/docs/' + section.docURI"></markdown>
 
-  </section>
+            </div>
 
-  <section class="child">
+        </div>
 
-    <ng-content select="[section=child]"></ng-content>
+        <!--<markdown *ngFor="let docUri of docURIs" [src]="'/assets/docs/' + docUri" (load)="onLoad($event)" (error)="onError($event)"></markdown>-->
 
-  </section>
+    </section>
+
+    <section class="error" *ngIf="hasError">
+
+        <p>An error occurred whilst loading the docs.</p>
+
+    </section>
+
+    <section class="controls">
+
+        <ng-content select="[section=controls]"></ng-content>
+
+    </section>
+
+    <section class="example">
+
+        <ng-content></ng-content>
+
+    </section>
 
 </div>
