@@ -12,6 +12,7 @@ import {WordSenseDS, WordSenseParser} from "../../../../product";
 import {wordSenseDTOCollectionMock} from "../../../../product/word-sense/index.mock";
 import {GridLayoutComponent} from "../../../grid-layout/grid-layout.component";
 import {MatIcon} from "@angular/material/icon";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 
 
@@ -24,7 +25,8 @@ describe('LessonPlanVocabularyComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                CommonModule
+                CommonModule,
+                NoopAnimationsModule
             ],
             declarations: [
                 IconComponent,

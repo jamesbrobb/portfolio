@@ -1,12 +1,14 @@
 import {Component, Input, OnChanges} from '@angular/core';
-import {WordSenseDS} from "../../../../product/word-sense";
+import {WordSenseDS} from "../../../../product";
+import {openClose} from "../../../../animation";
 
 
 
 @Component({
     selector: 'lesson-plan-vocabulary',
     templateUrl: './lesson-plan-vocabulary.component.html',
-    styleUrls: ['./lesson-plan-vocabulary.component.scss']
+    styleUrls: ['./lesson-plan-vocabulary.component.scss'],
+    animations: [openClose]
 })
 export class LessonPlanVocabularyComponent implements OnChanges {
 

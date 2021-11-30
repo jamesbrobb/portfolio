@@ -7,9 +7,6 @@
 
     .lesson-plan-vocabulary {
         --lesson-plan-vocabulary-button-transform: rotateX(0);
-        --lesson-plan-vocabulary-vocab-list-max-height: 0;
-        --lesson-plan-vocabulary-vocab-list-padding: 0 #{$gap-xl};
-        --lesson-plan-vocabulary-vocab-list-border-width: 0;
 
         background-color: $palette-white;
         color: $palette-slate-900;
@@ -17,9 +14,6 @@
 
         &.expanded {
             --lesson-plan-vocabulary-button-transform: rotateX(180deg);
-            --lesson-plan-vocabulary-vocab-list-max-height: auto;
-            --lesson-plan-vocabulary-vocab-list-padding: #{$gap-xl};
-            --lesson-plan-vocabulary-vocab-list-border-width: 2px;
         }
 
         .bar {
@@ -46,19 +40,22 @@
             button {
                 @include button_reset;
 
-                fill: $palette-slate-900;
+                color: $palette-slate-900;
 
                 transform: var(--lesson-plan-vocabulary-button-transform);
                 transition: transform 0.3s cubic-bezier(0.35, 0, 0.25, 1);
             }
         }
 
-        .vocab-list {
-            padding: var(--lesson-plan-vocabulary-vocab-list-padding);
-            height: var(--lesson-plan-vocabulary-vocab-list-max-height);
-            border-top: var(--lesson-plan-vocabulary-vocab-list-border-width) solid $palette-slate-20;
+        .vocab-list-container {
+            display: block;
             overflow: hidden;
-            transition: 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+        }
+
+        .vocab-list {
+            display: block;
+            padding: $gap-xl;
+            border-top: 2px solid $palette-slate-20;
 
             .grid {
                 --grid-vertical-gap: 20px;

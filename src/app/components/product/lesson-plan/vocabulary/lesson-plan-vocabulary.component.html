@@ -14,26 +14,30 @@
 
     </div>
 
-    <div class="vocab-list">
+    <div class="vocab-list-container" [@openClose]="isExpanded">
 
-        <grid-layout class="grid" [dataProvider]="vocabulary">
+        <div class="vocab-list">
 
-            <ng-template let-item="item">
+            <grid-layout class="grid" [dataProvider]="vocabulary">
 
-                <div class="word-sense">
+                <ng-template let-item="item">
 
-                    <div class="title">
-                        {{ item.headForm }}
-                        <span class="type">({{ item.type }})</span>
+                    <div class="word-sense">
+
+                        <div class="title">
+                            {{ item.headForm }}
+                            <span class="type">({{ item.type }})</span>
+                        </div>
+
+                        <p class="definition">{{ item.definition }}</p>
+
                     </div>
 
-                    <p class="definition">{{ item.definition }}</p>
+                </ng-template>
 
-                </div>
+            </grid-layout>
 
-            </ng-template>
-
-        </grid-layout>
+        </div>
 
     </div>
 
