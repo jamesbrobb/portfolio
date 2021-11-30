@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import { MarkdownModule } from 'ngx-markdown';
 import { AppRoutingModule } from './app-routing.module';
@@ -20,6 +21,7 @@ const config = environment.configuration;
     AppComponent
   ],
   imports: [
+    BrowserAnimationsModule,
     HttpClientModule,
     MarkdownModule.forRoot({loader: HttpClient}),
     BrowserModule,
