@@ -16,12 +16,14 @@ export class CommandProcessor {
     }
 }
 ```
-
+<br/>
 The first two arguments are always required:
+
  - `commandGroup: CommandGroup`
  - `input` - the type of this argument is inferred from the `CommandGroup`'s `IOType`
 
 Any other required arguments are determined by inspecting the supplied `CommandGroup`:
+
  - `extraArgs` - required if the `CommandGroup` specifies an `ExtraArgsType`. Its type is a predetermined length tuple exposing element labels and types. 
  - `bypassCondition: CommandProcessorBypassCondition` - this is required if the `CommandGroup` specifies an `AdditionalOutputType`. It's a type guard function that is executed to test the current return type, bypassing the remaining commands if it's found to be the same type as the groups `AdditionalOutputType`.
 <br/><br/>
