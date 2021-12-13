@@ -1,0 +1,54 @@
+{
+    "page": {
+        "trackType": "page",
+        "properties": {
+            "page_title": "{%title%}",
+            "page_path": "{%path%}",
+            "page_location": "{%href%}"
+        }
+    },
+    "github-link" : {
+        "type": "github-link",
+        "trackType": "event",
+        "properties": {
+            "event_category": "links",
+            "event_label": "{%link%}"
+        }
+    },
+    "child-section": {
+        "type": "child-section.expand",
+        "trackType": "event",
+        "properties": {
+            "event_category": "page",
+            "event_label": "{%label%}",
+            "value": "{%value%}"
+        }
+    },
+    "href-link": {
+        "type": "href-link",
+        "trackType": "event",
+        "properties": {
+            "event_category": "links",
+            "event_label": "{%link%}"
+        }
+    },
+    "menu": {
+        "parent-item": {
+            "type": "parent-item-click",
+            "trackType": "event",
+            "properties": {
+                "event_category": "menu",
+                "event_label": "{%label%}",
+                "value": "{%value%}"
+            }
+        },
+        "item": {
+            "type": "item-click",
+            "trackType": "event",
+            "properties": {
+                "event_category": "menu",
+                "event_label": "{%label%}"
+            }
+        }
+    }
+}

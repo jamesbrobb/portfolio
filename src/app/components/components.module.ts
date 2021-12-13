@@ -36,6 +36,7 @@ import {MyLibraryLessonPlanCardComponent} from "./product/my-library/lesson-plan
 import {IconsModule} from "./common/icons";
 import {CodemirrorComponent} from "./forms/codemirror/codemirror.component";
 import {JsonEditorComponent} from "./forms/json-editor/json-editor.component";
+import {HrefListenerDirective} from "./utils/util.directives";
 
 
 export const COMPONENTS = [
@@ -60,7 +61,8 @@ export const COMPONENTS = [
   HtmlRendererComponent,
   MyLibraryLessonPlanCardComponent,
   CodemirrorComponent,
-  JsonEditorComponent
+  JsonEditorComponent,
+  HrefListenerDirective
 ];
 
 

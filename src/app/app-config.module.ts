@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import {AnalyticsActionsService, GAConfigService} from './ng/core';
 import {githubConfigService} from "./components/page-container/page-container.component";
 import {environment} from "../environments/environment";
+import analytics from "../assets/json/analytics.json";
 
 
 
@@ -13,28 +14,7 @@ import {environment} from "../environments/environment";
   ],
   providers: [{
     provide: AnalyticsActionsService,
-    useValue: {
-      page: {
-        trackType: 'page',
-        properties: {
-          page_title: '{%title%}',
-          page_path: '{%path%}',
-          page_location: '{%href%}'
-        }
-      },
-      test: {
-        for: {
-          me: {
-            type: 'minkyPinky',
-            trackType: 'event',
-            properties: {
-              event_category: '{%prop1%}',
-              event_label: '{%prop2%}'
-            }
-          }
-        }
-      }
-    }
+    useValue: analytics
   }, {
     provide: githubConfigService,
     useValue: environment.configuration.githubConfig

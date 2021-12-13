@@ -6,9 +6,10 @@ My current skill set includes:
 - Typescript (4 years experience - currently working with v4.4.4)
 - CSS/SCSS
 - HTML
-- RxJS
+- RxJS/NgRx
 - Git
 - TDD
+- OOP
 
 [View full CV](https://docs.google.com/document/d/1mF6q1800kQuNBG2CP5WxcNtqtLIbQTqwSTxHeV0xB6w/edit?usp=sharing)
 

@@ -50,7 +50,7 @@ export type ReplaceTypeInTupleWith<T extends unknown[], U, V> = {[P in keyof T] 
 
 export type UnwrapObservables<T> = T extends Observable<infer U> ? U : T;
 
-export type UnionToTuple<T extends any[]> = T[number];
+export type TupleToUnion<T extends any[]> = T[number];
 
 export type AddParameterToTuple<T extends [unknown], U extends unknown[] = []> =
     T extends [] ?
@@ -102,3 +102,5 @@ export type NoInfer<T> = [T][T extends any ? 0 : never];
 export type ErrorBrand<Err extends string> = Readonly<{
     [key in Err]: void;
 }>;
+
+export type Invalid<T> = { __errMsg: T };

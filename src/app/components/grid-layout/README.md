@@ -17,14 +17,9 @@ Content projection is used to render the supplied UI component repeatedly within
 
     <ng-template let-item="item">
 
-        <button class="grid-item" 
-                (click)="onItemSelect(item)">
-
-            <some-component-to-render 
-              [dataProvider]="item">
-            </some-component-to-render>
-
-        </button>
+        <some-component-to-render class="grid-item"
+          [dataProvider]="item">
+        </some-component-to-render>
 
     </ng-template>
 
