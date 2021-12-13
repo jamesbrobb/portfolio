@@ -11,7 +11,10 @@ import {
     GroupExtraArgsMismatchError,
     GroupIOMismatchError,
     IsCommandCompatible,
-    NoCommandTypeParamError, HasNonMatchingOutputTypeWhenNotAllowed, GroupAdditionalOutputTypeError
+    NoCommandTypeParamError,
+    HasNonMatchingOutputTypeWhenNotAllowed,
+    GroupAdditionalOutputTypeError,
+    IsGroupValid, IsCommandCompatibleWithGroup
 } from "./command-group";
 
 import {Command, CommandTypeTemplate} from "../command/command";
@@ -185,58 +188,90 @@ import {
         expectType<false>(anmot4);
 
 
-// IsCommandCompatible
+// IsGroupValid
+
+    // Should not be valid if
+
+        // Error if the group CommandType type variable is not set
+
+            declare const igc1: IsGroupValid<unknown, never>;
+            expectType<NoCommandTypeParamError>(igc1);
+
+        // The Group CommandType I and O types are a mismatch
+
+            declare const igc2: IsGroupValid<never, TypeB>;
+            expectType<GroupIOMismatchError>(igc2);
+
+        // The group has an additional output type but the type parameter wasn't set to allow it
+
+            declare const igc3: IsGroupValid<TypeA, TypeB>;
+            expectType<GroupAdditionalOutputTypeError<TypeB>>(igc3);
+
+    // Should be valid if
+
+        // the group has a valid IOType
+
+            declare const igc4: IsGroupValid<TypeA, never>;
+            expectType<true>(igc4);
+
+        // the group has an additional output type and it's explicitly declare as ok
+
+            declare const igc5: IsGroupValid<TypeA, TypeB, true>;
+            expectType<true>(igc5);
+
+
+// IsCommandCompatibleWithGroup
 
 // Should not be compatible if
 
     // Error if the group CommandType type variable is not set
 
-        declare const icc1: IsCommandCompatible<Command<unknown, unknown>, unknown, never>
+        declare const icc1: IsCommandCompatibleWithGroup<Command<unknown, unknown>, unknown, never>
         expectType<NoCommandTypeParamError>(icc1);
 
     // Once any calculated AdditionalOutput type has been removed from O, Error if
 
         // The Group CommandType I and O types are a mismatch
 
-            declare const icc2: IsCommandCompatible<TypeAInBOutCommand, never, TypeB>
+            declare const icc2: IsCommandCompatibleWithGroup<TypeAInBOutCommand, never, TypeB>
             expectType<GroupIOMismatchError>(icc2);
 
         // The group has an additional output type but the type parameter wasn't set to allow it
 
-            declare const icc2a: IsCommandCompatible<TypeAInABOutCommand, TypeA, TypeB>
-            expectType<GroupAdditionalOutputTypeError>(icc2a);
+            declare const icc2a: IsCommandCompatibleWithGroup<TypeAInABOutCommand, TypeA, TypeB>
+            expectType<GroupAdditionalOutputTypeError<TypeB>>(icc2a);
 
         // IO of supplied commands does not match IOType of group
 
-            declare const icc3: IsCommandCompatible<TypeACommand, TypeB, never>
-            expectType<GroupAndSuppliedCommandIOMismatchError>(icc3);
+            declare const icc3: IsCommandCompatibleWithGroup<TypeACommand, TypeB, never>
+            expectType<GroupAndSuppliedCommandIOMismatchError<TypeB, TypeA>>(icc3);
 
         // IO of supplied commands is a union and IOType of group isn't an exact match
 
-            declare const icc4: IsCommandCompatible<TypeABInABOutCommand, TypeA, never>;
-            expectType<GroupAndSuppliedCommandIOMismatchError>(icc4);
+            declare const icc4: IsCommandCompatibleWithGroup<TypeABInABOutCommand, TypeA, never>;
+            expectType<GroupAndSuppliedCommandIOMismatchError<TypeA, TypeA | TypeB>>(icc4);
 
-            declare const icc4z: IsCommandCompatible<TypeABInABOutCommand, TypeA | string, never>;
-            expectType<GroupAndSuppliedCommandIOMismatchError>(icc4z);
+            declare const icc4z: IsCommandCompatibleWithGroup<TypeABInABOutCommand, TypeA | string, never>;
+            expectType<GroupAndSuppliedCommandIOMismatchError<TypeA | string, TypeA | TypeB>>(icc4z);
 
         // Group AdditionalOutputType is never and supplied commands AdditionalOutputType is not
 
-            declare const icc4a: IsCommandCompatible<TypeAInABOutCommand, TypeA, never>
-            expectType<GroupAdditionalOutputTypeNeverError>(icc4a);
+            declare const icc4a: IsCommandCompatibleWithGroup<TypeAInABOutCommand, TypeA, never>
+            expectType<GroupAdditionalOutputTypeNeverError<TypeB>>(icc4a);
 
         // Group AdditionalOutputType and supplied commands AdditionalOutputType are both set and do not match
 
-            declare const icc4b: IsCommandCompatible<TypeAInABOutCommand, TypeA, string, true>
-            expectType<GroupAndCommandAdditionalOutputTypeMismatchError>(icc4b);
+            declare const icc4b: IsCommandCompatibleWithGroup<TypeAInABOutCommand, TypeA, string, true>
+            expectType<GroupAndCommandAdditionalOutputTypeMismatchError<string, TypeB>>(icc4b);
 
     // The Group and supplied commands ExtraArgs type does not match
 
-        declare const icc4c: IsCommandCompatible<ExtraArgsCommand, TypeA, never, true, [number, string]>
-        expectType<GroupExtraArgsMismatchError>(icc4c);
+        declare const icc4c: IsCommandCompatibleWithGroup<ExtraArgsCommand, TypeA, never, true, [number, string]>
+        expectType<GroupExtraArgsMismatchError<[number, string], [string, Function]>>(icc4c);
 
         type TestCommand3 = Command<TypeA, TypeA, [string, Function, TypeB, number]>
-        declare const icc4d: IsCommandCompatible<TestCommand3, TypeA, never, true, [string, Function]>
-        expectType<GroupExtraArgsMismatchError>(icc4d);
+        declare const icc4d: IsCommandCompatibleWithGroup<TestCommand3, TypeA, never, true, [string, Function]>
+        expectType<GroupExtraArgsMismatchError<[string, Function], [string, Function, TypeB, number]>>(icc4d);
 
 
 
@@ -246,49 +281,49 @@ import {
 
         // And the AdditionalOutputTypes are an exact match
 
-            declare const icc5: IsCommandCompatible<TypeACommand, TypeA, never>
+            declare const icc5: IsCommandCompatibleWithGroup<TypeACommand, TypeA, never>
             expectType<TypeACommand>(icc5);
 
-            declare const icc6: IsCommandCompatible<TypeAInABOutCommand, TypeA, TypeB, true>
+            declare const icc6: IsCommandCompatibleWithGroup<TypeAInABOutCommand, TypeA, TypeB, true>
             expectType<TypeAInABOutCommand>(icc6);
 
-            declare const icc8: IsCommandCompatible<TypeABInABOutCommand, TypeA | TypeB, never>
+            declare const icc8: IsCommandCompatibleWithGroup<TypeABInABOutCommand, TypeA | TypeB, never>
             expectType<TypeABInABOutCommand>(icc8);
 
-            declare const icc9: IsCommandCompatible<TypeABInAOutCommand, TypeA, never>
+            declare const icc9: IsCommandCompatibleWithGroup<TypeABInAOutCommand, TypeA, never>
             expectType<TypeABInAOutCommand>(icc9);
 
             type TestCommand = Command<TypeA | TypeB, TypeA | string>
-            declare const icc11: IsCommandCompatible<TestCommand, TypeA, string, true>
+            declare const icc11: IsCommandCompatibleWithGroup<TestCommand, TypeA, string, true>
             expectType<TestCommand>(icc11);
 
         // And the group AdditionalOutputType has a type and the supplied commands AdditionalOutputType is never
 
-            declare const icc7: IsCommandCompatible<TypeACommand, TypeA, TypeB, true>
+            declare const icc7: IsCommandCompatibleWithGroup<TypeACommand, TypeA, TypeB, true>
             expectType<TypeACommand>(icc7);
 
-            declare const icc10: IsCommandCompatible<TypeABInAOutCommand, TypeA, TypeB, true>
+            declare const icc10: IsCommandCompatibleWithGroup<TypeABInAOutCommand, TypeA, TypeB, true>
             expectType<TypeABInAOutCommand>(icc10);
 
     // The supplied commands IOType with the group AdditionalOutputType excluded is an exact match with group IOType
 
-        declare const icc10a: IsCommandCompatible<TypeABInABOutCommand, TypeA, TypeB, true>
+        declare const icc10a: IsCommandCompatibleWithGroup<TypeABInABOutCommand, TypeA, TypeB, true>
         expectType<TypeABInABOutCommand>(icc10a);
 
     // The supplied commands InputType is an exact match with the group IOType
 
         // And the AdditionalOutputType types are an exact match
 
-            declare const icc10b: IsCommandCompatible<TypeABInAOutCommand, TypeA | TypeB, never>
+            declare const icc10b: IsCommandCompatibleWithGroup<TypeABInAOutCommand, TypeA | TypeB, never>
             expectType<TypeABInAOutCommand>(icc10b);
 
             type TestCommand2 = Command<TypeA | TypeB, TypeA | string>
-            declare const icc10d: IsCommandCompatible<TestCommand2, TypeA | TypeB, string, true>
+            declare const icc10d: IsCommandCompatibleWithGroup<TestCommand2, TypeA | TypeB, string, true>
             expectType<TestCommand2>(icc10d);
 
         // And the AdditionalOutputType of the group has a type but the supplied commands AdditionalOutputType is never
 
-            declare const icc10c: IsCommandCompatible<TypeABInAOutCommand, TypeA | TypeB, TypeB, true>
+            declare const icc10c: IsCommandCompatibleWithGroup<TypeABInAOutCommand, TypeA | TypeB, TypeB, true>
             expectType<TypeABInAOutCommand>(icc10c);
 
     // The Group and supplied commands ExtraArgs
@@ -296,22 +331,26 @@ import {
         // Are an exact match
 
             // And its AdditionalOutputType is never
-            declare const icc12: IsCommandCompatible<ExtraArgsCommand, TypeA, never, false, [string, Function]>
+            declare const icc12: IsCommandCompatibleWithGroup<ExtraArgsCommand, TypeA, never, false, [string, Function]>
             expectType<ExtraArgsCommand>(icc12);
 
             // And its AdditionalOutputType matches
-            declare const icc13: IsCommandCompatible<ExtraArgsCommandWithBypassType, TypeA, TypeB, true, [string, Function]>
+            declare const icc13: IsCommandCompatibleWithGroup<ExtraArgsCommandWithBypassType, TypeA, TypeB, true, [string, Function]>
             expectType<ExtraArgsCommandWithBypassType>(icc13);
 
         // Are a partial match
 
             // And its AdditionalOutputType is never
-            declare const icc14: IsCommandCompatible<ExtraArgsCommand, TypeA, never, false, [string, Function, number, boolean]>
+            declare const icc14: IsCommandCompatibleWithGroup<ExtraArgsCommand, TypeA, never, false, [string, Function, number, boolean]>
             expectType<ExtraArgsCommand>(icc14);
 
             // And its AdditionalOutputType matches
-            declare const icc15: IsCommandCompatible<ExtraArgsCommandWithBypassType, TypeA, TypeB, true, [string, Function, number, boolean]>
+            declare const icc15: IsCommandCompatibleWithGroup<ExtraArgsCommandWithBypassType, TypeA, TypeB, true, [string, Function, number, boolean]>
             expectType<ExtraArgsCommandWithBypassType>(icc15);
+
+
+
+
 
 
 
@@ -423,7 +462,7 @@ expectError(group6.addCommands([new TypeAInABOutCommand()])); // GroupAndSupplie
 expectType(group6.addCommands([new TypeABInABOutCommand()]));
 expectType(group6.addCommands([new TypeABInAOutCommand()]));
 
-expectType(group6.addCommands([new TypeACommand(), new TypeAInABOutCommand(), new TypeABInABOutCommand(), new TypeABInAOutCommand()]));
+expectType(group6.addCommands([new TypeABInABOutCommand(), new TypeABInAOutCommand()]));
 
 const group7 = new CommandGroup<TypeABInAOutCommand>()
 expectType<CommandGroup<TypeABInAOutCommand, false, TypeA, never, []>>(group7);

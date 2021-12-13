@@ -1,11 +1,10 @@
 import {
     IfElse,
     EqualsNever,
-    ErrorBrand,
     StrictExclude,
     Equals,
-    UnionToTuple,
-    TupleElementComparison, Not,
+    TupleToUnion,
+    TupleElementComparison, Not, Invalid,
 } from "../../../../types";
 
 import {
@@ -26,8 +25,7 @@ type _GetAdditionalOutputType<T extends GetCommandTypeParamsResultTemplateType> 
     StrictExclude<T[1], T[0]>;
 
 export type AreExtraArgsCompatible<T1 extends readonly unknown[], T2 extends readonly unknown[]> =
-    0 extends (UnionToTuple<TupleElementComparison<T1, T2> & unknown[]>) ? false : true;
-
+    0 extends (TupleToUnion<TupleElementComparison<T1, T2> & unknown[]>) ? false : true;
 
 
 export type CalculateValidIOType<IOT, BYT, CMIOT, CMIT = undefined> =
@@ -79,22 +77,15 @@ export type HasNonMatchingOutputTypeWhenNotAllowed<AllowNonMatchingOutputType ex
     >
 
 
-export type NoCommandTypeParamError = ErrorBrand<'A type is required for the CommandGroup CommandType type variable'>
-export type GroupIOMismatchError = ErrorBrand<'The CommandGroup CommandType type variable has an Input and Output type mismatch'>
-export type GroupAdditionalOutputTypeError = ErrorBrand<'The CommandGroup CommandType has an additional output type, but the AllowNonMatchingOutputType type parameter was not explicitly set to true'>
-export type GroupAndSuppliedCommandIOMismatchError = ErrorBrand<`IOType of CommandGroup and supplied command do not match`>
-export type GroupAdditionalOutputTypeNeverError = ErrorBrand<'CommandGroup AdditionalOutputType is never but the supplied commands AdditionalOutputType has a type set'>
-export type GroupAndCommandAdditionalOutputTypeMismatchError = ErrorBrand<'CommandGroup and supplied commands AdditionalOutputType do not match'>
-export type GroupExtraArgsMismatchError = ErrorBrand<'CommandGroup and supplied commands ExtraArgs do not match'>;
+export type NoCommandTypeParamError = Invalid<['A type is required for the CommandGroup CommandType type variable']>;
+export type GroupIOMismatchError = Invalid<['The CommandType assigned to the CommandGroup must have a common I and O type']>;
+export type GroupAdditionalOutputTypeError<AdditionalOutputType> = Invalid<['The CommandGroup CommandType has an additional output type', AdditionalOutputType, ', but AllowAdditionalOutputType type parameter was not explicitly set to true']>;
 
 
-
-export type IsCommandCompatible<
-    CommandType extends CommandTypeTemplate,
+export type IsGroupValid<
     IOType,
     AdditionalOutputType,
     AllowNonMatchingOutputType extends boolean = false,
-    ExtraArgsType extends ReadonlyArray<unknown> = [],
 > =
     IfElse<
         Equals<[IOType, IOType], [unknown, unknown]>,
@@ -104,26 +95,45 @@ export type IsCommandCompatible<
             GroupIOMismatchError,
             IfElse<
                 HasNonMatchingOutputTypeWhenNotAllowed<AllowNonMatchingOutputType, AdditionalOutputType>,
-                GroupAdditionalOutputTypeError,
-                IfElse<
-                    Equals<IOType, CalculateValidIOType<IOType, AdditionalOutputType, GetIOType<CommandType, true>, GetInputType<CommandType, true>>>,
-                    IfElse<
-                        Equals<AdditionalOutputType, CalculateValidAdditionalOutputType<AdditionalOutputType, GetAdditionalOutputType<CommandType>>>,
-                        IfElse<
-                            Equals<ExtraArgsType, CalculateValidExtrasArgType<ExtraArgsType, GetExtraArgsType<CommandType>>>,
-                            CommandType,
-                            GroupExtraArgsMismatchError
-                        >,
-                        IfElse<
-                            EqualsNever<AdditionalOutputType>,
-                            GroupAdditionalOutputTypeNeverError,
-                            GroupAndCommandAdditionalOutputTypeMismatchError
-                        >
-                    >,
-                    GroupAndSuppliedCommandIOMismatchError
-                >
+                GroupAdditionalOutputTypeError<AdditionalOutputType>,
+                true
             >
         >
+    >
+
+
+export type GroupAndSuppliedCommandIOMismatchError<IOType, CMDIOType> = Invalid<['IOType of CommandGroup', IOType ,'and supplied command IOType', CMDIOType, 'do not match']>;
+export type GroupAdditionalOutputTypeNeverError<CMDAOType> = Invalid<['CommandGroup AdditionalOutputType is never but the supplied command AdditionalOutputType is', CMDAOType]>;
+export type GroupAndCommandAdditionalOutputTypeMismatchError<AOType, CMDAOType> = Invalid<['CommandGroup AdditionalOutputType', AOType ,'and supplied command AdditionalOutputType', CMDAOType, 'do not match']>
+export type GroupExtraArgsMismatchError<ExtraArgs, CMDExtraArgs> = Invalid<['CommandGroup ExtraArgs', ExtraArgs, 'and supplied commands ExtraArgs', CMDExtraArgs, 'do not match']>;
+
+
+export type IsCommandCompatible<
+    CommandType extends CommandTypeTemplate,
+    IOType,
+    AOType,
+    ExtraArgsType extends ReadonlyArray<unknown> = [],
+    CMDIOType = GetIOType<CommandType, true>,
+    CMDInputType = GetInputType<CommandType, true>,
+    CMDAOType = GetAdditionalOutputType<CommandType>,
+    CMDExtraArgsType extends ReadonlyArray<unknown> = GetExtraArgsType<CommandType>
+> =
+    IfElse<
+        Equals<IOType, CalculateValidIOType<IOType, AOType, CMDIOType, CMDInputType>>,
+        IfElse<
+            Equals<AOType, CalculateValidAdditionalOutputType<AOType, CMDAOType>>,
+            IfElse<
+                Equals<ExtraArgsType, CalculateValidExtrasArgType<ExtraArgsType, CMDExtraArgsType>>,
+                CommandType,
+                GroupExtraArgsMismatchError<ExtraArgsType, CMDExtraArgsType>
+            >,
+            IfElse<
+                EqualsNever<AOType>,
+                GroupAdditionalOutputTypeNeverError<CMDAOType>,
+                GroupAndCommandAdditionalOutputTypeMismatchError<AOType, CMDAOType>
+            >
+        >,
+        GroupAndSuppliedCommandIOMismatchError<IOType, CMDIOType>
     >
 
 
@@ -157,6 +167,52 @@ export type GetCommandGroupExtraArgsType<GroupType extends CommandGroupTypeTempl
 type _GetCommandGroupExtraArgsType<T extends GetCommandGroupTypeParamsResultTypeTemplate> = T[4];
 
 
+export type IsCommandCompatibleWithGroup<
+    CommandType extends CommandTypeTemplate,
+    IOType,
+    AOType,
+    AllowAdditionalOutput extends boolean = false,
+    ExtraArgsType extends ReadonlyArray<unknown> = readonly unknown[],
+    GroupValid = IsGroupValid<IOType, AOType, AllowAdditionalOutput>
+> =
+    IfElse<
+        Equals<true, GroupValid>,
+        IsCommandCompatible<CommandType, IOType, AOType, ExtraArgsType>,
+        GroupValid
+    >;
+
+
+// required due to @link https://github.com/microsoft/TypeScript/issues/21729
+export type _AreMultipleCommandsCompatibleWithGroupInner<
+    CommandType extends unknown,
+    IOType,
+    AOType,
+    AllowAdditionalOutputType extends boolean,
+    ExtraArgsType extends ReadonlyArray<unknown>
+> =
+    CommandType extends Command<unknown> ?
+        IsCommandCompatibleWithGroup<CommandType, IOType, AOType, AllowAdditionalOutputType, ExtraArgsType> :
+        never;
+
+export type AreMultipleCommandsCompatibleWithGroup<
+    T extends CommandTypeTemplate[],
+    IOType,
+    AOType,
+    AllowAdditionalOutputType extends boolean = false,
+    ExtraArgsType extends ReadonlyArray<unknown> = []
+> =
+    [...{ [K in keyof T]:
+        _AreMultipleCommandsCompatibleWithGroupInner<
+                T[K],
+                IOType,
+                AOType,
+                AllowAdditionalOutputType,
+                ExtraArgsType
+            > & T[K]
+        }
+    ];
+
+
 
 export class CommandGroup<
     CommandType extends CommandTypeTemplate,
@@ -169,13 +225,13 @@ export class CommandGroup<
     private _commands: Command<IOType, IOType | AdditionalOutputType, ExtraArgsType>[] = [];
 
     addCommand<T extends CommandTypeTemplate>(
-        command: IsCommandCompatible<T, IOType, AdditionalOutputType, AllowNonMatchingOutputType, ExtraArgsType> & T
+        command: IsCommandCompatibleWithGroup<T, IOType, AdditionalOutputType, AllowNonMatchingOutputType, ExtraArgsType> & T
     ): void {
         this._commands.push(command as Command<IOType, IOType | AdditionalOutputType, ExtraArgsType>);
     }
 
     addCommands<T extends CommandTypeTemplate[]>(
-        commands: IsCommandCompatible<T[number], IOType, AdditionalOutputType, AllowNonMatchingOutputType, ExtraArgsType>[] & T
+        commands: AreMultipleCommandsCompatibleWithGroup<T, IOType, AdditionalOutputType, AllowNonMatchingOutputType, ExtraArgsType>
     ): void {
         commands.forEach((command: CommandTypeTemplate) => {
             this._commands.push(command as Command<IOType, IOType | AdditionalOutputType, ExtraArgsType>);
