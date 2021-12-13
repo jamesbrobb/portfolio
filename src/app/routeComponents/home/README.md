@@ -10,9 +10,10 @@ My current skill set includes:
 - Typescript (4 years experience - currently working with v4.4.4)
 - CSS/SCSS
 - HTML
-- RxJS
+- RxJS/NgRx
 - Git
 - TDD
+- OOP
 
 <br/>
 
@@ -27,7 +28,7 @@ Angular
  - [component 3](/components/product/lesson-plan/grid)
 
 Typescript
- - [generics/conditional types](/core/commands/command)
+ - [generics/conditional types](/core/commands)
 
 SCSS
- - [mixins](/layout/flex-grid)
+ - [mixins](/components/layout/flex-grid)
