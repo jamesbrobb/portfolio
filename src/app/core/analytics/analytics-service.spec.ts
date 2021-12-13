@@ -8,12 +8,11 @@ import {
   INTERPOLATABLE_PROP_VALUES_BUT_EMPTY_PROP_MAP_ERROR
 } from './analytics-service';
 
-import {AnalyticsAdaptor} from './analytics-adaptor';
 import {ObjectUtils} from "../utils";
 import {MISSING_OBJECT_PROP_ERROR_MESSAGE} from "../utils/object-utils";
+import {AnalyticsAdaptor} from './analytics-adaptor';
 import {AnalyticsHook} from "./analytics-hook";
-import {CommandGroup} from "../commands/group/command-group";
-import {CommandProcessor} from "../commands/processor/command-processor";
+import {CommandGroup, CommandProcessor} from "../commands";
 
 
 describe('AnalyticsService', () => {

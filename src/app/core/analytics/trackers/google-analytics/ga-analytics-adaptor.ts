@@ -110,7 +110,7 @@ export class GaAnalyticsAdaptor implements AnalyticsAdaptor {
     }
 
     /*
-      @https://developers.google.com/analytics/devguides/collection/gtagjs/pages
+      @link https://developers.google.com/analytics/devguides/collection/gtagjs/pages
     */
     private _trackPage(action: AnalyticsPageAction): void {
 
@@ -137,7 +137,7 @@ export class GaAnalyticsAdaptor implements AnalyticsAdaptor {
     }
 
     /*
-      @https://developers.google.com/analytics/devguides/collection/gtagjs/events
+      @link https://developers.google.com/analytics/devguides/collection/gtagjs/events
      */
     private _trackEvent(action: AnalyticsAction): void {
 

@@ -1,11 +1,10 @@
-import {AnalyticsAdaptor} from './analytics-adaptor';
-import {AnalyticsHook} from './analytics-hook';
-import {ObjectUtils} from "../utils";
-import {CommandGroup} from "../commands/group/command-group";
-import {CommandProcessor} from "../commands/processor/command-processor";
 import {Observable, of} from "rxjs";
 import {take} from "rxjs/operators";
-import {IfElse, DoesExtend, EqualsNever, Equals} from "../../../types";
+import {ObjectUtils} from "../utils";
+import {AnalyticsAdaptor} from './analytics-adaptor';
+import {AnalyticsHook} from './analytics-hook';
+import {CommandGroup, CommandProcessor} from "../commands";
+import {IfElse, Equals} from "../../../types";
 
 
 type PropertyValueMapType = {[propertyKey: string]: unknown};
