@@ -6,9 +6,8 @@ import {
   AnalyticsAdaptor,
   AnalyticsHook
 } from "../../../core";
-import {AnalyticsEventDirective} from "./components/analytics-event.directive";
-import {CommandGroup} from "../../../core/commands/group/command-group";
-import {CommandProcessor} from "../../../core/commands/processor/command-processor";
+import {AnalyticsEventDirective, AnalyticsHrefListenerDirective} from "./components/analytics-event.directive";
+import {CommandGroup, CommandProcessor} from "../../../core/commands";
 
 
 
@@ -53,18 +52,19 @@ const ANALYTICS_SERVICE_PROVIDER: Provider = {
 }
 
 const COMPONENTS = [
-  AnalyticsEventDirective
+    AnalyticsEventDirective,
+    AnalyticsHrefListenerDirective
 ];
 
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  providers: [
-    ANALYTICS_SERVICE_PROVIDER
-  ],
-  declarations: COMPONENTS,
-  exports: COMPONENTS
+    imports: [
+        CommonModule
+    ],
+    providers: [
+        ANALYTICS_SERVICE_PROVIDER
+    ],
+    declarations: COMPONENTS,
+    exports: COMPONENTS
 })
 export class AnalyticsModule {}
