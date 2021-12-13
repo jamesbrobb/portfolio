@@ -1,5 +1,16 @@
-import {Component, Inject, InjectionToken, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {
+    Component,
+    Directive,
+    HostListener,
+    Inject,
+    InjectionToken,
+    Input,
+    OnChanges,
+    SimpleChanges
+} from '@angular/core';
+
 import {openClose} from "../../animation";
+import {Router} from "@angular/router";
 
 
 interface Section {
@@ -53,20 +64,6 @@ export class PageContainerComponent implements OnChanges {
     this.hasError = false;
     this._loadCount = 0;
 
-    /*let dURIs: string[] = [];
-
-    if(!this.ioDocURI) {
-      return;
-    }
-
-    if(typeof this.ioDocURI === 'string') {
-      dURIs = [this.ioDocURI];
-    }
-
-    if(Array.isArray(this.ioDocURI)) {
-      dURIs = this.ioDocURI;
-    }*/
-
     this.docURI = this.ioDocURI;
     this.sections = this.ioSections;
   }
@@ -92,6 +89,6 @@ export class PageContainerComponent implements OnChanges {
 
   private _onLoad(): void {
     this._loadCount++;
-    this.hasLoaded = true;//(this._loadCount == this.docURIs?.length);
+    this.hasLoaded = true;
   }
 }
